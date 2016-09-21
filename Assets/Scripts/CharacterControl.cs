@@ -1,24 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class CharacterControl : MonoBehaviour {
 
+    public GameObject character;
     private Animator anim;
     private SpriteRenderer sRenderer;
     private Rigidbody2D rBody;
     
-    public float speed = 1;
-    public float jumpForce = 1;
-    public float airSpeed = 1.5f;
+    public float speed = 20;
+    public float jumpForce = 12;
+    public float airSpeed = 10f;
     
     private float move = 0;
     private bool jumping = false;
 
 
     void Start () {
-        anim = GetComponent<Animator>();
-        sRenderer = GetComponent<SpriteRenderer>();
-        rBody = GetComponent<Rigidbody2D>();
+        if (character != null) {
+            anim = character.GetComponent<Animator>();
+            sRenderer = character.GetComponent<SpriteRenderer>();
+            rBody = GetComponent<Rigidbody2D>();
+        } else {
+            anim = GetComponentInChildren<Animator>();
+            sRenderer = GetComponentInChildren<SpriteRenderer>();
+            rBody = GetComponentInChildren<Rigidbody2D>();
+        }
     }
 
     void FixedUpdate () {    	

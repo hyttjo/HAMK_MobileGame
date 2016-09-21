@@ -3,3 +3,7 @@
 ################################################################################
 
 /Temp
+/obj/Debug
+/Library
+/.vs
+/Assets/Resources/Textures/Corel Auto-Preserve

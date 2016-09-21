@@ -16,6 +16,7 @@ public class LevelLoader : MonoBehaviour {
             if (level != null) {
                 if (levelObjects.Length > 0 && levelObjects != null) {
                     if (level.format == TextureFormat.RGB24) {
+                        ResetLevel();
                         LoadLevel();
                     } else {
                         Debug.Log("Level texture fromat is incorrect! Use RGB24 format.");
@@ -29,6 +30,15 @@ public class LevelLoader : MonoBehaviour {
         }
         load = false;
 	}
+
+    void ResetLevel() {
+        var children = new List<GameObject>();
+
+        foreach (Transform child in transform) {
+            children.Add(child.gameObject);
+        }
+        children.ForEach(child => Destroy(child));
+    }
 
     void LoadLevel() {
         int gameObjectNumber = 0;

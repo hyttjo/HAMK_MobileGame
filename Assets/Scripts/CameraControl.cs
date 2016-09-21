@@ -5,39 +5,32 @@ public class CameraControl : MonoBehaviour {
 
 	public GameObject player;
 	public GameObject[] background;
-	private Rigidbody2D playerRb;
 	private Material[] backgroundMat;
-	private float cameraHeight;
-	public float cameraHeightMultiplier = 2;
 	public float offsetMultiplierX = 0.01f;
 	public float offsetMultiplierY = 0.01f;
 	public float offsetClampY = 0.05f;
+    public float cameraHeight = 1f;
 	
 	void Start () {
-		if (player != null) {
-			playerRb = player.GetComponent<Rigidbody2D>();
+		if (player == null) {
+            player = GameObject.FindGameObjectWithTag("Player");
 		}
-		
-		if (background.Length > 0) {
+
+        if (background.Length > 0) {
 			backgroundMat = new Material[background.Length];
 			
 			for(int i = 0; i < background.Length; i++) {
 				backgroundMat[i] = background[i].GetComponent<MeshRenderer>().material;
 			}
 		}
-		
-		cameraHeight = transform.position.y;
 	}
 	
 	void FixedUpdate () {
 		if (player != null) {
 			Vector3 playerPosition = player.transform.position;
-			float playerVelocity = playerRb.velocity.magnitude * cameraHeightMultiplier;
 			
 			Vector3 cameraPosition = new Vector3(playerPosition.x, playerPosition.y + cameraHeight, transform.position.z);
-			gameObject.transform.position = Vector3.Slerp(transform.position, cameraPosition, 1f);	
-			
-			Camera.main.orthographicSize = 5 + playerVelocity;
+			gameObject.transform.position = Vector3.Slerp(transform.position, cameraPosition, 1f);
 			
 			if (background.Length > 0) {
 				for(int i = 0; i < background.Length; i++) {
@@ -51,7 +44,7 @@ public class CameraControl : MonoBehaviour {
 							backgroundOffsetY = offsetClampY;
 						} else if (backgroundOffsetY < -offsetClampY) {
 							backgroundOffsetY = -offsetClampY;
-						}//
+						}
 						
 						Vector2 backgroundOffset = new Vector2(playerPosition.x * offsetMultiplierX * i, backgroundOffsetY);
 						backgroundMat[i].mainTextureOffset = backgroundOffset;

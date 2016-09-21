@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(CharacterControl))]
 public class PlayerControl : MonoBehaviour {
 
     private CharacterControl cControl;
