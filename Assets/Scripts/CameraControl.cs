@@ -4,20 +4,26 @@ using System.Collections;
 public class CameraControl : MonoBehaviour {
 
 	public GameObject player;
-	public GameObject background;
+	public GameObject[] background;
 	private Rigidbody2D playerRb;
-	private Material backgroundMat;
+	private Material[] backgroundMat;
 	private float cameraHeight;
 	public float cameraHeightMultiplier = 2;
-	public float offsetMultiplier = 0.01f;
+	public float offsetMultiplierX = 0.01f;
+	public float offsetMultiplierY = 0.01f;
+	public float offsetClampY = 0.05f;
 	
 	void Start () {
 		if (player != null) {
 			playerRb = player.GetComponent<Rigidbody2D>();
 		}
 		
-		if (background != null) {
-			backgroundMat = background.GetComponent<MeshRenderer>().material;
+		if (background.Length > 0) {
+			backgroundMat = new Material[background.Length];
+			
+			for(int i = 0; i < background.Length; i++) {
+				backgroundMat[i] = background[i].GetComponent<MeshRenderer>().material;
+			}
 		}
 		
 		cameraHeight = transform.position.y;
@@ -33,12 +39,24 @@ public class CameraControl : MonoBehaviour {
 			
 			Camera.main.orthographicSize = 5 + playerVelocity;
 			
-			if (background != null) {
-				Vector3 backgroundPosition = new Vector3(playerPosition.x, background.transform.position.y, playerPosition.z);
-				background.transform.position = backgroundPosition;
-				
-				Vector2 backgroundOffset = new Vector2(playerPosition.x * offsetMultiplier, playerPosition.z * offsetMultiplier);
-				backgroundMat.mainTextureOffset = backgroundOffset;
+			if (background.Length > 0) {
+				for(int i = 0; i < background.Length; i++) {
+					if (background[i] != null) {
+						Vector3 backgroundPosition = new Vector3(cameraPosition.x, cameraPosition.y, 10 + background.Length - i);
+						background[i].transform.position = backgroundPosition;
+						
+						float backgroundOffsetY = playerPosition.y * offsetMultiplierY * i;
+						
+						if (backgroundOffsetY > offsetClampY) {
+							backgroundOffsetY = offsetClampY;
+						} else if (backgroundOffsetY < -offsetClampY) {
+							backgroundOffsetY = -offsetClampY;
+						}//
+						
+						Vector2 backgroundOffset = new Vector2(playerPosition.x * offsetMultiplierX * i, backgroundOffsetY);
+						backgroundMat[i].mainTextureOffset = backgroundOffset;
+					}
+				}
 			}
 		}
 	}
