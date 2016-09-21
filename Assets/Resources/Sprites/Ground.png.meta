@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: a50f9682c15254e4da2345294f3b32d3
-timeCreated: 1474407864
+timeCreated: 1474440255
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -16,6 +16,7 @@ TextureImporter:
     21300018: Ground_9
     21300020: Ground_10
     21300022: Ground_11
+    21300024: Ground_12
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -56,7 +57,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 64
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
   textureType: 8
@@ -69,11 +70,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 416
+        y: 576
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -81,12 +82,12 @@ TextureImporter:
       name: Ground_1
       rect:
         serializedVersion: 2
-        x: 72
-        y: 416
+        x: 64
+        y: 576
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -94,12 +95,12 @@ TextureImporter:
       name: Ground_2
       rect:
         serializedVersion: 2
-        x: 144
-        y: 416
+        x: 128
+        y: 576
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -107,12 +108,12 @@ TextureImporter:
       name: Ground_3
       rect:
         serializedVersion: 2
-        x: 216
-        y: 416
+        x: 192
+        y: 576
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -120,12 +121,12 @@ TextureImporter:
       name: Ground_4
       rect:
         serializedVersion: 2
-        x: 288
-        y: 416
+        x: 256
+        y: 576
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -134,11 +135,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 344
+        y: 512
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -146,12 +147,12 @@ TextureImporter:
       name: Ground_6
       rect:
         serializedVersion: 2
-        x: 72
-        y: 344
+        x: 64
+        y: 512
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -159,12 +160,12 @@ TextureImporter:
       name: Ground_7
       rect:
         serializedVersion: 2
-        x: 144
-        y: 344
+        x: 128
+        y: 512
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -172,12 +173,12 @@ TextureImporter:
       name: Ground_8
       rect:
         serializedVersion: 2
-        x: 216
-        y: 344
+        x: 192
+        y: 512
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -185,12 +186,12 @@ TextureImporter:
       name: Ground_9
       rect:
         serializedVersion: 2
-        x: 288
-        y: 344
+        x: 256
+        y: 512
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -198,12 +199,12 @@ TextureImporter:
       name: Ground_10
       rect:
         serializedVersion: 2
-        x: 216
-        y: 272
+        x: 64
+        y: 448
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
@@ -211,12 +212,25 @@ TextureImporter:
       name: Ground_11
       rect:
         serializedVersion: 2
-        x: 288
-        y: 272
+        x: 192
+        y: 448
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Ground_12
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 448
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0

@@ -8,8 +8,11 @@ public class CharacterControl : MonoBehaviour {
     private Rigidbody2D rBody;
     
     public float speed = 1;
+    public float jumpForce = 1;
+    public float airSpeed = 1.5f;
+    
     private float move = 0;
-    public bool jumping = false;
+    private bool jumping = false;
 
 
     void Start () {
@@ -18,43 +21,47 @@ public class CharacterControl : MonoBehaviour {
         rBody = GetComponent<Rigidbody2D>();
     }
 
-    void Update () {
-    	
-    	if (Input.GetKey(KeyCode.A)) {
-    		move = -1;
-    		sRenderer.flipX = true;
-    	} else if (Input.GetKey(KeyCode.D)) {
-    		move = 1;
-    		sRenderer.flipX = false;
-    	} else if (Input.GetKey(KeyCode.W)) {
-    		if (!jumping) {
-    			rBody.AddForce(new Vector2(0, 1 * speed), ForceMode2D.Impulse);
-    			jumping = true;
-    			speed = speed / 2;
-    		}
-    	} else {
-    		move = 0;
-    	}
-    	
-    	Vector3 moveVector = transform.position;
-    	
+    void FixedUpdate () {    	
+    	Move();
+    }
+    
+    public void Move() {
     	rBody.AddForce(new Vector2(move * speed, 0), ForceMode2D.Force);
-    	
     	anim.SetFloat("Speed", move);
-		/*
-        AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-        
-        if(Input.GetKeyDown(KeyCode.Space) && stateInfo.nameHash == runStateHash)
-        {
-            anim.SetTrigger (jumpHash);
+    }
+    
+    public void MoveLeft() {
+		move = -1;
+		sRenderer.flipX = true;
+    }
+    
+    public void MoveRight() {
+		move = 1;
+		sRenderer.flipX = false;
+    }
+    
+    public void Jump() {
+    	Vector2 position = transform.position;
+    	
+    	RaycastHit2D hit = Physics2D.Raycast(position, position + Vector2.down * 0.1f);
+
+    	if (hit.collider != null){
+    		if (!jumping) {
+				rBody.AddForce(new Vector2(0, 1 * jumpForce), ForceMode2D.Impulse);
+				jumping = true;
+				speed = speed / airSpeed;
+			}
         }
-        */
+    }
+    
+    public void Idle() {
+    	move = 0;
     }
     
     void OnCollisionEnter2D(Collision2D col) {
     	if (jumping) {
     		jumping = false;
-    		speed = speed * 2;
+    		speed = speed * airSpeed;
     	}
     }
 }
