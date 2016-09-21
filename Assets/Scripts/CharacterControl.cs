@@ -34,31 +34,39 @@ public class CharacterControl : MonoBehaviour {
     }
     
     public void Move() {
-    	rBody.AddForce(new Vector2(move * speed, 0), ForceMode2D.Force);
-    	anim.SetFloat("Speed", move);
+        if (character != null) {
+            rBody.AddForce(new Vector2(move * speed, 0), ForceMode2D.Force);
+            anim.SetFloat("Speed", move);
+        }
     }
     
     public void MoveLeft() {
-		move = -1;
-		sRenderer.flipX = true;
+        if (character != null) {
+            move = -1;
+            sRenderer.flipX = true;
+        }
     }
     
     public void MoveRight() {
-		move = 1;
-		sRenderer.flipX = false;
+        if (character != null) {
+            move = 1;
+            sRenderer.flipX = false;
+        }
     }
     
     public void Jump() {
-    	Vector2 position = transform.position;
-    	
-    	RaycastHit2D hit = Physics2D.Raycast(position, position + Vector2.down * 0.1f);
+        if (character != null) {
+            Vector2 position = transform.position;
 
-    	if (hit.collider != null){
-    		if (!jumping) {
-				rBody.AddForce(new Vector2(0, 1 * jumpForce), ForceMode2D.Impulse);
-				jumping = true;
-				speed = speed / airSpeed;
-			}
+            RaycastHit2D hit = Physics2D.Raycast(position, position + Vector2.down * 0.1f);
+
+            if (hit.collider != null) {
+                if (!jumping) {
+                    rBody.AddForce(new Vector2(0, 1 * jumpForce), ForceMode2D.Impulse);
+                    jumping = true;
+                    speed = speed / airSpeed;
+                }
+            }
         }
     }
     
