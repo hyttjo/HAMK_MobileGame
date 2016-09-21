@@ -18,6 +18,7 @@ public class LevelLoader : MonoBehaviour {
                     if (level.format == TextureFormat.RGB24) {
                         ResetLevel();
                         LoadLevel();
+                        SetupLevel();
                     } else {
                         Debug.Log("Level texture fromat is incorrect! Use RGB24 format.");
                     }
@@ -32,12 +33,18 @@ public class LevelLoader : MonoBehaviour {
 	}
 
     void ResetLevel() {
-        var children = new List<GameObject>();
+        Transform[] children = new Transform[transform.childCount];
+        int nextElement = 0;
 
-        foreach (Transform child in transform) {
-            children.Add(child.gameObject);
+        foreach (Transform obj in transform) {
+            children[nextElement++] = obj;
         }
-        children.ForEach(child => Destroy(child));
+
+        foreach (Transform obj in children) {
+            if (null != obj) {
+                GameObject.DestroyImmediate(obj.gameObject);
+            }
+        }
     }
 
     void LoadLevel() {
@@ -59,7 +66,15 @@ public class LevelLoader : MonoBehaviour {
                 }
             }
         }
-        Debug.Log("level loaded from the texture succesfully! " + gameObjectNumber + " GameObjects created.");
+        Debug.Log("Level loaded from the texture succesfully! " + gameObjectNumber + " GameObjects created.");
+    }
+
+    void SetupLevel() {
+        CameraControl camControl = Camera.main.GetComponent<CameraControl>();
+
+        if (camControl != null) {
+            camControl.cameraBounds = new Rect(7, 5, level.width - 7, level.height - 5);
+        }
     }
 }
 
