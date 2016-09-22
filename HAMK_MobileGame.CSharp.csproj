@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.4.1f1</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -76,44 +74,6 @@
     <Compile Include="Assets\Scripts\Health.cs" />
     <Compile Include="Assets\Scripts\LevelLoader.cs" />
     <Compile Include="Assets\Scripts\PlayerControl.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="Assets\Prefabs\BottomDamage.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground_Alt.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground_Flat.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground_Left_Grass_Wall.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground_Left_Wall.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground_Lower_Left_Corner.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground_Lower_Right_Corner.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground_Right_Grass_Wall.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground_Right_Wall.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground_Upper_Left_Corner.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground_Upper_Left_Grass_Corner.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground_Upper_Right_Corner.prefab" />
-    <None Include="Assets\Prefabs\Ground\Ground_Upper_Right_Grass_Corner.prefab" />
-    <None Include="Assets\Prefabs\Level.prefab" />
-    <None Include="Assets\Prefabs\Player.prefab" />
-    <None Include="Assets\Resources\Animations\Character.controller" />
-    <None Include="Assets\Resources\Animations\Character_idle.anim" />
-    <None Include="Assets\Resources\Animations\Character_walk.anim" />
-    <None Include="Assets\Resources\Materials\Skyboc_Clouds.mat" />
-    <None Include="Assets\Resources\Materials\Skybox_Grass.mat" />
-    <None Include="Assets\Resources\Materials\Skybox_Ocean.mat" />
-    <None Include="Assets\Resources\Materials\Skybox_Sky.mat" />
-    <None Include="Assets\Scenes\Default.unity" />
-    <None Include="Assets\Scenes\EditorLevelLoader.unity" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\Resources\Sprites\Character.png" />
-    <Content Include="Assets\Resources\Sprites\Ground.png" />
-    <Content Include="Assets\Resources\Textures\Level1.png" />
-    <Content Include="Assets\Resources\Textures\Level1_collider.png" />
-    <Content Include="Assets\Resources\Textures\Skybox_clouds.png" />
-    <Content Include="Assets\Resources\Textures\Skybox_grass.png" />
-    <Content Include="Assets\Resources\Textures\Skybox_ocean.png" />
-    <Content Include="Assets\Resources\Textures\Skybox_sky.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

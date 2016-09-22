@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 [ExecuteInEditMode]
 public class LevelLoader : MonoBehaviour {
@@ -9,6 +10,7 @@ public class LevelLoader : MonoBehaviour {
     public Texture2D level;
     public Texture2D levelCollider;
     public Color32 colliderColor = new Color(255, 255, 0, 255);
+    public Color32 colliderStartColor = new Color(255, 0, 0, 255);
     public GameObject bottomPit;
     public int spriteSize = 1;
     public bool load = false;
@@ -107,60 +109,75 @@ public class LevelLoader : MonoBehaviour {
         }
     }
 
+    
     void CreateLevelColliders() {
         GameObject colliders = new GameObject("Colliders");
         colliders.transform.parent = gameObject.transform;
-        EdgeCollider2D eCollider = colliders.AddComponent<EdgeCollider2D>();
 
-        List<Vector2> points = new List<Vector2>();
+        int[][] levelColliderArray = new int[levelCollider.width][];
+        List<Vector2> startVectors = new List<Vector2>();
+        List<Vector2> colliderVectors = new List<Vector2>();
 
-        Vector2[] pointNeighbours = new Vector2[] { new Vector2(0, 1),
+        Vector2[] neighbourVectors = new Vector2[] { new Vector2(0, 1),
                                                      new Vector2(1, 0),
                                                      new Vector2(0, -1),
-                                                     new Vector2(-1, 0)  };
+                                                     new Vector2(-1, 0) };
 
         for (int x = 0; x < levelCollider.width; x++) {
+            levelColliderArray[x] = new int[levelCollider.height];
+
             for (int y = 0; y < levelCollider.height; y++) {
                 Color32 pixel = levelCollider.GetPixel(x, y);
 
-                if (pixel.Equals(colliderColor)) {
-                    Vector2 point = new Vector2(x, y);
+                if (pixel.Equals(colliderColor) || pixel.Equals(colliderStartColor)) {
+                    levelColliderArray[x][y] = 1;
+                } else {
+                    levelColliderArray[x][y] = 0;
+                }
 
-                    while (!points.Contains(point)) {
-                        points.Add(point);
-
-                        foreach (Vector2 pointNeighbour in pointNeighbours) {
-                            int neighbourX = (int)pointNeighbour.x + (int)point.x;
-                            int neighbourY = (int)pointNeighbour.y + (int)point.y;
-
-                            Color32 pixelNeighbour = levelCollider.GetPixel(neighbourX, neighbourY);
-
-                            if (pixelNeighbour.Equals(colliderColor)) {
-                                Vector2 neighbourPoint = new Vector2(neighbourX, neighbourY);
-
-                                if (!points.Contains(neighbourPoint)) {
-                                    point = neighbourPoint;
-                                }
-                            }
-                        }
-                    }
+                if (pixel.Equals(colliderStartColor)) {
+                    startVectors.Add(new Vector2(x, y));
                 }
             }
         }
 
-        Vector2 pointOffset = new Vector2(-0.5f, 0.5f);
+        for (int i = 0; i < startVectors.Count; i++) {
+            GameObject collider = new GameObject("Collider " + startVectors[i].ToString());
+            collider.transform.parent = colliders.transform;
 
-        for (int i = 0; i < points.Count; i++) {
-            Debug.Log(points.Count + ": " + points[i].ToString());
-            points[i] += pointOffset;
-        }
+            colliderVectors.Clear();
 
-        if (points.Count > 1) {
-            eCollider.points = points.ToArray();
-            Debug.Log("Collider creation successful! (Total: " + points.Count + " points).");
-        } else {
-            Debug.Log("Too few collider points provided, can't assign them (Total: " + points.Count + ").");
+            EdgeCollider2D eCollider = collider.AddComponent<EdgeCollider2D>();
+            eCollider.points = GetConnectedVectors((int)startVectors[i].x, (int)startVectors[i].y, levelColliderArray, colliderVectors);
+            eCollider.offset = new Vector2(-0.5f, -0.5f);
         }
+    }
+    
+
+    public Vector2[] GetConnectedVectors(int x, int y, int[][] array, List<Vector2> vectors) {
+        bool canUp = (x - 1 >= 0);
+        bool canDown = (x + 1 < array.Length);
+        bool canRight = (y + 1 < array[0].Length);
+        bool canLeft = (y - 1 >= 0);
+
+        int value = array[x][y];
+        vectors.Add(new Vector2(x, y));
+
+        array[x][y] = 0;
+
+        if (canUp && array[x - 1][y] == value) {
+            GetConnectedVectors(x - 1, y, array, vectors);
+        }
+        if (canDown && array[x + 1][y] == value) {
+            GetConnectedVectors(x + 1, y, array, vectors);
+        }
+        if (canLeft && array[x][y - 1] == value) {
+            GetConnectedVectors(x, y - 1, array, vectors);
+        }
+        if (canRight && array[x][y + 1] == value) {
+            GetConnectedVectors(x, y + 1, array, vectors);
+        }
+        return vectors.ToArray();
     }
 
     void CreateBottomPit() {
