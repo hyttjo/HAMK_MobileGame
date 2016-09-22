@@ -7,14 +7,12 @@ public class Health : MonoBehaviour {
     public GameObject _gameObject;
     public int health = 100;
 
-	// Use this for initialization
-	void Start () {
+    void Start () {
 	    if (_gameObject == null) {
             _gameObject = gameObject;
         }
 	}
 	
-	// Update is called once per frame
 	void Update () {
 	    if (health <= 0) {
             Destroy();
@@ -32,7 +30,7 @@ public class Health : MonoBehaviour {
     }
 
     void DeathByPit() {
-        Destroy();
+        health = 0;
     }
 
     void DamageByFire() {

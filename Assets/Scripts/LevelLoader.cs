@@ -118,11 +118,6 @@ public class LevelLoader : MonoBehaviour {
         List<Vector2> startVectors = new List<Vector2>();
         List<Vector2> colliderVectors = new List<Vector2>();
 
-        Vector2[] neighbourVectors = new Vector2[] { new Vector2(0, 1),
-                                                     new Vector2(1, 0),
-                                                     new Vector2(0, -1),
-                                                     new Vector2(-1, 0) };
-
         for (int x = 0; x < levelCollider.width; x++) {
             levelColliderArray[x] = new int[levelCollider.height];
 
