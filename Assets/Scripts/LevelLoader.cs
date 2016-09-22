@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 
 [ExecuteInEditMode]
+[RequireComponent(typeof(Level))]
 public class LevelLoader : MonoBehaviour {
 
     public Texture2D level;
@@ -16,8 +17,6 @@ public class LevelLoader : MonoBehaviour {
     public bool load = false;
     public LevelObject[] levelObjects;
     
-    
-
 	void Update () {
         if (load) {
             if (level != null) {
@@ -142,7 +141,7 @@ public class LevelLoader : MonoBehaviour {
 
             colliderVectors.Clear();
 
-            EdgeCollider2D eCollider = collider.AddComponent<EdgeCollider2D>();
+            PolygonCollider2D eCollider = collider.AddComponent<PolygonCollider2D>();
             eCollider.points = GetConnectedVectors((int)startVectors[i].x, (int)startVectors[i].y, levelColliderArray, colliderVectors);
             eCollider.offset = new Vector2(-0.5f, -0.5f);
         }

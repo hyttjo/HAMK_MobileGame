@@ -6,11 +6,14 @@ public class Health : MonoBehaviour {
 
     public GameObject _gameObject;
     public int health = 100;
+    private Rigidbody2D rBody;
 
     void Start () {
 	    if (_gameObject == null) {
             _gameObject = gameObject;
         }
+
+        rBody = GetComponent<Rigidbody2D>();
 	}
 	
 	void Update () {
@@ -23,18 +26,28 @@ public class Health : MonoBehaviour {
         string colliderTag = col.gameObject.tag;
 
         if (colliderTag == "DamageTypePit") {
-            DeathByPit();
+            DeathByPit(col);
         } else if (colliderTag == "DamageTypeFire") {
-            DamageByFire();
+            DamageByFire(col);
+        } else if (colliderTag == "DamageTypeBite") {
+            DamageByBite(col);
         }
     }
 
-    void DeathByPit() {
+    void DeathByPit(Collision2D col) {
         health = 0;
     }
 
-    void DamageByFire() {
+    void DamageByFire(Collision2D col) {
         health -= 50;
+    }
+
+    void DamageByBite(Collision2D col) {
+        Vector2 position = transform.position;
+        Vector2 damagePoint = col.contacts[0].point;
+        rBody.velocity -= (position - damagePoint);
+
+        health -= 35;
     }
 
     void Destroy() {

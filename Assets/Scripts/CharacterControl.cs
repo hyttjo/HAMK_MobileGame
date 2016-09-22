@@ -8,10 +8,11 @@ public class CharacterControl : MonoBehaviour {
     private Animator anim;
     private SpriteRenderer sRenderer;
     private Rigidbody2D rBody;
-    
+
+    public float maxSpeed = 20;
     public float speed = 20;
     public float jumpForce = 12;
-    public float airSpeed = 10f;
+    public float airSpeed = 10;
     
     private float move = 0;
     private bool jumping = false;
@@ -36,6 +37,11 @@ public class CharacterControl : MonoBehaviour {
     public void Move() {
         if (character != null) {
             rBody.AddForce(new Vector2(move * speed, 0), ForceMode2D.Force);
+
+            if (rBody.velocity.sqrMagnitude > maxSpeed) {
+                rBody.velocity *= 0.99f;
+            }
+
             anim.SetFloat("Speed", move);
         }
     }
