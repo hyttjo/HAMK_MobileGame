@@ -142,6 +142,12 @@ public class LevelLoader : MonoBehaviour {
             Vector2[] connectedVectors = GetConnectedVectors((int)startVectors[i].x, (int)startVectors[i].y, levelColliderArray, colliderVectors);
             eCollider.points = TrimVectorArray(connectedVectors);
             eCollider.offset = new Vector2(-0.5f, -0.5f);
+
+            PhysicsMaterial2D physicsMaterial = (PhysicsMaterial2D)Resources.Load("Materials/Grass");
+
+            if (physicsMaterial != null) {
+                eCollider.sharedMaterial = physicsMaterial;
+            }
         }
     }
 

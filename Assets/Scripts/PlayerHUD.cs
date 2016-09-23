@@ -46,7 +46,7 @@ public class PlayerHUD : MonoBehaviour {
             GUI.Label(new Rect(padding.x, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Health:");
 
             if (healthSprite != null) {
-                for (int i = 0; i < health.health / Mathf.Ceil(100 / numberOfHearts); i++) {
+                for (int i = 0; i < health.health / Mathf.CeilToInt(100 / numberOfHearts); i++) {
                     Rect rect = new Rect(padding.x + 110 + 20 * i + 4 * i, padding.y + 4, 20, 20);
                     GUI.DrawTexture(rect, healthSprite.texture);
                 }
