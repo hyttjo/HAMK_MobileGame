@@ -7,9 +7,9 @@ public class Health : MonoBehaviour {
     public GameObject _gameObject;
     public int health = 100;
     public bool immuneToFire = false;
-    public int damageFire = 34;
+    public int damageFire = 33;
     public bool immuneToBite = false;
-    public int damageBite = 34;
+    public int damageBite = 33;
     public bool immuneToCrush = false;
     public int damageCrush = 100;
     public float damageShowDuration = 0.25f;
