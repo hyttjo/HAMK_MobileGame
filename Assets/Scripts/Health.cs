@@ -6,6 +6,12 @@ public class Health : MonoBehaviour {
 
     public GameObject _gameObject;
     public int health = 100;
+    public bool immuneToFire = false;
+    public int damageFire = 34;
+    public bool immuneToBite = false;
+    public int damageBite = 34;
+    public bool immuneToCrush = false;
+    public int damageCrush = 100;
     private Rigidbody2D rBody;
 
     void Start () {
@@ -22,37 +28,49 @@ public class Health : MonoBehaviour {
         }
 	}
 
-    void OnCollisionEnter2D(Collision2D col) {
+    void OnTriggerEnter2D(Collider2D col) {
         string colliderTag = col.gameObject.tag;
 
         if (colliderTag == "DamageTypePit") {
-            DeathByPit(col);
+            DeathByPit();
         } else if (colliderTag == "DamageTypeFire") {
-            DamageByFire(col);
+            if (!immuneToFire) {
+                DamageByFire(col);
+            }
         } else if (colliderTag == "DamageTypeBite") {
-            DamageByBite(col);
+            if (!immuneToBite) {
+                DamageByBite(col);
+            }
+        } else if (colliderTag == "DamageTypeCrush") {
+            if (!immuneToCrush) {
+                DamageByCrush(col);
+            }
         }
     }
 
-    void DeathByPit(Collision2D col) {
+    void DeathByPit() {
         health = 0;
     }
 
-    void DamageByFire(Collision2D col) {
-        health -= 50;
+    void DamageByFire(Collider2D col) {
+        health -= damageFire;
     }
 
-    void DamageByBite(Collision2D col) {
-        Vector2 position = transform.position;
-        Vector2 damagePoint = col.contacts[0].point;
-        rBody.velocity -= (position - damagePoint);
+    void DamageByBite(Collider2D col) {
+        if (rBody != null) {
+            Vector2 colPosition = col.transform.position;
+            Vector2 position = transform.position;
+            Vector2 direction = -(colPosition - position).normalized;
+            rBody.velocity = direction * 10;
+        }
+        health -= damageBite;
+    }
 
-        health -= 35;
+    void DamageByCrush(Collider2D col) {
+        health -= damageCrush;
     }
 
     void Destroy() {
-        Rigidbody2D rBody = GetComponent<Rigidbody2D>();
-
         if (rBody != null) {
             rBody.isKinematic = true;
         }
