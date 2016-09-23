@@ -12,7 +12,11 @@ public class Health : MonoBehaviour {
     public int damageBite = 34;
     public bool immuneToCrush = false;
     public int damageCrush = 100;
+    public float damageShowDuration = 0.25f;
+    public Color32 damageColor = new Color32(255, 128, 128, 255);
+    public float pushBackForce = 10f;
     private Rigidbody2D rBody;
+    private SpriteRenderer sRenderer;
 
     void Start () {
 	    if (_gameObject == null) {
@@ -20,7 +24,8 @@ public class Health : MonoBehaviour {
         }
 
         rBody = GetComponent<Rigidbody2D>();
-	}
+        sRenderer = GetComponentInChildren<SpriteRenderer>();
+    }
 	
 	void Update () {
 	    if (health <= 0) {
@@ -57,17 +62,34 @@ public class Health : MonoBehaviour {
     }
 
     void DamageByBite(Collider2D col) {
-        if (rBody != null) {
-            Vector2 colPosition = col.transform.position;
-            Vector2 position = transform.position;
-            Vector2 direction = -(colPosition - position).normalized;
-            rBody.velocity = direction * 10;
-        }
+        PushBack(col);
+        StartCoroutine(ShowFlashDamage(damageShowDuration));
         health -= damageBite;
     }
 
     void DamageByCrush(Collider2D col) {
         health -= damageCrush;
+    }
+
+    void PushBack(Collider2D col) {
+        if (rBody != null) {
+            Vector2 colPosition = col.transform.position;
+            Vector2 position = transform.position;
+            Vector2 direction = -(colPosition - position).normalized;
+            rBody.velocity = direction * pushBackForce;
+        }
+    }
+
+    IEnumerator ShowFlashDamage(float duration) {
+        ChangeColor(damageColor);
+        yield return new WaitForSeconds(duration);
+        ChangeColor(Color.white);
+    }
+
+    void ChangeColor(Color32 color) {
+        if (sRenderer != null) {
+            sRenderer.color = color;
+        }
     }
 
     void Destroy() {

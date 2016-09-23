@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System;
-using System.Linq;
 
 public class Level : MonoBehaviour {
     public Dictionary<Position, GameObject> gameObjects;
@@ -51,5 +48,30 @@ public struct Position {
     public Position(Vector2 vector) {
         this.x = (int)vector.x;
         this.y = (int)vector.y;
+    }
+}
+
+public enum Direction { none, up, down, left, right };
+
+public static class Dir {
+
+    public static Direction GetDirection(int prevX, int prevY, int x, int y) {
+        if (x == prevX && y == prevY + 1) {
+            return Direction.up;
+        }
+        if (x == prevX && y == prevY - 1) {
+            return Direction.down;
+        }
+        if (x == prevX - 1 && y == prevY) {
+            return Direction.left;
+        }
+        if (x == prevX + 1 && y == prevY) {
+            return Direction.right;
+        }
+        return Direction.none;
+    }
+
+    public static Direction GetDirection(Vector2 prevVector, Vector2 vector) {
+        return GetDirection((int)prevVector.x, (int)prevVector.y, (int)vector.x, (int)vector.y);
     }
 }
