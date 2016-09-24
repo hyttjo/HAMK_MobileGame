@@ -68,6 +68,8 @@ public class Health : MonoBehaviour {
     }
 
     void DamageByFire(Collider2D col) {
+        PushBack(col);
+        StartCoroutine(ShowFlashDamage(damageShowDuration));
         health -= damageFire;
     }
 

@@ -18,7 +18,7 @@ public class CharacterControl : MonoBehaviour {
     private bool jumping = false;
 
     //Tulipalloja ja muita ampumisia varten
-    public int facingDir = 0;
+    public int facingDir = 1;
     public float shotsPerSecond = 2;
     private float lastShotTimer = 0;
     private float timer = 0;

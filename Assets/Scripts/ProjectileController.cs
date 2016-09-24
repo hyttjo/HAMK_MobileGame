@@ -35,12 +35,27 @@ public class ProjectileController : MonoBehaviour {
         }
     }
 
+    void LateUpdate()
+    {
+        Rotate();
+    }
+
     void CheckDecay()
     {
         aliveTimer += Time.deltaTime;
         if (aliveTimer > decayTime)
         {
             Destroy(gameObject);
+        }
+    }
+
+    void Rotate()
+    {
+        Vector2 moveDirection = rb.velocity;
+        if (moveDirection != Vector2.zero)
+        {
+            float angle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
         }
     }
 }
