@@ -129,7 +129,6 @@ public class CharacterControl : MonoBehaviour {
     void CheckAndResetShooting()
     {
         timer += Time.deltaTime;
-        Debug.Log(timer);
         if (!canShoot)
         {
             if (lastShotTimer + (1 / shotsPerSecond) < timer)
