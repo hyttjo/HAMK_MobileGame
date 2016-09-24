@@ -24,16 +24,21 @@ public class ProjectileController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        aliveTimer += Time.deltaTime;
-        if (aliveTimer > decayTime)
-        {
-            Destroy(gameObject);
-        }
+        CheckDecay();
     }
 
     void OnCollisionEnter2D (Collision2D other)
     {
         if (other.gameObject.tag == "Enemy")
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    void CheckDecay()
+    {
+        aliveTimer += Time.deltaTime;
+        if (aliveTimer > decayTime)
         {
             Destroy(gameObject);
         }
