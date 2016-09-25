@@ -12,6 +12,8 @@ public class Health : MonoBehaviour {
     public int damageBite = 33;
     public bool immuneToCrush = false;
     public int damageCrush = 100;
+    public bool immuneToFireball = false; //Fireball immunity
+    public int damageFireball = 33; //Fireball damage
     public float damageShowDuration = 0.25f;
     public Color32 damageColor = new Color32(255, 128, 128, 255);
     public float pushBackForce = 10f;
@@ -50,7 +52,15 @@ public class Health : MonoBehaviour {
             if (!immuneToCrush) {
                 DamageByCrush(col);
             }
+        } else if (colliderTag == "DamageTypeFireball")
+        {
+            if (!immuneToCrush)
+            {
+                DamageByFireball(col);
+            }
         }
+
+
     }
 
     void DeathByPit() {
@@ -58,6 +68,8 @@ public class Health : MonoBehaviour {
     }
 
     void DamageByFire(Collider2D col) {
+        PushBack(col);
+        StartCoroutine(ShowFlashDamage(damageShowDuration));
         health -= damageFire;
     }
 
@@ -69,6 +81,11 @@ public class Health : MonoBehaviour {
 
     void DamageByCrush(Collider2D col) {
         health -= damageCrush;
+    }
+
+    void DamageByFireball(Collider2D col)
+    {
+        health -= damageFireball;
     }
 
     void PushBack(Collider2D col) {
