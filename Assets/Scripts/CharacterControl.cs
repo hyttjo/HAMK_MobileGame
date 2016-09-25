@@ -17,6 +17,15 @@ public class CharacterControl : MonoBehaviour {
     private float move = 0;
     private bool jumping = false;
 
+    //Tulipalloja ja muita ampumisia varten
+    public int facingDir = 1;
+    public float shotsPerSecond = 2;
+    private float lastShotTimer = 0;
+    private float timer = 0;
+    private bool canShoot = false;
+    public bool hasFire = false;
+    public GameObject Fireball;
+
 
     void Start () {
         if (character != null) {
@@ -28,6 +37,11 @@ public class CharacterControl : MonoBehaviour {
             sRenderer = GetComponentInChildren<SpriteRenderer>();
             rBody = GetComponentInChildren<Rigidbody2D>();
         }
+    }
+
+    void Update()
+    {
+        CheckAndResetShooting();
     }
 
     void FixedUpdate () {    	
@@ -49,6 +63,7 @@ public class CharacterControl : MonoBehaviour {
     public void MoveLeft() {
         if (character != null) {
             move = -1;
+            facingDir = -1;
             sRenderer.flipX = true;
         }
     }
@@ -56,6 +71,7 @@ public class CharacterControl : MonoBehaviour {
     public void MoveRight() {
         if (character != null) {
             move = 1;
+            facingDir = 1;
             sRenderer.flipX = false;
         }
     }
@@ -85,5 +101,40 @@ public class CharacterControl : MonoBehaviour {
     		jumping = false;
     		speed = speed * airSpeed;
     	}
+    }
+
+    public void EnableFire()
+    {
+        hasFire = true;
+        canShoot = true;
+    }
+
+    public void ShootFire() //Tulipallojen ampuminen
+    {
+        if (hasFire && canShoot) //hasFire on boolean, jonka arvoa muutetaan PickupController-scriptistä, jos pelaaja poimii PickupFire-objektin
+        {
+            //Kerrotaan facingDir:illä (-1 / 1) jotta saadaan oikea puoli jonne spawnata tulipallo
+            Vector2 spawnPosition = new Vector2((transform.position.x + (0.75f * facingDir)), (transform.position.y + 1));
+            Transform fireProjectile = Instantiate(Fireball, spawnPosition, Quaternion.identity) as Transform; //Syntyy fireball-tyypin projectile prefab
+            lastShotTimer = timer;
+            canShoot = false;
+        }
+    }
+
+    public int GetFacingDir()
+    {
+        return facingDir;
+    }
+
+    void CheckAndResetShooting()
+    {
+        timer += Time.deltaTime;
+        if (!canShoot)
+        {
+            if (lastShotTimer + (1 / shotsPerSecond) < timer)
+            {
+                canShoot = true;
+            }
+        }
     }
 }
