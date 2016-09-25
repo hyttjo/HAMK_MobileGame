@@ -13,11 +13,12 @@ public class CharacterControl : MonoBehaviour {
     public float speed = 20;
     public float jumpForce = 12;
     public float airSpeed = 10;
-    
-    public float move = 0;
+
+    public int facingDir = 1;
+    private float move = 1;
     private bool jumping = false;
 
-    public float shotsPerSecond = 2;
+    public float shotsPerSecond = 1.5f;
     private float lastShotTimer = 0;
     private float timer = 0;
     private bool canShoot = false;
@@ -46,26 +47,28 @@ public class CharacterControl : MonoBehaviour {
     
     public void Move() {
         if (character != null && rBody != null) {
-            rBody.AddForce(new Vector2(move * speed, 0), ForceMode2D.Force);
+            rBody.AddForce(new Vector2(move * facingDir * speed, 0), ForceMode2D.Force);
 
             if (rBody.velocity.sqrMagnitude > maxSpeed) {
                 rBody.velocity *= 0.99f;
             }
 
             anim.SetFloat("Speed", move);
+
+            move = 1;
         }
     }
     
     public void MoveLeft() {
         if (character != null) {
-            move = -1;
+            facingDir = -1;
             sRenderer.flipX = true;
         }
     }
     
     public void MoveRight() {
         if (character != null) {
-            move = 1;
+            facingDir = 1;
             sRenderer.flipX = false;
         }
     }
@@ -100,7 +103,9 @@ public class CharacterControl : MonoBehaviour {
     public void Shoot() {
         if (projectile != null && canShoot) {
             Vector2 spawnPosition = new Vector2((transform.position.x + (0.75f * move)), (transform.position.y + 1));
-            Instantiate(projectile, spawnPosition, Quaternion.identity);
+            GameObject projectile_go = (GameObject)Instantiate(projectile, spawnPosition, Quaternion.identity);
+            Projectile projectile_co = projectile_go.GetComponent<Projectile>();
+            projectile_co.parent = gameObject;      
             lastShotTimer = timer;
             canShoot = false;
         }

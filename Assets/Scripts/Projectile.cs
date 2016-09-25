@@ -2,21 +2,21 @@
 
 public class Projectile : MonoBehaviour {
 
+    public GameObject parent;
     private CharacterControl cControl;
     private Rigidbody2D rBody;
 
-    public float speedX = 8;
+    public float speedX = 5;
     public float speedY = -4;
-    public float decayTime = 1;
+    public float decayTime = 2;
     private float aliveTimer;
 
     void Start() {
-        cControl = GetComponent<CharacterControl>();
+        cControl = parent.GetComponent<CharacterControl>();
         rBody = GetComponent<Rigidbody2D>();
 
         if (rBody != null && cControl != null) {
-            rBody.AddForce(transform.up * speedY, ForceMode2D.Impulse);
-            rBody.AddForce(transform.right * speedX * cControl.move, ForceMode2D.Impulse);
+            rBody.AddForce(new Vector2(speedX * cControl.facingDir, speedY), ForceMode2D.Impulse);
         }
     }
 
