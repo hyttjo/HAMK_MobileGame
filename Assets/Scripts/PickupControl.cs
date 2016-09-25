@@ -7,44 +7,36 @@ public class PickupControl : MonoBehaviour {
      * Entäpä mitä tapahtuu kun PickupFire syntyy? (Se lentää ilmaan)
      * Mitä jos pelaaja nappaa PickupFire-objektin? (Pelaaja saa sen sisältämän "taikavoiman" itselleen)
      */
-    private CharacterControl cControl;
+    public bool container = true;
     public GameObject pickup;
 
     void Start() {
-        if (gameObject.tag == "PickupFire") { //Jos tämä scripti koskee PickupFireä...
-            Rigidbody2D rBody = GetComponent<Rigidbody2D>();
+        Rigidbody2D rBody = GetComponent<Rigidbody2D>();
 
-            if (rBody != null) {
-                //rBody.AddForce(transform.up * Random.Range(5.75f, 11.25f)); //PickupFire lentää random suuntaan random nopeudella
-                rBody.AddForce(transform.up * 6, ForceMode2D.Impulse);
-            }
+        if (rBody != null) {
+            rBody.AddForce(transform.up, ForceMode2D.Impulse);
         }
-
     }
 
     void OnCollisionEnter2D(Collision2D col) {
         if (col.gameObject.tag == "Player") { //Jos pelaaja osuu pickupiin
-            cControl = col.gameObject.GetComponent<CharacterControl>(); //Tämä poimii viittauksen pelaajan CharacterControl -scriptiin
+            CharacterControl cControl = col.gameObject.GetComponent<CharacterControl>(); //Tämä poimii viittauksen pelaajan CharacterControl -scriptiin
 
-            if (gameObject.tag == "PickupBoxFire") { //Jos osuttava pickup onkin laatikko
-                SpawnFire();
-            }
-
-            if (gameObject.tag == "PickupFire") { //Jos osuttava pickup onkin laatikko
-                GainFire();
+            if (cControl != null) {
+                if (container) { //Jos osuttava pickup onkin laatikko
+                    SpawnPickup();
+                } else {
+                    cControl.projectile = pickup;
+                    Destroy(gameObject);
+                }
             }
         }
     }
 
-    void SpawnFire() {
+    void SpawnPickup() {
         //Tähän voisi kehitellä animaation alkamisen (laatikko hajoaa)
-        Destroy(gameObject); //Laatikko häviää
         Vector2 spawnPosition = new Vector2(transform.position.x, transform.position.y);
-        Instantiate(pickup, spawnPosition, Quaternion.identity); //Syntyy poimittava power-up
-    }
-
-    void GainFire() {
-        Destroy(gameObject); //Powerup häviää
-        cControl.EnableFire(); //Pelaaja saa taikavoiman
+        GameObject pickup_go = (GameObject)Instantiate(pickup, spawnPosition, Quaternion.identity); //Syntyy poimittava power-up
+        Destroy(gameObject);
     }
 }

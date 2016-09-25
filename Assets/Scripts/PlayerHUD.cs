@@ -19,9 +19,9 @@ public class PlayerHUD : MonoBehaviour {
     void Start() {
         if (player != null) {
             player = GameObject.FindGameObjectWithTag("Player");
-        }
-        health = player.GetComponent<Health>();
 
+            health = player.GetComponent<Health>();
+        }
         background = new Texture2D(1, 1);
         background.SetPixel(0, 0, hudBackgroundColor);
         background.Apply();

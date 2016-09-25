@@ -14,18 +14,15 @@ public class CharacterControl : MonoBehaviour {
     public float jumpForce = 12;
     public float airSpeed = 10;
     
-    private float move = 0;
+    public float move = 0;
     private bool jumping = false;
 
-    //Tulipalloja ja muita ampumisia varten
-    public int facingDir = 1;
     public float shotsPerSecond = 2;
     private float lastShotTimer = 0;
     private float timer = 0;
     private bool canShoot = false;
-    public bool hasFire = false;
-    public GameObject Fireball;
 
+    public GameObject projectile;
 
     void Start () {
         if (character != null) {
@@ -39,17 +36,16 @@ public class CharacterControl : MonoBehaviour {
         }
     }
 
-    void Update()
-    {
+    void Update() {
         CheckAndResetShooting();
     }
 
-    void FixedUpdate () {    	
+    void FixedUpdate() {    	
     	Move();
     }
     
     public void Move() {
-        if (character != null) {
+        if (character != null && rBody != null) {
             rBody.AddForce(new Vector2(move * speed, 0), ForceMode2D.Force);
 
             if (rBody.velocity.sqrMagnitude > maxSpeed) {
@@ -63,7 +59,6 @@ public class CharacterControl : MonoBehaviour {
     public void MoveLeft() {
         if (character != null) {
             move = -1;
-            facingDir = -1;
             sRenderer.flipX = true;
         }
     }
@@ -71,13 +66,12 @@ public class CharacterControl : MonoBehaviour {
     public void MoveRight() {
         if (character != null) {
             move = 1;
-            facingDir = 1;
             sRenderer.flipX = false;
         }
     }
     
     public void Jump() {
-        if (character != null) {
+        if (character != null && rBody != null) {
             Vector2 position = transform.position;
 
             RaycastHit2D hit = Physics2D.Raycast(position, position + Vector2.down * 0.1f);
@@ -93,7 +87,7 @@ public class CharacterControl : MonoBehaviour {
     }
     
     public void Idle() {
-    	move = 0;
+        move = 0;
     }
     
     void OnCollisionEnter2D(Collision2D col) {
@@ -103,36 +97,20 @@ public class CharacterControl : MonoBehaviour {
     	}
     }
 
-    public void EnableFire()
-    {
-        hasFire = true;
-        canShoot = true;
-    }
-
-    public void ShootFire() //Tulipallojen ampuminen
-    {
-        if (hasFire && canShoot) //hasFire on boolean, jonka arvoa muutetaan PickupController-scriptistä, jos pelaaja poimii PickupFire-objektin
-        {
-            //Kerrotaan facingDir:illä (-1 / 1) jotta saadaan oikea puoli jonne spawnata tulipallo
-            Vector2 spawnPosition = new Vector2((transform.position.x + (0.75f * facingDir)), (transform.position.y + 1));
-            Transform fireProjectile = Instantiate(Fireball, spawnPosition, Quaternion.identity) as Transform; //Syntyy fireball-tyypin projectile prefab
+    public void Shoot() {
+        if (projectile != null && canShoot) {
+            Vector2 spawnPosition = new Vector2((transform.position.x + (0.75f * move)), (transform.position.y + 1));
+            Instantiate(projectile, spawnPosition, Quaternion.identity);
             lastShotTimer = timer;
             canShoot = false;
         }
     }
 
-    public int GetFacingDir()
-    {
-        return facingDir;
-    }
-
-    void CheckAndResetShooting()
-    {
+    void CheckAndResetShooting() {
         timer += Time.deltaTime;
-        if (!canShoot)
-        {
-            if (lastShotTimer + (1 / shotsPerSecond) < timer)
-            {
+
+        if (!canShoot) {
+            if (lastShotTimer + (1 / shotsPerSecond) < timer) {
                 canShoot = true;
             }
         }

@@ -1,33 +1,27 @@
 ﻿using UnityEngine;
 
-public class ProjectileControl : MonoBehaviour {
+public class Projectile : MonoBehaviour {
 
     private CharacterControl cControl;
     private Rigidbody2D rBody;
 
-    public float speedX;
-    public float speedY;
-    public float decayTime;
+    public float speedX = 8;
+    public float speedY = -4;
+    public float decayTime = 1;
     private float aliveTimer;
 
     void Start() {
+        cControl = GetComponent<CharacterControl>();
         rBody = GetComponent<Rigidbody2D>();
-        cControl = GameObject.Find("Player").GetComponent<CharacterControl>();
 
-        if (rBody != null) {
+        if (rBody != null && cControl != null) {
             rBody.AddForce(transform.up * speedY, ForceMode2D.Impulse);
-            rBody.AddForce(transform.right * speedX * cControl.GetFacingDir(), ForceMode2D.Impulse);
+            rBody.AddForce(transform.right * speedX * cControl.move, ForceMode2D.Impulse);
         }
     }
 
     void Update() {
         CheckDecay();
-    }
-
-    void OnCollisionEnter2D(Collision2D col) {
-        if (col.gameObject.tag == "Enemy") {
-            Destroy(gameObject);
-        }
     }
 
     void LateUpdate() {

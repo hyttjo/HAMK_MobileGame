@@ -51,10 +51,10 @@
      <Compile Include="Assets\Scripts\Health.cs" />
      <Compile Include="Assets\Scripts\Level.cs" />
      <Compile Include="Assets\Scripts\LevelLoader.cs" />
-     <Compile Include="Assets\Scripts\PickupController.cs" />
+     <Compile Include="Assets\Scripts\PickupControl.cs" />
      <Compile Include="Assets\Scripts\PlayerControl.cs" />
      <Compile Include="Assets\Scripts\PlayerHUD.cs" />
-     <Compile Include="Assets\Scripts\ProjectileController.cs" />
+     <Compile Include="Assets\Scripts\Projectile.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Users/jhyttine/Programs/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

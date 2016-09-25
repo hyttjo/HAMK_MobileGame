@@ -10,7 +10,7 @@ public class PlayerControl : MonoBehaviour {
     public KeyCode moveRight = KeyCode.D;
     public KeyCode jump = KeyCode.W;
     public KeyCode jumpAlt = KeyCode.Space;
-    public KeyCode fire = KeyCode.F;
+    public KeyCode shoot = KeyCode.F;
 
     void Start () {
         cControl = GetComponent<CharacterControl>();
@@ -29,9 +29,8 @@ public class PlayerControl : MonoBehaviour {
     		cControl.Jump();
     	}
 
-        if (Input.GetKey(fire))
-        {
-            cControl.ShootFire();
+        if (Input.GetKey(shoot)) {
+            cControl.Shoot();
         }
     }
 }
