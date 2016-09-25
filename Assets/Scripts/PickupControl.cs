@@ -11,10 +11,18 @@ public class PickupControl : MonoBehaviour {
     public GameObject pickup;
 
     void Start() {
+        if (container) {
+            SpriteRenderer[] sRenderer = GetComponentsInChildren<SpriteRenderer>();
+
+            if (sRenderer != null && pickup != null) {
+                sRenderer[1].sprite = pickup.GetComponent<SpriteRenderer>().sprite;
+            }
+        }
+
         Rigidbody2D rBody = GetComponent<Rigidbody2D>();
 
         if (rBody != null) {
-            rBody.AddForce(transform.up, ForceMode2D.Impulse);
+            rBody.AddForce(Vector2.up, ForceMode2D.Impulse);
         }
     }
 
@@ -36,7 +44,7 @@ public class PickupControl : MonoBehaviour {
     void SpawnPickup() {
         //Tähän voisi kehitellä animaation alkamisen (laatikko hajoaa)
         Vector2 spawnPosition = new Vector2(transform.position.x, transform.position.y);
-        GameObject pickup_go = (GameObject)Instantiate(pickup, spawnPosition, Quaternion.identity); //Syntyy poimittava power-up
+        Instantiate(pickup, spawnPosition, Quaternion.Euler(0, 0, 270)); //Syntyy poimittava power-up
         Destroy(gameObject);
     }
 }
