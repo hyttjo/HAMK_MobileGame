@@ -29,7 +29,7 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
-  isReadable: 0
+  isReadable: 1
   grayScaleToAlpha: 0
   generateCubemap: 0
   cubemapConvolution: 0
@@ -57,11 +57,11 @@ TextureImporter:
   spritePixelsToUnits: 20
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
-  textureType: 8
+  textureType: 5
   buildTargetSettings:
   - buildTarget: Standalone
     maxTextureSize: 2048
-    textureFormat: -2
+    textureFormat: 2
     compressionQuality: 50
     allowsAlphaSplitting: 0
   spriteSheet:

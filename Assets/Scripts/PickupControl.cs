@@ -49,7 +49,7 @@ public class PickupControl : MonoBehaviour {
                 GameObject collider = col.gameObject;
                 Rigidbody2D cRigidBody = collider.GetComponentInParent<Rigidbody2D>();
 
-                Vector2 hitDirection = GetHitDirection(col.contacts[0].normal);
+                Vector2 hitDirection = Misc.GetHitDirection(col.contacts[0].normal);
 
                 if (hitDirection.y == 0 && cRigidBody != null) {
                     cRigidBody.AddForce(-hitDirection * pushForce, ForceMode2D.Force);
@@ -96,23 +96,5 @@ public class PickupControl : MonoBehaviour {
             bumpDirection = Vector2.zero;
         }
         bumpTimer += Time.deltaTime;
-    }
-
-    Vector2 GetHitDirection(Vector2 collider) {
-        float angle = Vector3.Angle(collider, Vector3.up);
-
-        if (Mathf.Approximately(angle, 0)) {
-            return Vector2.up;
-        } else if (Mathf.Approximately(angle, 180)) {
-            return Vector2.down;
-        }else if (Mathf.Approximately(angle, 90)) {
-            Vector3 cross = Vector3.Cross(Vector3.forward, collider);
-            if (cross.y > 0) {
-                return Vector2.right;
-            } else {
-                return Vector2.left;
-            }
-        }
-        return Vector2.zero;
     }
 }
