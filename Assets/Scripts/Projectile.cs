@@ -5,6 +5,7 @@ public class Projectile : MonoBehaviour {
     public GameObject parent;
     private CharacterControl cControl;
     private Rigidbody2D rBody;
+    public GameObject decayEffect;
 
     public float speedX = 5;
     public float speedY = -4;
@@ -32,6 +33,11 @@ public class Projectile : MonoBehaviour {
         aliveTimer += Time.deltaTime;
 
         if (aliveTimer > decayTime) {
+            if (decayEffect != null) {
+                decayEffect = (GameObject)Instantiate(decayEffect, transform.position, Quaternion.identity);
+                decayEffect.transform.localScale *= 0.75f;
+                Destroy(decayEffect, 0.5f);
+            }
             Destroy(gameObject);
         }
     }

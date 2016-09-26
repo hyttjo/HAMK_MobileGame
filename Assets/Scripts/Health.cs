@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Health : MonoBehaviour {
 
     public GameObject _gameObject;
+    public GameObject deathEffect;
     public int health = 100;
     public bool immuneToFire = false;
     public int damageFire = 33;
@@ -100,7 +101,11 @@ public class Health : MonoBehaviour {
         if (rBody != null) {
             rBody.isKinematic = true;
         }
-
+        if (deathEffect != null) {
+            Vector2 spawnPosition = (Vector2)transform.position + Vector2.up * 0.5f;
+            deathEffect = (GameObject)Instantiate(deathEffect, spawnPosition, Quaternion.identity);
+            Destroy(deathEffect, 0.5f);
+        }
         GameObject.Destroy(_gameObject);
     }
 }
