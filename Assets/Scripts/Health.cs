@@ -105,6 +105,7 @@ public class Health : MonoBehaviour {
             Vector2 spawnPosition = (Vector2)transform.position + Vector2.up * 0.5f;
             deathEffect = (GameObject)Instantiate(deathEffect, spawnPosition, Quaternion.identity);
             Destroy(deathEffect, 0.5f);
+            this.enabled = false;
         }
         GameObject.Destroy(_gameObject);
     }
