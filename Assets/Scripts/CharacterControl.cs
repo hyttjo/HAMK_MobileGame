@@ -14,9 +14,9 @@ public class CharacterControl : MonoBehaviour {
     public float jumpForce = 12;
     public float airSpeed = 10;
 
-    public int facingDir = 1;
+    private int facingDir = 1;
     private float move = 1;
-    private bool jumping = false;
+    public bool jumping = false;
 
     public float shotsPerSecond = 1.5f;
     private float lastShotTimer = 0;
@@ -75,11 +75,8 @@ public class CharacterControl : MonoBehaviour {
     
     public void Jump() {
         if (character != null && rBody != null) {
-            Vector2 position = transform.position;
-
-            RaycastHit2D hit = Physics2D.Raycast(position, position + Vector2.down * 0.5f);
-
-            Debug.DrawLine(position, position + Vector2.down * 0.5f, Color.red, 1f);
+            Vector2 position = (Vector2)transform.position + Vector2.up;      
+            RaycastHit2D hit = Physics2D.Raycast(position, Vector2.down, 0.6f);
 
             if (hit.collider != null) {
                 if (!jumping) {
@@ -89,6 +86,10 @@ public class CharacterControl : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public int GetFacingDir() {
+        return facingDir;
     }
     
     public void Idle() {

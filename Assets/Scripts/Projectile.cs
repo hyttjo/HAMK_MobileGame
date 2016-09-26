@@ -17,7 +17,7 @@ public class Projectile : MonoBehaviour {
         rBody = GetComponent<Rigidbody2D>();
 
         if (rBody != null && cControl != null) {
-            rBody.AddForce(new Vector2(speedX * cControl.facingDir, speedY), ForceMode2D.Impulse);
+            rBody.AddForce(new Vector2(speedX * cControl.GetFacingDir(), speedY), ForceMode2D.Impulse);
         }
     }
 
