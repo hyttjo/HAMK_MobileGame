@@ -102,7 +102,7 @@ public class Health : MonoBehaviour {
             rBody.isKinematic = true;
         }
         if (deathEffect != null) {
-            Vector2 spawnPosition = (Vector2)transform.position + Vector2.up * 0.5f;
+            Vector2 spawnPosition = (Vector2)transform.position + Vector2.up * 0.5f * transform.localScale.y;
             deathEffect = (GameObject)Instantiate(deathEffect, spawnPosition, Quaternion.identity);
             Destroy(deathEffect, 0.5f);
             this.enabled = false;

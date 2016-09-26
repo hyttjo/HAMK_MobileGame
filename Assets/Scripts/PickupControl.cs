@@ -44,25 +44,32 @@ public class PickupControl : MonoBehaviour {
     }
 
     void OnCollisionEnter2D(Collision2D col) {
-        if (col.gameObject.tag == "Player") { //Jos pelaaja osuu pickupiin
-            GameObject collider = col.gameObject;
-            CharacterControl cControl = collider.GetComponent<CharacterControl>(); //Tämä poimii viittauksen pelaajan CharacterControl -scriptiin
-            Rigidbody2D cRigidBody = collider.GetComponent<Rigidbody2D>();
+        if (container) {
+            if (col.gameObject.tag == "Player") { //Jos pelaaja osuu pickupiin
+                GameObject collider = col.gameObject;
+                Rigidbody2D cRigidBody = collider.GetComponentInParent<Rigidbody2D>();
 
-            Vector2 hitDirection = GetHitDirection(col.contacts[0].normal);     
+                Vector2 hitDirection = GetHitDirection(col.contacts[0].normal);
 
-            if (hitDirection.y == 0 && cRigidBody != null) {
-                cRigidBody.AddForce(-hitDirection * pushForce, ForceMode2D.Force);
-            }
+                if (hitDirection.y == 0 && cRigidBody != null) {
+                    cRigidBody.AddForce(-hitDirection * pushForce, ForceMode2D.Force);
+                }
 
-            if (hitDirection.y != -1 && cControl != null) {
-                if (container) { //Jos osuttava pickup onkin laatikko
+                if (hitDirection.y != -1) {
                     SpawnPickup();
                     bumpDirection = hitDirection;
-                } else {
-                    cControl.projectile = pickup;
-                    Destroy(gameObject);
                 }
+            }
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D col) {
+        if (!container) {
+            CharacterControl cControl = col.GetComponentInParent<CharacterControl>();
+
+            if (cControl != null) {
+                cControl.projectile = pickup;
+                Destroy(gameObject);
             }
         }
     }

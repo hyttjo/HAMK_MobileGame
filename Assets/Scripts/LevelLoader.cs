@@ -101,7 +101,7 @@ public class LevelLoader : MonoBehaviour {
             CameraControl camControl = cam.GetComponent<CameraControl>();
 
             if (camControl != null) {
-                camControl.cameraBounds = new Rect(7, 5, level.width - 7, level.height - 5);
+                camControl.cameraBounds = new Rect(8, 7, level.width - 8, level.height - 7);
             }
         }
     }

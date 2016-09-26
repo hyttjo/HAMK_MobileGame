@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: ae943af56ccd8b24f9e550201dd5a491
-timeCreated: 1474548848
+timeCreated: 1474897355
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -9,6 +9,11 @@ TextureImporter:
     21300004: Enemy_2
     21300006: Enemy_3
     21300008: Enemy_4
+    21300010: Enemy_Snake_0
+    21300012: Enemy_Snake_1
+    21300014: Enemy_Snake_2
+    21300016: Enemy_Snake_3
+    21300018: Enemy_Snake_4
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -63,67 +68,67 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Enemy_0
+      name: Enemy_Snake_0
       rect:
         serializedVersion: 2
-        x: 3
+        x: 4
         y: 104
         width: 15
         height: 22
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: -0.45}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Enemy_1
+      name: Enemy_Snake_1
       rect:
         serializedVersion: 2
-        x: 22
+        x: 21
         y: 104
         width: 18
         height: 22
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: -0.45}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Enemy_2
+      name: Enemy_Snake_2
       rect:
         serializedVersion: 2
         x: 41
         y: 104
         width: 22
         height: 22
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: -0.45}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Enemy_3
+      name: Enemy_Snake_3
       rect:
         serializedVersion: 2
-        x: 65
+        x: 64
         y: 104
         width: 18
         height: 22
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: -0.45}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Enemy_4
+      name: Enemy_Snake_4
       rect:
         serializedVersion: 2
-        x: 85
+        x: 86
         y: 104
         width: 15
         height: 22
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: -0.45}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       tessellationDetail: 0
