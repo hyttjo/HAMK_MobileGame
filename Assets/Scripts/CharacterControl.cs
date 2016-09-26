@@ -77,7 +77,9 @@ public class CharacterControl : MonoBehaviour {
         if (character != null && rBody != null) {
             Vector2 position = transform.position;
 
-            RaycastHit2D hit = Physics2D.Raycast(position, position + Vector2.down * 0.1f);
+            RaycastHit2D hit = Physics2D.Raycast(position, position + Vector2.down * 0.5f);
+
+            Debug.DrawLine(position, position + Vector2.down * 0.5f, Color.red, 1f);
 
             if (hit.collider != null) {
                 if (!jumping) {

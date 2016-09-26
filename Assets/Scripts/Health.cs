@@ -52,15 +52,7 @@ public class Health : MonoBehaviour {
             if (!immuneToCrush) {
                 DamageByCrush(col);
             }
-        } else if (colliderTag == "DamageTypeFireball")
-        {
-            if (!immuneToCrush)
-            {
-                DamageByFireball(col);
-            }
         }
-
-
     }
 
     void DeathByPit() {
@@ -81,11 +73,6 @@ public class Health : MonoBehaviour {
 
     void DamageByCrush(Collider2D col) {
         health -= damageCrush;
-    }
-
-    void DamageByFireball(Collider2D col)
-    {
-        health -= damageFireball;
     }
 
     void PushBack(Collider2D col) {
