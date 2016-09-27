@@ -14,13 +14,16 @@ public class LevelCreator : Editor {
     public void OnEnable() {
         SceneView.onSceneGUIDelegate += GridUpdate;
 
-        activeGo = (GameObject)Instantiate(tile);
-        activeGo.transform.position = new Vector3(0.5f, 0.5f, 0);
+        if (tile != null) {
+            activeGo = (GameObject)Instantiate(tile);
+            activeGo.transform.position = new Vector3(0.5f, 0.5f, 0);
+        }
     }
 
     void GridUpdate(SceneView sceneview) { 
         Event e = Event.current;
         Camera camera = Camera.current;
+        int controlID = GUIUtility.GetControlID(FocusType.Passive);
 
         if (camera != null) {
             Vector3 position = camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x, -e.mousePosition.y + Screen.height - 40, 0));
@@ -32,10 +35,9 @@ public class LevelCreator : Editor {
                     activeGo.transform.position = aligned;
                 }
 
-                if (e.isKey && e.character == 'a') {
+                if (e.isMouse && e.button == 1) {
                     if (tile != null) {
                         GameObject obj = (GameObject)Instantiate(tile);
-
                         obj.transform.position = aligned;
                     }
                 }
@@ -78,6 +80,4 @@ public class LevelCreator : Editor {
         Gizmos.DrawLine(new Vector3(width * tileSize, height * tileSize, 0), new Vector3(width * tileSize, 0, 0));
         Gizmos.DrawLine(new Vector3(width * tileSize, 0, 0), Vector3.zero);
     }
-
-
 }
