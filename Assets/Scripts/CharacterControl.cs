@@ -97,10 +97,14 @@ public class CharacterControl : MonoBehaviour {
     }
     
     void OnCollisionEnter2D(Collision2D col) {
-    	if (jumping) {
-    		jumping = false;
-    		speed = speed * airSpeed;
-    	}
+        Vector2 hitDirection = Misc.GetHitDirection(col.contacts[0].normal);
+
+        if (hitDirection == Vector2.up) {
+            if (jumping) {
+                jumping = false;
+                speed = speed * airSpeed;
+            }
+        }
     }
 
     public void Shoot() {
