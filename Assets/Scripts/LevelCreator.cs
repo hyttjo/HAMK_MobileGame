@@ -1,37 +1,59 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-[InitializeOnLoad]
+[ExecuteInEditMode]
 public class LevelCreator : Editor {
 
     public GameObject tile;
+    private GameObject activeGo;
 
-    public int width = 4;
-    public int height = 4;
+    public int width = 128;
+    public int height = 32;
     public float tileSize = 1;
 
     public void OnEnable() {
         SceneView.onSceneGUIDelegate += GridUpdate;
+
+        activeGo = (GameObject)Instantiate(tile);
+        activeGo.transform.position = new Vector3(0.5f, 0.5f, 0);
     }
 
-    void GridUpdate(SceneView sceneview) {
+    void GridUpdate(SceneView sceneview) { 
         Event e = Event.current;
         Camera camera = Camera.current;
 
         if (camera != null) {
-            if (e.isKey && e.character == 'a') {
+            Vector3 position = camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x, -e.mousePosition.y + Screen.height - 40, 0));
+            Vector3 aligned = new Vector3(Mathf.Floor(position.x / tileSize) * tileSize + tileSize / 2.0f,
+                                          Mathf.Floor(position.y / tileSize) * tileSize + tileSize / 2.0f, 0);
 
-                Vector3 mousePos = camera.ScreenToWorldPoint(Input.mousePosition);
+            if (IsInsideGrid(position)) {
+                if (activeGo != null) {
+                    activeGo.transform.position = aligned;
+                }
 
-                if (tile != null) {
-                    GameObject obj = (GameObject)Instantiate(tile);
-                    Vector3 aligned = new Vector3(Mathf.Floor(mousePos.x / tileSize) * tileSize + tileSize / 2.0f,
-                                                  Mathf.Floor(mousePos.y / tileSize) * tileSize + tileSize / 2.0f, 0);
-                    obj.transform.position = aligned;
+                if (e.isKey && e.character == 'a') {
+                    if (tile != null) {
+                        GameObject obj = (GameObject)Instantiate(tile);
 
-                    Debug.Log(aligned + " " + mousePos);
+                        obj.transform.position = aligned;
+                    }
                 }
             }
+        }
+    }
+
+    bool IsInsideGrid(Vector3 position) {
+        if (position.x < 0) {
+            return false;
+        } else if (position.y < 0) {
+            return false;
+        } else if (position.x > width * tileSize) {
+            return false;
+        } else if (position.y > height * tileSize) {
+            return false;
+        } else {
+            return true;
         }
     }
 
