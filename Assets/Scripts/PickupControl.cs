@@ -56,7 +56,7 @@ public class PickupControl : MonoBehaviour {
                 }
 
                 if (hitDirection.y != -1) {
-                    SpawnPickup();
+                    SpawnPickup(transform.position);
                     bumpDirection = hitDirection;
                 }
             }
@@ -66,20 +66,29 @@ public class PickupControl : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D col) {
         if (!container) {
             CharacterControl cControl = col.GetComponentInParent<CharacterControl>();
+            Health health = col.GetComponentInParent<Health>();
 
-            if (cControl != null) {
+            if (cControl != null && gameObject.tag == "PickupFire") {
                 cControl.projectile = pickup;
+                Destroy(gameObject);
+            }
+
+            if (cControl != null && gameObject.tag == "PickupHeart")
+            {
+                health.GainHealthPickup();
                 Destroy(gameObject);
             }
         }
     }
 
-    void SpawnPickup() {
-        if (pickup != null) {
-            Vector2 spawnPosition = (Vector2)transform.position + Vector2.up * 0.5f;
+    public void SpawnPickup(Vector2 location) {
+        Vector2 spawnPosition = location + Vector2.up * 0.5f;
+        if (pickup != null && container) {
             Instantiate(pickup, spawnPosition, Quaternion.Euler(0, 0, 270)); //Syntyy poimittava power-up
             pickUpSpriteRenderer.enabled = false;
             pickup = null;
+        } else {
+            Instantiate(pickup, spawnPosition, Quaternion.Euler(0, 0, 0)); //Syntyy poimittava power-up
         }
     }
 
