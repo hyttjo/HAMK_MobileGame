@@ -7,6 +7,8 @@ public class Health : MonoBehaviour {
     public GameObject _gameObject;
     public GameObject deathEffect;
     public int health = 100;
+    public int maxHealth = 100;
+    public int healFromHeart = 34;
     public bool immuneToFire = false;
     public int damageFire = 33;
     public bool immuneToBite = false;
@@ -34,7 +36,12 @@ public class Health : MonoBehaviour {
 	    if (health <= 0) {
             Destroy();
         }
-	}
+
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
+    }
 
     void OnTriggerEnter2D(Collider2D col) {
         string colliderTag = col.gameObject.tag;
@@ -95,6 +102,10 @@ public class Health : MonoBehaviour {
         if (sRenderer != null) {
             sRenderer.color = color;
         }
+    }
+
+    public void GainHealthPickup() {
+        health += healFromHeart;
     }
 
     void Destroy() {

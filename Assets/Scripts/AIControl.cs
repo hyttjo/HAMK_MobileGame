@@ -9,6 +9,9 @@ public class AIControl : MonoBehaviour {
 
     private Vector2 moveDirection;
 
+    public int lootChance = 33;
+    public GameObject loot;
+
     void Start () {
         cControl = GetComponent<CharacterControl>();
         level = GameObject.FindGameObjectWithTag("Level").GetComponent<Level>();
@@ -47,6 +50,13 @@ public class AIControl : MonoBehaviour {
 
         if (obstacle != null) {
             moveDirection *= -1;
+        }
+    }
+
+    void OnDestroy(){
+        if (Random.Range(0,100) <= lootChance){
+            Debug.Log("YO");
+            loot.GetComponent<PickupControl>().SpawnPickup(transform.position);
         }
     }
 }
