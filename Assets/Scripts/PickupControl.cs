@@ -45,7 +45,7 @@ public class PickupControl : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D col) {
         if (container) {
-            if (col.gameObject.tag == "Player") { //Jos pelaaja osuu pickupiin
+            if (col.gameObject.tag == "Player") { 
                 GameObject collider = col.gameObject;
                 Rigidbody2D cRigidBody = collider.GetComponentInParent<Rigidbody2D>();
 
@@ -84,11 +84,9 @@ public class PickupControl : MonoBehaviour {
     public void SpawnPickup(Vector2 location) {
         Vector2 spawnPosition = location + Vector2.up * 0.5f;
         if (pickup != null && container) {
-            Instantiate(pickup, spawnPosition, Quaternion.Euler(0, 0, 270)); //Syntyy poimittava power-up
+            Instantiate(pickup, spawnPosition, Quaternion.identity);
             pickUpSpriteRenderer.enabled = false;
             pickup = null;
-        } else {
-            Instantiate(pickup, spawnPosition, Quaternion.Euler(0, 0, 0)); //Syntyy poimittava power-up
         }
     }
 

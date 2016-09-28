@@ -47,8 +47,7 @@ public class Projectile : MonoBehaviour {
             Vector2 moveDirection = rBody.velocity;
 
             if (moveDirection != Vector2.zero) {
-                float angle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+                transform.rotation = Quaternion.FromToRotation(Vector3.down, moveDirection);
             }
         }
     }

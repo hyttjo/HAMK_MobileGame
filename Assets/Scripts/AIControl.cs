@@ -54,9 +54,14 @@ public class AIControl : MonoBehaviour {
     }
 
     void OnDestroy(){
-        if (Random.Range(0,100) <= lootChance){
-            Debug.Log("YO");
-            loot.GetComponent<PickupControl>().SpawnPickup(transform.position);
+        if (Random.Range(0,100) <= lootChance) {
+            if (loot != null) {
+                PickupControl pickUpControl = loot.GetComponent<PickupControl>();
+
+                if (pickUpControl != null) {
+                    pickUpControl.SpawnPickup(transform.position);
+                }
+            }
         }
     }
 }

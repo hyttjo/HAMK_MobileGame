@@ -109,7 +109,7 @@ public class CharacterControl : MonoBehaviour {
 
     public void Shoot() {
         if (projectile != null && canShoot) {
-            Vector2 spawnPosition = new Vector2((transform.position.x + (0.75f * move)), (transform.position.y + 1));
+            Vector2 spawnPosition = new Vector2((transform.position.x + (0.75f * move)), (transform.position.y + 0.75f));
             GameObject projectile_go = (GameObject)Instantiate(projectile, spawnPosition, Quaternion.identity);
             Projectile projectile_co = projectile_go.GetComponent<Projectile>();
             projectile_co.parent = gameObject;      
