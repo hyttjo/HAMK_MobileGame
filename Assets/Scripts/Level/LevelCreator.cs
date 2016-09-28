@@ -54,17 +54,16 @@ public class LevelCreator : MonoBehaviour {
                         Position pos = new Position(new Vector3(aligned.x, aligned.y, layer_index));
 
                         if (!objects.ContainsKey(pos)) {
-                            GameObject obj = (GameObject)Instantiate(activeGo);
-                            SpriteRenderer sRenderer = obj.GetComponentInChildren<SpriteRenderer>();
-
-                            if (sRenderer != null) {
-                                sRenderer.sortingOrder = layer_index;
-                            }
-                            obj.transform.position = aligned;
-                            objects.Add(pos, obj);
-                            Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
+                            PlaceGameObject(pos, aligned);
                         } else {
-                            Debug.Log(pos.ToString() + " is already taken by an object!");
+                            GameObject obj = objects[pos];
+
+                            if (obj == null) {
+                                objects.Remove(pos);
+                                PlaceGameObject(pos, aligned);
+                            } else {
+                                Debug.Log(pos.ToString() + " is already taken by an object!");
+                            }
                         }
                     }
                 }
@@ -127,5 +126,17 @@ public class LevelCreator : MonoBehaviour {
             return prefabs[activeGO_index];
         }
         return null;
+    }
+
+    private void PlaceGameObject(Position pos, Vector3 position) {
+        GameObject obj = (GameObject)Instantiate(activeGo);
+        SpriteRenderer sRenderer = obj.GetComponentInChildren<SpriteRenderer>();
+
+        if (sRenderer != null) {
+            sRenderer.sortingOrder = layer_index;
+        }
+        obj.transform.position = position;
+        objects.Add(pos, obj);
+        Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
     }
 }
