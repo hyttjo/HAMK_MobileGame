@@ -46,6 +46,8 @@ public class LevelEditorInspector : Editor {
         level.layer_index = GUILayout.SelectionGrid(level.layer_index, layers, 1);
         GUILayout.EndHorizontal();
 
+        level.overwrite = GUILayout.Toggle(level.overwrite, "Overwrite:");
+
         GUILayout.Space(5);
 
         Texture2D activeGO_texture = null;

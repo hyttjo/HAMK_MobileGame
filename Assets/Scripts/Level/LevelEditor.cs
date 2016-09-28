@@ -20,6 +20,8 @@ public class LevelEditor : MonoBehaviour {
     public int height = 32;
     public float tileSize = 1;
 
+    public bool overwrite = false;
+
     public void OnEnable() {
         if (Application.isEditor) {
             objects = new Dictionary<Position, GameObject>();
@@ -67,7 +69,13 @@ public class LevelEditor : MonoBehaviour {
                                 objects.Remove(pos);
                                 PlaceGameObject(pos, aligned);
                             } else {
-                                Debug.Log(pos.ToString() + " is already taken by an object!");
+                                if (overwrite) {
+                                    DestroyImmediate(obj);
+                                    objects.Remove(pos);
+                                    PlaceGameObject(pos, aligned);
+                                } else {
+                                    Debug.Log(pos.ToString() + " is already taken by an object!");
+                                }
                             }
                         }
                     }
