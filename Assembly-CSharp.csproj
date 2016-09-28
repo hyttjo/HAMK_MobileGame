@@ -47,17 +47,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\AIControl.cs" />
+    <Compile Include="Assets\Scripts\BreakableObject.cs" />
     <Compile Include="Assets\Scripts\CameraControl.cs" />
     <Compile Include="Assets\Scripts\CharacterControl.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
-    <Compile Include="Assets\Scripts\Level.cs" />
-    <Compile Include="Assets\Scripts\LevelLoader.cs" />
+    <Compile Include="Assets\Scripts\Level\Level.cs" />
+    <Compile Include="Assets\Scripts\Level\LevelCreatorInspector.cs" />
+    <Compile Include="Assets\Scripts\Level\LevelCreator.cs" />
+    <Compile Include="Assets\Scripts\Level\LevelLoader.cs" />
     <Compile Include="Assets\Scripts\Misc.cs" />
     <Compile Include="Assets\Scripts\PickupControl.cs" />
     <Compile Include="Assets\Scripts\PlayerControl.cs" />
     <Compile Include="Assets\Scripts\PlayerHUD.cs" />
     <Compile Include="Assets\Scripts\Projectile.cs" />
-    <Compile Include="Assets\Scripts\BreakableObject.cs" />
     <Reference Include="UnityEngine.UI">
       <HintPath>C:/Users/jhyttine/Programs/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
     </Reference>

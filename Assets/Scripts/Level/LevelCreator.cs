@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
+using System.Linq;
 
 [ExecuteInEditMode]
-public class LevelCreator : Editor {
+public class LevelCreator : MonoBehaviour {
 
-    public GameObject tile;
-    private GameObject activeGo;
+    public GameObject[] objects;
+    public GameObject activeGo;
+    public int activeGO_index = 0;
 
     public int width = 128;
     public int height = 32;
@@ -14,16 +17,21 @@ public class LevelCreator : Editor {
     public void OnEnable() {
         SceneView.onSceneGUIDelegate += GridUpdate;
 
-        if (tile != null) {
-            activeGo = (GameObject)Instantiate(tile);
+        objects = LoadPrefabs();
+
+        if (objects != null) {
+            activeGo = (GameObject)Instantiate(objects[activeGO_index]);
             activeGo.transform.position = new Vector3(0.5f, 0.5f, 0);
         }
+    }
+
+    public void OnDisable() {
+        SceneView.onSceneGUIDelegate -= GridUpdate;
     }
 
     void GridUpdate(SceneView sceneview) { 
         Event e = Event.current;
         Camera camera = Camera.current;
-        int controlID = GUIUtility.GetControlID(FocusType.Passive);
 
         if (camera != null) {
             Vector3 position = camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x, -e.mousePosition.y + Screen.height - 40, 0));
@@ -36,8 +44,8 @@ public class LevelCreator : Editor {
                 }
 
                 if (e.isMouse && e.button == 1) {
-                    if (tile != null) {
-                        GameObject obj = (GameObject)Instantiate(tile);
+                    if (activeGo != null) {
+                        GameObject obj = (GameObject)Instantiate(activeGo);
                         obj.transform.position = aligned;
                     }
                 }
@@ -62,15 +70,15 @@ public class LevelCreator : Editor {
     void OnDrawGizmos() {
         Gizmos.color = Color.black;
 
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                float y_height = Mathf.Floor(y / tileSize) * tileSize;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                float x_size = Mathf.Floor(x / tileSize) * tileSize;
 
-                Gizmos.DrawLine(new Vector3(y_height, 0, 0), new Vector3(y_height, height, 0));
+                Gizmos.DrawLine(new Vector3(x_size, 0, 0), new Vector3(x_size, height, 0));
             }
-            float x_width = Mathf.Floor(x / tileSize) * tileSize;
+            float y_size = Mathf.Floor(y / tileSize) * tileSize;
 
-            Gizmos.DrawLine(new Vector3(0, x_width, 0), new Vector3(width, x_width, 0));
+            Gizmos.DrawLine(new Vector3(0, y_size, 0), new Vector3(width, y_size, 0));
         }
 
         Gizmos.color = Color.white;
@@ -79,5 +87,19 @@ public class LevelCreator : Editor {
         Gizmos.DrawLine(new Vector3(0, height * tileSize, 0), new Vector3(width * tileSize, height * tileSize, 0));
         Gizmos.DrawLine(new Vector3(width * tileSize, height * tileSize, 0), new Vector3(width * tileSize, 0, 0));
         Gizmos.DrawLine(new Vector3(width * tileSize, 0, 0), Vector3.zero);
+    }
+
+    GameObject[] LoadPrefabs() {
+        GameObject[] prefabsArray = Resources.LoadAll<GameObject>("Prefabs");
+        List<GameObject> prefabs = prefabsArray.ToList();
+
+        for (int i = 0; i < prefabsArray.Length; i++) {
+            SpriteRenderer sRenderer = prefabsArray[i].GetComponentInChildren<SpriteRenderer>();
+
+            if (sRenderer == null) {
+                prefabs.RemoveAt(i);
+            }
+        }
+        return prefabs.ToArray();
     }
 }
