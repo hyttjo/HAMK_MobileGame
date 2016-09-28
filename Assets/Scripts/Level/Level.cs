@@ -11,7 +11,9 @@ public class Level : MonoBehaviour {
     void SetupLevelData() {
         objects = new Dictionary<Position, GameObject>();
 
-        GameObject[] arrayGameObjects = GameObject.FindGameObjectsWithTag("Ground");
+        GameObject playingLayer = GameObject.Find("PlayingLayer");
+
+        GameObject[] arrayGameObjects = Misc.GetChildren(playingLayer);
 
         foreach (GameObject _gameObject in arrayGameObjects) {
             Vector2 position = _gameObject.transform.position;
@@ -67,30 +69,5 @@ public struct Position {
 
     public override string ToString() {
         return "Position (" + this.x + ", " + this.y + ", " + this.z + ")";
-    }
-}
-
-public enum Direction { none, up, down, left, right };
-
-public static class Dir {
-
-    public static Direction GetDirection(int prevX, int prevY, int x, int y) {
-        if (x == prevX && y == prevY + 1) {
-            return Direction.up;
-        }
-        if (x == prevX && y == prevY - 1) {
-            return Direction.down;
-        }
-        if (x == prevX - 1 && y == prevY) {
-            return Direction.left;
-        }
-        if (x == prevX + 1 && y == prevY) {
-            return Direction.right;
-        }
-        return Direction.none;
-    }
-
-    public static Direction GetDirection(Vector2 prevVector, Vector2 vector) {
-        return GetDirection((int)prevVector.x, (int)prevVector.y, (int)vector.x, (int)vector.y);
     }
 }

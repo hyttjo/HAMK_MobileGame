@@ -104,6 +104,40 @@ public static class Misc {
         return list.ToArray();
     }
 
+    public enum Direction { none, up, down, left, right };
+
+    public static class Dir {
+
+        public static Direction GetDirection(int prevX, int prevY, int x, int y) {
+            if (x == prevX && y == prevY + 1) {
+                return Direction.up;
+            }
+            if (x == prevX && y == prevY - 1) {
+                return Direction.down;
+            }
+            if (x == prevX - 1 && y == prevY) {
+                return Direction.left;
+            }
+            if (x == prevX + 1 && y == prevY) {
+                return Direction.right;
+            }
+            return Direction.none;
+        }
+
+        public static Direction GetDirection(Vector2 prevVector, Vector2 vector) {
+            return GetDirection((int)prevVector.x, (int)prevVector.y, (int)vector.x, (int)vector.y);
+        }
+    }
+
+    public static GameObject[] GetChildren(this GameObject go) {
+        List<GameObject> children = new List<GameObject>();
+
+        foreach (Transform tran in go.transform) {
+            children.Add(tran.gameObject);
+        }
+        return children.ToArray();
+    }
+
     public static Texture2D GetTextureFromSprite(Sprite sprite) {
         if (sprite.rect.width != sprite.texture.width) {
             Texture2D newText = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
@@ -117,6 +151,4 @@ public static class Misc {
         } else
             return sprite.texture;
     }
-
-
 }

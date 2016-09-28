@@ -4,11 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 
 [ExecuteInEditMode]
-public class LevelCreator : MonoBehaviour {
+public class LevelEditor : MonoBehaviour {
 
     private Dictionary<Position, GameObject> objects;
+
+    private GameObject[] layers;
+
     public GameObject[] prefabs;
     public GameObject activeGo;
+
     public int activeGO_index = 0;
     public int layer_index = 0;
 
@@ -22,6 +26,7 @@ public class LevelCreator : MonoBehaviour {
 
             SceneView.onSceneGUIDelegate += GridUpdate;
 
+            layers = LoadLayersGameObjects();
             prefabs = LoadPrefabs();
 
             if (prefabs != null) {
@@ -107,6 +112,40 @@ public class LevelCreator : MonoBehaviour {
         Gizmos.DrawLine(new Vector3(width * tileSize, 0, 0), Vector3.zero);
     }
 
+    GameObject[] LoadLayersGameObjects() {
+        GameObject[] layersArray = new GameObject[4];
+
+        GameObject background = GameObject.Find("Background");
+        if (background == null) {
+            background = new GameObject("Background");
+            background.transform.parent = transform;
+        }
+        layersArray[0] = background;
+
+        GameObject middleground = GameObject.Find("Middleground");
+        if (middleground == null) {
+            middleground = new GameObject("Middleground");
+            middleground.transform.parent = transform;
+        }
+        layersArray[1] = middleground;
+
+        GameObject playinglayer = GameObject.Find("PlayingLayer");
+        if (playinglayer == null) {
+            playinglayer = new GameObject("PlayingLayer");
+            playinglayer.transform.parent = transform;
+        }
+        layersArray[2] = playinglayer;
+
+        GameObject foreground = GameObject.Find("Foreground");
+        if (foreground == null) {
+            foreground = new GameObject("Foreground");
+            foreground.transform.parent = transform;
+        }
+        layersArray[3] = foreground;
+
+        return layersArray;
+    }
+
     GameObject[] LoadPrefabs() {
         GameObject[] prefabsArray = Resources.LoadAll<GameObject>("Prefabs");
         List<GameObject> prefabs = prefabsArray.ToList();
@@ -130,12 +169,14 @@ public class LevelCreator : MonoBehaviour {
 
     private void PlaceGameObject(Position pos, Vector3 position) {
         GameObject obj = (GameObject)Instantiate(activeGo);
+        obj.name = activeGo.name + " - " + pos.ToString();
         SpriteRenderer sRenderer = obj.GetComponentInChildren<SpriteRenderer>();
 
         if (sRenderer != null) {
             sRenderer.sortingOrder = layer_index;
         }
         obj.transform.position = position;
+        obj.transform.parent = layers[layer_index].transform;
         objects.Add(pos, obj);
         Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
     }

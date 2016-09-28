@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(LevelCreator))]
-public class LevelCreatorInspector : Editor {
+[CustomEditor(typeof(LevelEditor))]
+public class LevelEditorInspector : Editor {
 
-    LevelCreator level;
+    LevelEditor level;
 
     private GUIContent[] objects;
     private string[] layers;
 
     public void OnEnable() {
-        level = (LevelCreator)target;
+        level = (LevelEditor)target;
 
         if (level.prefabs != null) {
             objects = new GUIContent[level.prefabs.Length];
@@ -23,7 +23,7 @@ public class LevelCreatorInspector : Editor {
             }
         }
 
-        layers = new string[] { "Background", "Collider", "Entities", "Foreground" };
+        layers = new string[] { "0: Background", "1: Middleground", "2: PlayingLayer", "3: Foreground" };
     }
 
     public override void OnInspectorGUI() {
@@ -31,10 +31,10 @@ public class LevelCreatorInspector : Editor {
 
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        GUILayout.Label(" Grid Width ");
+        GUILayout.Label("Grid Width:");
         level.width = EditorGUILayout.IntField(level.width, GUILayout.Width(50));
         GUILayout.FlexibleSpace();
-        GUILayout.Label(" Grid Height ");
+        GUILayout.Label("Grid Height:");
         level.height = EditorGUILayout.IntField(level.height, GUILayout.Width(50));
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
