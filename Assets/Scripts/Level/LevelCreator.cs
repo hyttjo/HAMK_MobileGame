@@ -4,9 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 
 [ExecuteInEditMode]
+//[RequireComponent(typeof(Level))]
 public class LevelCreator : MonoBehaviour {
 
-    public GameObject[] objects;
+    //private Level level;
+    private Dictionary<Position, GameObject> objects;
+    public GameObject[] prefabs;
     public GameObject activeGo;
     public int activeGO_index = 0;
 
@@ -15,13 +18,16 @@ public class LevelCreator : MonoBehaviour {
     public float tileSize = 1;
 
     public void OnEnable() {
-        SceneView.onSceneGUIDelegate += GridUpdate;
+        if (Application.isEditor) {
+            objects = new Dictionary<Position, GameObject>();
 
-        objects = LoadPrefabs();
+            SceneView.onSceneGUIDelegate += GridUpdate;
 
-        if (objects != null) {
-            activeGo = (GameObject)Instantiate(objects[activeGO_index]);
-            activeGo.transform.position = new Vector3(0.5f, 0.5f, 0);
+            prefabs = LoadPrefabs();
+
+            if (prefabs != null) {
+                activeGo = GetActiveGameObject();
+            }
         }
     }
 
@@ -40,13 +46,19 @@ public class LevelCreator : MonoBehaviour {
 
             if (IsInsideGrid(position)) {
                 if (activeGo != null) {
+                    activeGo = GetActiveGameObject();
                     activeGo.transform.position = aligned;
                 }
 
-                if (e.isMouse && e.button == 1) {
+                if (e.isMouse && e.button == 1 && e.type == EventType.mouseDown) {
                     if (activeGo != null) {
-                        GameObject obj = (GameObject)Instantiate(activeGo);
-                        obj.transform.position = aligned;
+                        Position pos = new Position(aligned);
+
+                        if (!objects.ContainsKey(pos)) {
+                            GameObject obj = (GameObject)Instantiate(activeGo);
+                            obj.transform.position = aligned;
+                            objects.Add(pos, obj);
+                        }
                     }
                 }
             }
@@ -101,5 +113,12 @@ public class LevelCreator : MonoBehaviour {
             }
         }
         return prefabs.ToArray();
+    }
+
+    public GameObject GetActiveGameObject() {
+        if (prefabs != null) {
+            return prefabs[activeGO_index];
+        }
+        return null;
     }
 }

@@ -6,16 +6,19 @@ public class LevelCreatorInspector : Editor {
 
     LevelCreator level;
 
-    private Texture2D[] textures;
+    private GUIContent[] objects;
 
     public void OnEnable() {
         level = (LevelCreator)target;
 
-        if (level.objects != null) {
-            textures = new Texture2D[level.objects.Length];
+        if (level.prefabs != null) {
+            objects = new GUIContent[level.prefabs.Length];
 
-            for (int i = 0; i < level.objects.Length; i++) {
-                textures[i] = GetTextureFromObject(level.objects[i]);
+            for (int i = 0; i < level.prefabs.Length; i++) {
+                GUIContent content = new GUIContent();
+                content.image = GetTextureFromObject(level.prefabs[i]);
+                content.tooltip = level.prefabs[i].name;
+                objects[i] = content;
             }
         }
     }
@@ -34,11 +37,15 @@ public class LevelCreatorInspector : Editor {
         Texture2D activeGO_texture = null;
 
         if (level.activeGo != null) {
-            Sprite activeGO_sprite = level.activeGo.GetComponentInChildren<SpriteRenderer>().sprite;
+            SpriteRenderer sRenderer = level.activeGo.GetComponentInChildren<SpriteRenderer>();
 
-            if (activeGO_sprite != null) {
-                activeGO_texture = Misc.GetTextureFromSprite(activeGO_sprite);
-                activeGO_texture.filterMode = FilterMode.Point;
+            if (sRenderer != null) {
+                Sprite activeGO_sprite = sRenderer.sprite;
+
+                if (activeGO_sprite != null) {
+                    activeGO_texture = Misc.GetTextureFromSprite(activeGO_sprite);
+                    activeGO_texture.filterMode = FilterMode.Point;
+                }
             }
         }
 
@@ -55,12 +62,20 @@ public class LevelCreatorInspector : Editor {
         GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        GUILayout.Label(level.activeGo.name.Replace("(Clone)", ""));
+
+        string activeGoName = "null";
+        if (level.activeGo != null) {
+            activeGoName = level.activeGo.name.Replace("(Clone)", "");
+        }
+        GUILayout.Label(activeGoName);
+
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
         GUILayout.Space(10);
 
-        level.activeGO_index = GUILayout.SelectionGrid(level.activeGO_index, textures, 6);
+        level.activeGO_index = GUILayout.SelectionGrid(level.activeGO_index, objects, 6);
+
+        level.activeGo = level.GetActiveGameObject();
 
         SceneView.RepaintAll();
     }
