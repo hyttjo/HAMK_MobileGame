@@ -4,14 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 
 [ExecuteInEditMode]
-//[RequireComponent(typeof(Level))]
 public class LevelCreator : MonoBehaviour {
 
-    //private Level level;
     private Dictionary<Position, GameObject> objects;
     public GameObject[] prefabs;
     public GameObject activeGo;
     public int activeGO_index = 0;
+    public int layer_index = 0;
 
     public int width = 128;
     public int height = 32;
@@ -52,12 +51,20 @@ public class LevelCreator : MonoBehaviour {
 
                 if (e.isMouse && e.button == 1 && e.type == EventType.mouseDown) {
                     if (activeGo != null) {
-                        Position pos = new Position(aligned);
+                        Position pos = new Position(new Vector3(aligned.x, aligned.y, layer_index));
 
                         if (!objects.ContainsKey(pos)) {
                             GameObject obj = (GameObject)Instantiate(activeGo);
+                            SpriteRenderer sRenderer = obj.GetComponentInChildren<SpriteRenderer>();
+
+                            if (sRenderer != null) {
+                                sRenderer.sortingOrder = layer_index;
+                            }
                             obj.transform.position = aligned;
                             objects.Add(pos, obj);
+                            Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
+                        } else {
+                            Debug.Log(pos.ToString() + " is already taken by an object!");
                         }
                     }
                 }

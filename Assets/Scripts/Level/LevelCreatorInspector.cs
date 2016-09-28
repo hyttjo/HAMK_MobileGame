@@ -7,6 +7,7 @@ public class LevelCreatorInspector : Editor {
     LevelCreator level;
 
     private GUIContent[] objects;
+    private string[] layers;
 
     public void OnEnable() {
         level = (LevelCreator)target;
@@ -21,18 +22,31 @@ public class LevelCreatorInspector : Editor {
                 objects[i] = content;
             }
         }
+
+        layers = new string[] { "Background", "Collider", "Entities", "Foreground" };
     }
 
     public override void OnInspectorGUI() {
-        GUILayout.BeginHorizontal();
-        GUILayout.Label(" Grid Width ");
-        level.width = EditorGUILayout.IntField(level.width, GUILayout.Width(50));
-        GUILayout.EndHorizontal();
+        GUILayout.Space(10);
 
         GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        GUILayout.Label(" Grid Width ");
+        level.width = EditorGUILayout.IntField(level.width, GUILayout.Width(50));
+        GUILayout.FlexibleSpace();
         GUILayout.Label(" Grid Height ");
         level.height = EditorGUILayout.IntField(level.height, GUILayout.Width(50));
+        GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
+
+        GUILayout.Space(5);
+
+        GUILayout.Label("Selected layer:");
+        GUILayout.BeginHorizontal();
+        level.layer_index = GUILayout.SelectionGrid(level.layer_index, layers, 1);
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(5);
 
         Texture2D activeGO_texture = null;
 

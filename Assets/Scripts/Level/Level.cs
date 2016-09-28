@@ -2,52 +2,71 @@
 using System.Collections.Generic;
 
 public class Level : MonoBehaviour {
-    public Dictionary<Position, GameObject> gameObjects;
+    public Dictionary<Position, GameObject> objects;
 
     void Start() {
         SetupLevelData();
     }
 
     void SetupLevelData() {
-        gameObjects = new Dictionary<Position, GameObject>();
+        objects = new Dictionary<Position, GameObject>();
 
         GameObject[] arrayGameObjects = GameObject.FindGameObjectsWithTag("Ground");
 
         foreach (GameObject _gameObject in arrayGameObjects) {
             Vector2 position = _gameObject.transform.position;
-            gameObjects.Add(new Position(position), _gameObject);
+            objects.Add(new Position(position), _gameObject);
         }
     }
 
     public GameObject GetGameObject(Vector2 vector) {
         GameObject _gameObject;
 
-        if (gameObjects.TryGetValue(new Position(vector), out _gameObject)) { }
+        if (objects.TryGetValue(new Position(vector), out _gameObject)) { }
 
         return _gameObject;
     }
 
     public void SetGameObject(int x, int y, GameObject gameObject) {
-        gameObjects.Add(new Position(x, y), gameObject);
+        objects.Add(new Position(x, y), gameObject);
     }
 
     public void SetGameObject(Vector2 vector, GameObject gameObject) {
-        gameObjects.Add(new Position(vector), gameObject);
+        objects.Add(new Position(vector), gameObject);
     }
 }
 
 public struct Position {
     public int x;
     public int y;
+    public int z;
+
+    public Position(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 
     public Position(int x, int y) {
         this.x = x;
         this.y = y;
+        this.z = 0;
+    }
+
+    public Position(Vector3 vector) {
+        this.x = (int)vector.x;
+        this.y = (int)vector.y;
+        this.z = (int)vector.z;
     }
 
     public Position(Vector2 vector) {
         this.x = (int)vector.x;
         this.y = (int)vector.y;
+        this.z = 0;
+    }
+
+    public override string ToString() {
+        return "Position (" + this.x + ", " + this.y + ", " + this.z + ")";
     }
 }
 
