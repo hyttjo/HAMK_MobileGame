@@ -7,6 +7,7 @@ public class PlayerHUD : MonoBehaviour {
     private Health health;
     public Font font;
     public Sprite healthSprite;
+    private Texture2D healthTexture;
     public int numberOfHearts = 3;
     public int hudHeight = 50;
     public Rect padding = new Rect(10, 10, 10, 10);
@@ -21,7 +22,12 @@ public class PlayerHUD : MonoBehaviour {
             player = GameObject.FindGameObjectWithTag("Player");
 
             health = player.GetComponent<Health>();
+
+            if (healthSprite != null) {
+                healthTexture = Misc.GetTextureFromSprite(healthSprite);
+            }
         }
+
         background = new Texture2D(1, 1);
         background.SetPixel(0, 0, hudBackgroundColor);
         background.Apply();
@@ -45,10 +51,10 @@ public class PlayerHUD : MonoBehaviour {
 
             GUI.Label(new Rect(padding.x, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Health:");
 
-            if (healthSprite != null) {
+            if (healthTexture != null) {
                 for (int i = 0; i < health.health / Mathf.CeilToInt(100 / numberOfHearts); i++) {
                     Rect rect = new Rect(padding.x + 110 + 20 * i + 4 * i, padding.y + 4, 20, 20);
-                    GUI.DrawTexture(rect, healthSprite.texture);
+                    GUI.DrawTexture(rect, healthTexture);
                 }
             }
         }
