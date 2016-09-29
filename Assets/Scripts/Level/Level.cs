@@ -4,21 +4,11 @@ using System.Collections.Generic;
 public class Level : MonoBehaviour {
     public Dictionary<Position, GameObject> objects;
 
+    private GameObject[] layers;
+
     void Start() {
-        SetupLevelData();
-    }
-
-    void SetupLevelData() {
-        objects = new Dictionary<Position, GameObject>();
-
-        GameObject playingLayer = GameObject.Find("PlayingLayer");
-
-        GameObject[] arrayGameObjects = Misc.GetChildren(playingLayer);
-
-        foreach (GameObject _gameObject in arrayGameObjects) {
-            Vector2 position = _gameObject.transform.position;
-            objects.Add(new Position(position), _gameObject);
-        }
+        layers = GetLayerGameObjects();
+        objects = GetLevelData();
     }
 
     public GameObject GetGameObject(Vector2 vector) {
@@ -35,6 +25,57 @@ public class Level : MonoBehaviour {
 
     public void SetGameObject(Vector2 vector, GameObject gameObject) {
         objects.Add(new Position(vector), gameObject);
+    }
+
+    public GameObject[] GetLayerGameObjects() {
+        GameObject[] layersArray = new GameObject[4];
+
+        GameObject background = GameObject.Find("Background");
+        if (background == null) {
+            background = new GameObject("Background");
+            background.transform.parent = transform;
+        }
+        layersArray[0] = background;
+
+        GameObject middleground = GameObject.Find("Middleground");
+        if (middleground == null) {
+            middleground = new GameObject("Middleground");
+            middleground.transform.parent = transform;
+        }
+        layersArray[1] = middleground;
+
+        GameObject playinglayer = GameObject.Find("PlayingLayer");
+        if (playinglayer == null) {
+            playinglayer = new GameObject("PlayingLayer");
+            playinglayer.transform.parent = transform;
+        }
+        layersArray[2] = playinglayer;
+
+        GameObject foreground = GameObject.Find("Foreground");
+        if (foreground == null) {
+            foreground = new GameObject("Foreground");
+            foreground.transform.parent = transform;
+        }
+        layersArray[3] = foreground;
+
+        return layersArray;
+    }
+
+    public Dictionary<Position, GameObject> GetLevelData() {
+        Dictionary<Position, GameObject> levelData = new Dictionary<Position, GameObject>();
+
+        for (int i = 0; i < layers.Length; i++) {
+            GameObject layer = layers[i];
+
+            GameObject[] arrayGamelevelData = Misc.GetChildren(layer);
+
+            foreach (GameObject _gameObject in arrayGamelevelData) {
+                Vector2 position = _gameObject.transform.position;
+                levelData.Add(new Position(position), _gameObject);
+            }
+        }
+
+        return levelData;
     }
 }
 

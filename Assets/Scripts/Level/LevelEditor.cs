@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 [ExecuteInEditMode]
+[RequireComponent(typeof(Level))]
 public class LevelEditor : MonoBehaviour {
+
+    private Level level;
 
     private Dictionary<Position, GameObject> objects;
 
@@ -12,6 +15,8 @@ public class LevelEditor : MonoBehaviour {
 
     public GameObject[] prefabs;
     public GameObject activeGo;
+
+    private Vector3 point;
 
     public int activeGO_index = 0;
     public int layer_index = 0;
@@ -24,11 +29,14 @@ public class LevelEditor : MonoBehaviour {
 
     public void OnEnable() {
         if (Application.isEditor) {
+            level = GetComponent<Level>();
+
+            layers = level.GetLayerGameObjects();
             objects = new Dictionary<Position, GameObject>();
 
             SceneView.onSceneGUIDelegate += GridUpdate;
-
-            layers = LoadLayersGameObjects();
+            SceneView.onSceneGUIDelegate += OnScene;
+            
             prefabs = LoadPrefabs();
 
             if (prefabs != null) {
@@ -39,6 +47,7 @@ public class LevelEditor : MonoBehaviour {
 
     public void OnDisable() {
         SceneView.onSceneGUIDelegate -= GridUpdate;
+        SceneView.onSceneGUIDelegate -= OnScene;
     }
 
     void GridUpdate(SceneView sceneview) { 
@@ -47,32 +56,32 @@ public class LevelEditor : MonoBehaviour {
 
         if (camera != null) {
             Vector3 position = camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x, -e.mousePosition.y + Screen.height - 40, 0));
-            Vector3 aligned = new Vector3(Mathf.Floor(position.x / tileSize) * tileSize + tileSize / 2.0f,
-                                          Mathf.Floor(position.y / tileSize) * tileSize + tileSize / 2.0f, 0);
+            point = new Vector3(Mathf.Floor(position.x / tileSize) * tileSize + tileSize / 2.0f,
+                                Mathf.Floor(position.y / tileSize) * tileSize + tileSize / 2.0f, 0);
 
             if (IsInsideGrid(position)) {
                 if (activeGo != null) {
                     activeGo = GetActiveGameObject();
-                    activeGo.transform.position = aligned;
+                    activeGo.transform.position = point;
                 }
 
                 if (e.isMouse && e.button == 1 && e.type == EventType.mouseDown) {
                     if (activeGo != null) {
-                        Position pos = new Position(new Vector3(aligned.x, aligned.y, layer_index));
+                        Position pos = new Position(new Vector3(point.x, point.y, layer_index));
 
                         if (!objects.ContainsKey(pos)) {
-                            PlaceGameObject(pos, aligned);
+                            PlaceGameObject(pos, point);
                         } else {
                             GameObject obj = objects[pos];
 
                             if (obj == null) {
                                 objects.Remove(pos);
-                                PlaceGameObject(pos, aligned);
+                                PlaceGameObject(pos, point);
                             } else {
                                 if (overwrite) {
                                     DestroyImmediate(obj);
                                     objects.Remove(pos);
-                                    PlaceGameObject(pos, aligned);
+                                    PlaceGameObject(pos, point);
                                 } else {
                                     Debug.Log(pos.ToString() + " is already taken by an object!");
                                 }
@@ -118,40 +127,23 @@ public class LevelEditor : MonoBehaviour {
         Gizmos.DrawLine(new Vector3(0, height * tileSize, 0), new Vector3(width * tileSize, height * tileSize, 0));
         Gizmos.DrawLine(new Vector3(width * tileSize, height * tileSize, 0), new Vector3(width * tileSize, 0, 0));
         Gizmos.DrawLine(new Vector3(width * tileSize, 0, 0), Vector3.zero);
+
+        Gizmos.color = Color.red;
+
+        if (IsInsideGrid(point)) {
+            Gizmos.DrawLine(point + new Vector3(-0.5f * tileSize, -0.5f * tileSize, 0), point + new Vector3(-0.5f * tileSize, 0.5f * tileSize, 0));
+            Gizmos.DrawLine(point + new Vector3(-0.5f * tileSize, 0.5f * tileSize, 0), point + new Vector3(0.5f * tileSize, 0.5f * tileSize, 0));
+            Gizmos.DrawLine(point + new Vector3(0.5f * tileSize, 0.5f * tileSize, 0), point + new Vector3(0.5f * tileSize, -0.5f * tileSize, 0));
+            Gizmos.DrawLine(point + new Vector3(0.5f * tileSize, -0.5f * tileSize, 0), point + new Vector3(-0.5f * tileSize, -0.5f * tileSize, 0));
+        }
     }
 
-    GameObject[] LoadLayersGameObjects() {
-        GameObject[] layersArray = new GameObject[4];
-
-        GameObject background = GameObject.Find("Background");
-        if (background == null) {
-            background = new GameObject("Background");
-            background.transform.parent = transform;
-        }
-        layersArray[0] = background;
-
-        GameObject middleground = GameObject.Find("Middleground");
-        if (middleground == null) {
-            middleground = new GameObject("Middleground");
-            middleground.transform.parent = transform;
-        }
-        layersArray[1] = middleground;
-
-        GameObject playinglayer = GameObject.Find("PlayingLayer");
-        if (playinglayer == null) {
-            playinglayer = new GameObject("PlayingLayer");
-            playinglayer.transform.parent = transform;
-        }
-        layersArray[2] = playinglayer;
-
-        GameObject foreground = GameObject.Find("Foreground");
-        if (foreground == null) {
-            foreground = new GameObject("Foreground");
-            foreground.transform.parent = transform;
-        }
-        layersArray[3] = foreground;
-
-        return layersArray;
+    void OnScene(SceneView sceneView) {
+        Handles.BeginGUI();
+        GUILayout.Label("Right mouse click places selected prefab to the selected layer");
+        GUILayout.Label("Selected layer: " + layers[layer_index].name);
+        GUILayout.Label("Selected prefab: " + activeGo.name);
+        Handles.EndGUI();
     }
 
     GameObject[] LoadPrefabs() {
