@@ -23,7 +23,9 @@ public class CharacterControl : MonoBehaviour {
     private float timer = 0;
     private bool canShoot = false;
 
-    public GameObject projectile;
+    private GameObject currentPower;
+    public GameObject firePower;
+    public GameObject icePower;
 
     void Start () {
         if (character != null) {
@@ -107,10 +109,24 @@ public class CharacterControl : MonoBehaviour {
         }
     }
 
+    public void GainFireball(){
+        if (firePower != null){
+            currentPower = firePower;
+        }
+    }
+
+    public void GainIceShard()
+    {
+        if (icePower != null)
+        {
+            currentPower = icePower;
+        }
+    }
+
     public void Shoot() {
-        if (projectile != null && canShoot) {
+        if (currentPower != null && canShoot) {
             Vector2 spawnPosition = new Vector2((transform.position.x + (0.75f * move)), (transform.position.y + 0.75f));
-            GameObject projectile_go = (GameObject)Instantiate(projectile, spawnPosition, Quaternion.identity);
+            GameObject projectile_go = (GameObject)Instantiate(currentPower, spawnPosition, Quaternion.identity);
             Projectile projectile_co = projectile_go.GetComponent<Projectile>();
             projectile_co.parent = gameObject;      
             lastShotTimer = timer;

@@ -1,11 +1,11 @@
 fileFormatVersion: 2
 guid: 3d2dbe543f520c7498ac4f932cef37a0
-timeCreated: 1475072619
+timeCreated: 1475272540
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: Pickup_0
-    21300002: Pickup_1
+    21300002: Pickup_Heart_0
     21300004: Pickup_2
     21300006: Pickup_3
     21300008: Pickup_4
@@ -79,13 +79,13 @@ TextureImporter:
       outline: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: Pickup_1
+      name: Pickup_Heart_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 32
-        height: 30
+        x: 1
+        y: 1
+        width: 16
+        height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

@@ -56,6 +56,7 @@
      <Compile Include="Assets\Scripts\Level\LevelLoader.cs" />
      <Compile Include="Assets\Scripts\Misc.cs" />
      <Compile Include="Assets\Scripts\PickupControl.cs" />
+     <Compile Include="Assets\Scripts\PickupController.cs" />
      <Compile Include="Assets\Scripts\PlayerControl.cs" />
      <Compile Include="Assets\Scripts\PlayerHUD.cs" />
      <Compile Include="Assets\Scripts\Projectile.cs" />

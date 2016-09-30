@@ -68,10 +68,10 @@ public class PickupControl : MonoBehaviour {
             CharacterControl cControl = col.GetComponentInParent<CharacterControl>();
             Health health = col.GetComponentInParent<Health>();
 
-            if (cControl != null && gameObject.tag == "PickupFire") {
-                cControl.projectile = pickup;
-                Destroy(gameObject);
-            }
+            //if (cControl != null && gameObject.tag == "PickupFire") {
+            //    cControl.projectile = pickup;
+            //    Destroy(gameObject);
+            //}
 
             if (cControl != null && gameObject.tag == "PickupHeart")
             {
