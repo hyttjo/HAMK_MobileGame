@@ -18,6 +18,11 @@ public class LevelEditor : MonoBehaviour {
     public List<Vector2> colliderPoints;
     public bool colliderCreation = false;
 
+    private Dictionary<Position, GameObject> copyObjects;
+    public bool selectionCopying = false;
+    public Vector3 startPoint;
+    public Vector3 endPoint;
+
     private Vector3 point;
 
     public int activeGO_index = 0;
@@ -43,6 +48,7 @@ public class LevelEditor : MonoBehaviour {
             layers = level.GetLayerGameObjects();
             objects = level.GetLevelData();
             colliders = new List<GameObject>();
+            copyObjects = new Dictionary<Position, GameObject>();
 
             SceneView.onSceneGUIDelegate += GridUpdate;
             SceneView.onSceneGUIDelegate += OnScene;
@@ -80,7 +86,7 @@ public class LevelEditor : MonoBehaviour {
                         activeGo.transform.position = point;
                     }
 
-                    if (e.isMouse && e.button == 1 && e.type == EventType.mouseDown) {
+                    if (e.isMouse && e.button == 1 && e.type == EventType.mouseUp) {
                         if (activeGo != null) {
                             Position pos = new Position(new Vector3(point.x, point.y, layer_index));
 
@@ -104,6 +110,63 @@ public class LevelEditor : MonoBehaviour {
                             }
                         }
                     }
+                    if (e.isKey && e.keyCode == KeyCode.X && e.type == EventType.keyDown) {
+                        startPoint = point;
+                        copyObjects.Clear();
+                        selectionCopying = true;
+                    }
+                    if (e.isKey && e.keyCode == KeyCode.C && e.type == EventType.keyDown) {
+                        if (startPoint == point || !IsSelectionValid(startPoint, point)) {
+                            endPoint = startPoint;
+                        } else {
+                            endPoint = point;
+                        }
+
+                        Position start = new Position(startPoint);
+                        Position end = new Position(endPoint);
+
+                        for (int x = 0; x < end.x + 1 - start.x; x++) {
+                            for (int y = 0; y < end.y + 1 - start.y; y++) {
+                                for (int z = 0; z < 4; z++) {
+                                    Position pos = new Position(start.x + x, start.y + y, z);
+
+                                    GameObject obj;
+                                    if (objects.TryGetValue(pos, out obj)) {
+                                        copyObjects.Add(pos, obj);
+                                    }
+                                }
+                            }
+                        }
+                        if (copyObjects.Count == 0) {
+                            copyObjects.Clear();
+                            selectionCopying = false;
+                            Debug.Log("Copy-area was empty, copying cancelled!");
+                        }
+                    }
+                    if (e.isKey && e.keyCode == KeyCode.V && e.type == EventType.keyDown) {
+                        selectionCopying = false;
+                        Position startPaste = new Position(point);
+
+                        foreach (Position pos in copyObjects.Keys) {
+                            GameObject _gameObject;
+                            GameObject target;
+
+                            float posX = pos.x - startPoint.x + startPaste.x + 1;
+                            float posY = pos.y - startPoint.y + startPaste.y + 1;
+                            Position pastePoint = new Position(new Vector3(posX, posY, pos.z));
+
+                            if (!objects.ContainsKey(pastePoint)) {
+                                target = copyObjects[pos];
+                                _gameObject = Instantiate(target);
+                                _gameObject.transform.parent = layers[pos.z].transform;
+                                _gameObject.transform.position = new Vector3(posX, posY, 0);
+                                _gameObject.name = target.name.Replace(pos.ToString(), pastePoint.ToString());
+                            } 
+                        }
+                        objects = level.GetLevelData();              
+                        Debug.Log(copyObjects.Count + " objects copied to Start " + startPaste.ToString());
+                        copyObjects.Clear();
+                    }
                 }
             } else {
                 point = new Vector3(Mathf.Round(position.x / tileSize) * tileSize,
@@ -126,7 +189,17 @@ public class LevelEditor : MonoBehaviour {
                         ColliderAssignPoints();
                     }
                 }
-             }
+            }
+        }
+    }
+
+    bool IsSelectionValid(Vector3 start, Vector3 end) {
+        if (start.x > end.x) {
+            return false;
+        } else if (start.y > end.y) {
+            return false;
+        } else {
+            return true;
         }
     }
 
@@ -158,28 +231,25 @@ public class LevelEditor : MonoBehaviour {
             Gizmos.DrawLine(new Vector3(0, y_size, 0), new Vector3(width, y_size, 0));
         }
 
-        Gizmos.color = Color.white;
-
-        Gizmos.DrawLine(Vector3.zero, new Vector3(0, height * tileSize, 0));
-        Gizmos.DrawLine(new Vector3(0, height * tileSize, 0), new Vector3(width * tileSize, height * tileSize, 0));
-        Gizmos.DrawLine(new Vector3(width * tileSize, height * tileSize, 0), new Vector3(width * tileSize, 0, 0));
-        Gizmos.DrawLine(new Vector3(width * tileSize, 0, 0), Vector3.zero);
+        DrawRectangle(Vector3.zero, new Vector3(width, height, 0), 0, Color.white);
 
         if (IsInsideGrid(point)) {
             if (layer_index != 4) {
-                Gizmos.color = Color.red;
-
-                Gizmos.DrawLine(point + new Vector3(-0.5f * tileSize, -0.5f * tileSize, 0), point + new Vector3(-0.5f * tileSize, 0.5f * tileSize, 0));
-                Gizmos.DrawLine(point + new Vector3(-0.5f * tileSize, 0.5f * tileSize, 0), point + new Vector3(0.5f * tileSize, 0.5f * tileSize, 0));
-                Gizmos.DrawLine(point + new Vector3(0.5f * tileSize, 0.5f * tileSize, 0), point + new Vector3(0.5f * tileSize, -0.5f * tileSize, 0));
-                Gizmos.DrawLine(point + new Vector3(0.5f * tileSize, -0.5f * tileSize, 0), point + new Vector3(-0.5f * tileSize, -0.5f * tileSize, 0));
+                if (selectionCopying) {
+                    if (copyObjects.Count == 0) {
+                        if (!IsSelectionValid(startPoint, point)) {
+                            point = startPoint;
+                        }
+                        DrawRectangle(startPoint, point, tileSize / 2, Color.yellow);
+                    } else {
+                        Position end = copyObjects.Keys.Last();
+                        DrawRectangle(startPoint, new Vector3(end.x + tileSize / 2, end.y + tileSize / 2, 0), tileSize / 2, Color.cyan);
+                    }
+                } else {
+                    DrawRectangle(point, point, tileSize / 2, Color.red);
+                }
             } else {
-                Gizmos.color = Color.red;
-
-                Gizmos.DrawLine(point + new Vector3(-0.2f * tileSize, -0.2f * tileSize, 0), point + new Vector3(-0.2f * tileSize, 0.2f * tileSize, 0));
-                Gizmos.DrawLine(point + new Vector3(-0.2f * tileSize, 0.2f * tileSize, 0), point + new Vector3(0.2f * tileSize, 0.2f * tileSize, 0));
-                Gizmos.DrawLine(point + new Vector3(0.2f * tileSize, 0.2f * tileSize, 0), point + new Vector3(0.2f * tileSize, -0.2f * tileSize, 0));
-                Gizmos.DrawLine(point + new Vector3(0.2f * tileSize, -0.2f * tileSize, 0), point + new Vector3(-0.2f * tileSize, -0.2f * tileSize, 0));
+                DrawRectangle(point, point, tileSize / 5, Color.red);
 
                 Gizmos.color = Color.green;
 
@@ -200,12 +270,26 @@ public class LevelEditor : MonoBehaviour {
         }
     }
 
+    private void DrawRectangle(Vector3 start, Vector3 end, float offset, Color color) {
+        Gizmos.color = color;
+        Gizmos.DrawLine(start + new Vector3(-offset * tileSize, -offset * tileSize, 0), new Vector3(end.x, start.y, 0) + new Vector3(offset * tileSize, -offset * tileSize, 0));
+        Gizmos.DrawLine(new Vector3(end.x, start.y, 0) + new Vector3(offset * tileSize, -offset * tileSize, 0), end + new Vector3(offset * tileSize, offset * tileSize, 0));
+        Gizmos.DrawLine(end + new Vector3(offset * tileSize, offset * tileSize, 0), new Vector3(start.x, end.y, 0) + new Vector3(-offset * tileSize, offset * tileSize, 0));
+        Gizmos.DrawLine(new Vector3(start.x, end.y, 0) + new Vector3(-offset * tileSize, offset * tileSize, 0), start + new Vector3(-offset * tileSize, -offset * tileSize, 0));
+    }
+
     void OnScene(SceneView sceneView) {
         Handles.BeginGUI();
         if (layer_index != 4) {
-            GUILayout.Label("Right mouse click places selected prefab to the selected layer");
-            GUILayout.Label("Selected layer: " + layers[layer_index].name);
-            GUILayout.Label("Selected prefab: " + activeGo.name);
+            if (selectionCopying) {
+                GUILayout.Label("Finish copy-area selection by pressing 'C' key");
+                GUILayout.Label("Paste copied area to new position by pressing 'V' key");
+            } else {
+                GUILayout.Label("Right mouse click places selected prefab to the selected layer");
+                GUILayout.Label("Start Copy-Paste feature by pressing 'X' key");
+                GUILayout.Label("Selected layer: " + layers[layer_index].name);
+                GUILayout.Label("Selected prefab: " + activeGo.name);//
+            }
         } else {
             if (colliderCreation) {
                 GUILayout.Label("Creating a new collider...");

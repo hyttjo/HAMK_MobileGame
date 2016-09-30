@@ -85,7 +85,11 @@ public class Level : MonoBehaviour {
 
             foreach (GameObject _gameObject in arrayGamelevelData) {
                 Vector2 position = _gameObject.transform.position;
-                levelData.Add(new Position(new Vector3(position.x, position.y, i)), _gameObject);
+                Position pos = new Position(new Vector3(position.x, position.y, i));
+
+                if (!levelData.ContainsKey(pos)) {
+                    levelData.Add(pos, _gameObject);
+                }
             }
         }
         return levelData;
