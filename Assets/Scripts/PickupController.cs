@@ -16,8 +16,12 @@ public class PickupController : MonoBehaviour {
     public float decayTime = 5; // Pickupin elinaika sekunneissa.
     private float decayTimer = 0; // Laskuri elinajan laskemiseen.
 
+    public bool spawnJump = true; // Hypähtääkö pickup ilmaan sen syntyessä?
+
 	void Start () {
-	
+        if (spawnJump) {
+            SpawnJump();
+        }
 	}
 	
 	void Update () {
@@ -27,7 +31,7 @@ public class PickupController : MonoBehaviour {
 	}
 
     void OnTriggerEnter2D(Collider2D col) {
-        if (behaviour == Pickups.Heart && col.gameObject.tag == "Player"){ // Jos pelaaja osuu pickupiin JA pickup on Pickups.Heart
+        if (behaviour == Pickups.Heart && col.gameObject.tag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.Heart
             Health health = col.GetComponentInParent<Health>(); // Haetaan pelaajan käyttämä Health-skripti
             if (health != null){ // Jos Health-skripti on olemassa...
                 health.GainHealthPickup(); // ...käytetään sen sisäistä funktiota pelaajan parantamiseen...
@@ -35,8 +39,15 @@ public class PickupController : MonoBehaviour {
             }
         }
 
-        if (behaviour == Pickups.Fireball && col.gameObject.tag == "Player")
-        { // Jos pelaaja osuu pickupiin JA pickup on Pickups.IceShard
+        if (behaviour == Pickups.Coin && col.gameObject.tag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.Coin
+            Score score = col.GetComponentInParent<Score>(); // Haetaan pelaajan käyttämä Score-skripti
+            if (score != null) { // Jos Score-skripti on olemassa...
+                score.GainCoin(); // ...käytetään sen sisäistä funktiota siihen, että pelaajalle merkataan kerätty kolikko...
+                Despawn(); // ...ja poistetaan tämä pickup pelimaailmasta.
+            }
+        }
+
+        if (behaviour == Pickups.Fireball && col.gameObject.tag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.IceShard
             CharacterControl cControl = col.GetComponentInParent<CharacterControl>(); // Haetaan pelaajan käyttämä CharacterControl-skripti
             if (cControl != null)
             { // Jos CharacterControl-skripti on olemassa...
@@ -58,6 +69,14 @@ public class PickupController : MonoBehaviour {
         decayTimer += Time.deltaTime;
         if (decayTimer >= decayTime && !ignoreDecay){
             Despawn();
+        }
+    }
+
+    void SpawnJump() {
+        Rigidbody2D rBody = GetComponent<Rigidbody2D>();
+
+        if (rBody != null){
+            rBody.AddForce(Vector2.up, ForceMode2D.Impulse);
         }
     }
 
