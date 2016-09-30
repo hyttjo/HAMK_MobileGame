@@ -50,7 +50,7 @@ public class LevelEditor : MonoBehaviour {
             colliders = new List<GameObject>();
             copyObjects = new Dictionary<Position, GameObject>();
 
-            SceneView.onSceneGUIDelegate += GridUpdate;
+            SceneView.onSceneGUIDelegate += LevelUpdate;
             SceneView.onSceneGUIDelegate += OnScene;
             
             prefabs = LoadPrefabs();
@@ -62,11 +62,11 @@ public class LevelEditor : MonoBehaviour {
     }
 
     public void OnDisable() {
-        SceneView.onSceneGUIDelegate -= GridUpdate;
+        SceneView.onSceneGUIDelegate -= LevelUpdate;
         SceneView.onSceneGUIDelegate -= OnScene;
     }
 
-    void GridUpdate(SceneView sceneview) {
+    void LevelUpdate(SceneView sceneview) {
         level.width = width;
         level.height = height;
 
@@ -76,121 +76,150 @@ public class LevelEditor : MonoBehaviour {
         if (camera != null) {
             Vector3 position = camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x, -e.mousePosition.y + Screen.height - 40, 0));
 
-            if (layer_index != 4) {
-                point = new Vector3(Mathf.Floor(position.x / tileSize) * tileSize + tileSize / 2.0f,
-                                    Mathf.Floor(position.y / tileSize) * tileSize + tileSize / 2.0f, 0);
+            if (IsInsideGrid(position)) {
+                if (activeGo != null) {
+                    activeGo = GetActiveGameObject();
+                    activeGo.transform.position = point;
+                }
 
-                if (IsInsideGrid(position)) {
-                    if (activeGo != null) {
-                        activeGo = GetActiveGameObject();
-                        activeGo.transform.position = point;
-                    }
+                if (layer_index != 4) {
+                    point = new Vector3(Mathf.Floor(position.x / tileSize) * tileSize + tileSize / 2.0f,
+                                        Mathf.Floor(position.y / tileSize) * tileSize + tileSize / 2.0f, 0);
+                } else {
+                    point = new Vector3(Mathf.Round(position.x / tileSize) * tileSize,
+                                        Mathf.Round(position.y / tileSize) * tileSize, 0);
+                }
 
-                    if (e.isMouse && e.button == 1 && e.type == EventType.mouseUp) {
-                        if (activeGo != null) {
-                            Position pos = new Position(new Vector3(point.x, point.y, layer_index));
+                if (e.isMouse && e.button == 1) {
+                    int controlID = GUIUtility.GetControlID (FocusType.Passive);
 
-                            if (!objects.ContainsKey(pos)) {
-                                PlaceGameObject(pos, point);
-                            } else {
-                                GameObject obj = objects[pos];
+                    switch (e.GetTypeForControl (controlID)) {
+                        case EventType.MouseDown:
+                            GUIUtility.hotControl = controlID;
+                            if (!selectionCopying) {
+                                startPoint = point;
+                                copyObjects.Clear();
+                            }
+                            e.Use();
+                        break;
 
-                                if (obj == null) {
-                                    objects.Remove(pos);
-                                    PlaceGameObject(pos, point);
+                        case EventType.MouseUp:
+                            GUIUtility.hotControl = 0;
+                            if (layer_index == 4) {
+                                if (colliderCreation) {
+                                    if (colliderPoints != null) {
+                                        colliderPoints.Add(point);
+                                    }
                                 } else {
-                                    if (overwrite) {
-                                        DestroyImmediate(obj);
-                                        objects.Remove(pos);
-                                        PlaceGameObject(pos, point);
+                                    CreateCollider();
+                                    colliderPoints.Add(point);
+                                }
+                            } else {
+                                if (selectionCopying) {
+                                    if (copyObjects.Count == 0) {
+                                        HandleAreaCopy();
                                     } else {
-                                        Debug.Log(pos.ToString() + " is already taken by an object!");
+                                        HandleAreaPaste();
                                     }
+                                } else {
+                                    HandleObjectPlacement();
                                 }
                             }
-                        }
+                            e.Use();
+                        break;
+
+                        case EventType.MouseDrag:
+                            GUIUtility.hotControl = controlID;
+                            selectionCopying = true;
+                            e.Use();
+                        break;
                     }
-                    if (e.isKey && e.keyCode == KeyCode.X && e.type == EventType.keyDown) {
-                        startPoint = point;
-                        copyObjects.Clear();
-                        selectionCopying = true;
-                    }
-                    if (e.isKey && e.keyCode == KeyCode.C && e.type == EventType.keyDown) {
-                        if (startPoint == point || !IsSelectionValid(startPoint, point)) {
-                            endPoint = startPoint;
-                        } else {
-                            endPoint = point;
-                        }
-
-                        Position start = new Position(startPoint);
-                        Position end = new Position(endPoint);
-
-                        for (int x = 0; x < end.x + 1 - start.x; x++) {
-                            for (int y = 0; y < end.y + 1 - start.y; y++) {
-                                for (int z = 0; z < 4; z++) {
-                                    Position pos = new Position(start.x + x, start.y + y, z);
-
-                                    GameObject obj;
-                                    if (objects.TryGetValue(pos, out obj)) {
-                                        copyObjects.Add(pos, obj);
-                                    }
-                                }
-                            }
-                        }
-                        if (copyObjects.Count == 0) {
-                            copyObjects.Clear();
-                            selectionCopying = false;
-                            Debug.Log("Copy-area was empty, copying cancelled!");
-                        }
-                    }
-                    if (e.isKey && e.keyCode == KeyCode.V && e.type == EventType.keyDown) {
-                        selectionCopying = false;
-                        Position startPaste = new Position(point);
-
-                        foreach (Position pos in copyObjects.Keys) {
-                            GameObject _gameObject;
-                            GameObject target;
-
-                            float posX = pos.x - startPoint.x + startPaste.x + 1;
-                            float posY = pos.y - startPoint.y + startPaste.y + 1;
-                            Position pastePoint = new Position(new Vector3(posX, posY, pos.z));
-
-                            if (!objects.ContainsKey(pastePoint)) {
-                                target = copyObjects[pos];
-                                _gameObject = Instantiate(target);
-                                _gameObject.transform.parent = layers[pos.z].transform;
-                                _gameObject.transform.position = new Vector3(posX, posY, 0);
-                                _gameObject.name = target.name.Replace(pos.ToString(), pastePoint.ToString());
-                            } 
-                        }
-                        objects = level.GetLevelData();              
-                        Debug.Log(copyObjects.Count + " objects copied to Start " + startPaste.ToString());
-                        copyObjects.Clear();
+                } else if (e.isKey && e.keyCode == KeyCode.Return) {
+                    if (colliderCreation) {
+                         ColliderAssignPoints();
                     }
                 }
+            }
+        }   
+    }
+
+    void HandleObjectPlacement() {
+        if (activeGo != null) {
+            Position pos = new Position(new Vector3(point.x, point.y, layer_index));
+
+            if (!objects.ContainsKey(pos)) {
+                PlaceGameObject(pos, point);
             } else {
-                point = new Vector3(Mathf.Round(position.x / tileSize) * tileSize,
-                                    Mathf.Round(position.y / tileSize) * tileSize, 0);
+                GameObject obj = objects[pos];
 
-                if (IsInsideGrid(position)) {
-                    if (activeGo != null) {
-                        activeGo = GetActiveGameObject();
-                        activeGo.transform.position = point;
-                    }
-                }
-
-                if (colliderCreation) {
-                    if (e.isMouse && e.button == 1 && e.type == EventType.mouseDown) {
-                        if (colliderPoints != null) {
-                            colliderPoints.Add(point);
-                        }
-                    }
-                    if (e.isKey && e.keyCode == KeyCode.Return) {
-                        ColliderAssignPoints();
+                if (obj == null) {
+                    objects.Remove(pos);
+                    PlaceGameObject(pos, point);
+                } else {
+                    if (overwrite) {
+                        DestroyImmediate(obj);
+                        objects.Remove(pos);
+                        PlaceGameObject(pos, point);
+                    } else {
+                        Debug.Log(pos.ToString() + " is already taken by an object!");
                     }
                 }
             }
         }
+    }
+
+    void HandleAreaCopy() {
+        if (startPoint == point || !IsSelectionValid(startPoint, point)) {
+            endPoint = startPoint;
+        } else {
+            endPoint = point;
+        }
+
+        Position start = new Position(startPoint);
+        Position end = new Position(endPoint);
+
+        for (int x = 0; x < end.x + 1 - start.x; x++) {
+            for (int y = 0; y < end.y + 1 - start.y; y++) {
+                for (int z = 0; z < 4; z++) {
+                    Position pos = new Position(start.x + x, start.y + y, z);
+
+                    GameObject obj;
+                    if (objects.TryGetValue(pos, out obj)) {
+                        copyObjects.Add(pos, obj);
+                    }
+                }
+            }
+        }
+        if (copyObjects.Count == 0) {
+            copyObjects.Clear();
+            selectionCopying = false;
+            Debug.Log("Copy-area was empty, copying cancelled!");
+        }
+    }
+
+    void HandleAreaPaste() {
+        selectionCopying = false;
+        Position startPaste = new Position(point);
+
+        foreach (Position pos in copyObjects.Keys) {
+            GameObject _gameObject;
+            GameObject target;
+
+            float posX = pos.x - startPoint.x + startPaste.x + 1;
+            float posY = pos.y - startPoint.y + startPaste.y + 1;
+            Position pastePoint = new Position(new Vector3(posX, posY, pos.z));
+
+            if (!objects.ContainsKey(pastePoint)) {
+                target = copyObjects[pos];
+                _gameObject = Instantiate(target);
+                _gameObject.transform.parent = layers[pos.z].transform;
+                _gameObject.transform.position = new Vector3(posX, posY, 0);
+                _gameObject.name = target.name.Replace(pos.ToString(), pastePoint.ToString());
+            } 
+        }
+        objects = level.GetLevelData();              
+        Debug.Log(copyObjects.Count + " objects copied to Start " + startPaste.ToString());
+        copyObjects.Clear();
     }
 
     bool IsSelectionValid(Vector3 start, Vector3 end) {
@@ -280,25 +309,32 @@ public class LevelEditor : MonoBehaviour {
 
     void OnScene(SceneView sceneView) {
         Handles.BeginGUI();
-        if (layer_index != 4) {
-            if (selectionCopying) {
-                GUILayout.Label("Finish copy-area selection by pressing 'C' key");
-                GUILayout.Label("Paste copied area to new position by pressing 'V' key");
+        if (Selection.activeGameObject == gameObject) {
+            if (layer_index != 4) {
+                if (selectionCopying) {
+                    if (copyObjects.Count == 0) {
+                        GUILayout.Label("Finish copy-area selection by releasing right mouse button");
+                    } else {
+                        GUILayout.Label("Paste selected area by clicking right mouse button again on a new area");
+                    }
+                } else {
+                    GUILayout.Label("Right mouse click places selected prefab to the selected layer");
+                    GUILayout.Label("Start Copy-Paste feature by dragging mouse while pressing right mouse button");
+                    GUILayout.Label("Selected layer: " + layers[layer_index].name);
+                    GUILayout.Label("Selected prefab: " + activeGo.name);//
+                }
             } else {
-                GUILayout.Label("Right mouse click places selected prefab to the selected layer");
-                GUILayout.Label("Start Copy-Paste feature by pressing 'X' key");
-                GUILayout.Label("Selected layer: " + layers[layer_index].name);
-                GUILayout.Label("Selected prefab: " + activeGo.name);//
+                if (colliderCreation) {
+                    GUILayout.Label("Creating a new collider...");
+                    GUILayout.Label("Right mouse click places a new collider point");
+                    GUILayout.Label("Click 'Collider done' button when finished placing points or press 'Enter'");
+                    GUILayout.Label("Collider points: " + colliderPoints.Count);
+                } else {
+                    GUILayout.Label("Click 'Create New Collider' button to start placing points for a new collider \n or right click on the starting point");
+                }
             }
         } else {
-            if (colliderCreation) {
-                GUILayout.Label("Creating a new collider...");
-                GUILayout.Label("Right mouse click places a new collider point");
-                GUILayout.Label("Click 'Collider done' button when finished placing points or press 'Enter'");
-                GUILayout.Label("Collider points: " + colliderPoints.Count);
-            } else {
-                GUILayout.Label("Click 'Create New Collider' button to start placing points for a new collider");
-            }
+            GUILayout.Label("Level GameObject not selected. You need to select it to use all the LevelEditor features");
         }
         Handles.EndGUI();
     }
