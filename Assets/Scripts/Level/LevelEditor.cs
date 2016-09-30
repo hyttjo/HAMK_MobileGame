@@ -53,6 +53,7 @@ public class LevelEditor : MonoBehaviour {
 
             width = level.width;
             height = level.height;
+            tileSize = level.tileSize;
 
             layers = level.GetLayerGameObjects();
             objects = level.GetLevelData();
@@ -78,6 +79,7 @@ public class LevelEditor : MonoBehaviour {
     void LevelUpdate(SceneView sceneview) {
         level.width = width;
         level.height = height;
+        level.tileSize = tileSize;
 
         Event e = Event.current;
         Camera camera = Camera.current;
@@ -85,7 +87,7 @@ public class LevelEditor : MonoBehaviour {
         if (camera != null) {
             Vector3 position = camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x, -e.mousePosition.y + Screen.height - 40, 0));
 
-            if (IsInsideGrid(position)) {
+            if (Misc.IsInsideGrid(level, position)) {
                 if (activeGo != null) {
                     activeGo = GetActiveGameObject();
                     activeGo.transform.position = point;
@@ -178,7 +180,7 @@ public class LevelEditor : MonoBehaviour {
     }
 
     void HandleAreaCopy() {
-        if (startPoint == point || !IsSelectionValid(startPoint, point)) {
+        if (startPoint == point || !Misc.IsSelectionValid(startPoint, point)) {
             endPoint = startPoint;
         } else {
             endPoint = point;
@@ -220,39 +222,17 @@ public class LevelEditor : MonoBehaviour {
 
             if (!objects.ContainsKey(pastePoint)) {
                 target = copyObjects[pos];
-                _gameObject = Instantiate(target);
-                _gameObject.transform.parent = layers[pos.z].transform;
-                _gameObject.transform.position = new Vector3(posX, posY, 0);
-                _gameObject.name = target.name.Replace(pos.ToString(), pastePoint.ToString());
+                if (target != null) {
+                    _gameObject = Instantiate(target);
+                    _gameObject.transform.parent = layers[pos.z].transform;
+                    _gameObject.transform.position = new Vector3(posX, posY, 0);
+                    _gameObject.name = target.name.Replace(pos.ToString(), pastePoint.ToString());
+                }
             } 
         }
         objects = level.GetLevelData();              
         Debug.Log(copyObjects.Count + " objects copied to Start " + startPaste.ToString());
         copyObjects.Clear();
-    }
-
-    bool IsSelectionValid(Vector3 start, Vector3 end) {
-        if (start.x > end.x) {
-            return false;
-        } else if (start.y > end.y) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    bool IsInsideGrid(Vector3 position) {
-        if (position.x < 0) {
-            return false;
-        } else if (position.y < 0) {
-            return false;
-        } else if (position.x > width * tileSize) {
-            return false;
-        } else if (position.y > height * tileSize) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     void OnDrawGizmos() {
@@ -271,17 +251,21 @@ public class LevelEditor : MonoBehaviour {
 
         DrawRectangle(Vector3.zero, new Vector3(width, height, 0), 0, Color.white);
 
-        if (IsInsideGrid(point)) {
+        if (Misc.IsInsideGrid(level, point)) {
             if (layer_index != 4) {
                 if (selectionCopying) {
                     if (copyObjects.Count == 0) {
-                        if (!IsSelectionValid(startPoint, point)) {
+                        if (!Misc.IsSelectionValid(startPoint, point)) {
                             point = startPoint;
                         }
                         DrawRectangle(startPoint, point, tileSize / 2, Color.yellow);
                     } else {
-                        Position end = copyObjects.Keys.Last();
-                        DrawRectangle(startPoint, new Vector3(end.x + tileSize / 2, end.y + tileSize / 2, 0), tileSize / 2, Color.cyan);
+                        foreach (KeyValuePair<Position, GameObject> pair in copyObjects) {
+                            Position pos = pair.Key;
+                            GameObject _gameObject = pair.Value;
+                            Vector3 objectPoint =  new Vector3(0.5f, 0.5f, 0) + new Vector3(pos.x, pos.y, 0)  - new Vector3(startPoint.x, startPoint.y, 0) + new Vector3(point.x, point.y, 0);
+                            DrawRectangle(objectPoint, objectPoint, tileSize / 2, Color.cyan);
+                        }
                     }
                 } else {
                     DrawRectangle(point, point, tileSize / 2, Color.red);
