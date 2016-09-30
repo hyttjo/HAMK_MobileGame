@@ -4,6 +4,9 @@ using System.Collections.Generic;
 public class Level : MonoBehaviour {
     public Dictionary<Position, GameObject> objects;
 
+    public int width = 128;
+    public int height = 32;
+
     private GameObject[] layers;
 
     void Start() {
@@ -28,7 +31,7 @@ public class Level : MonoBehaviour {
     }
 
     public GameObject[] GetLayerGameObjects() {
-        GameObject[] layersArray = new GameObject[4];
+        GameObject[] layersArray = new GameObject[5];
 
         GameObject background = GameObject.Find("Background");
         if (background == null) {
@@ -58,11 +61,22 @@ public class Level : MonoBehaviour {
         }
         layersArray[3] = foreground;
 
+        GameObject colliders = GameObject.Find("Colliders");
+        if (colliders == null) {
+            colliders = new GameObject("Colliders");
+            colliders.transform.parent = transform;
+        }
+        layersArray[4] = colliders;
+
         return layersArray;
     }
 
     public Dictionary<Position, GameObject> GetLevelData() {
         Dictionary<Position, GameObject> levelData = new Dictionary<Position, GameObject>();
+
+        if (layers == null) {
+            layers = GetLayerGameObjects();
+        }
 
         for (int i = 0; i < layers.Length; i++) {
             GameObject layer = layers[i];
@@ -71,10 +85,9 @@ public class Level : MonoBehaviour {
 
             foreach (GameObject _gameObject in arrayGamelevelData) {
                 Vector2 position = _gameObject.transform.position;
-                levelData.Add(new Position(position), _gameObject);
+                levelData.Add(new Position(new Vector3(position.x, position.y, i)), _gameObject);
             }
         }
-
         return levelData;
     }
 }
