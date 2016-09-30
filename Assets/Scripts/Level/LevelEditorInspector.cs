@@ -8,6 +8,7 @@ public class LevelEditorInspector : Editor {
 
     private GUIContent[] objects;
     private string[] layers;
+    private int previousActiveGO_index;
 
     public void OnEnable() {
         editor = (LevelEditor)target;
@@ -59,6 +60,13 @@ public class LevelEditorInspector : Editor {
 
                 if (sRenderer != null) {
                     Sprite activeGO_sprite = sRenderer.sprite;
+                    int renderer_layer = sRenderer.sortingOrder;
+
+                    if (previousActiveGO_index != editor.activeGO_index) {
+                        editor.layer_index = renderer_layer;
+                    }
+
+                    previousActiveGO_index = editor.activeGO_index;
 
                     if (activeGO_sprite != null) {
                         activeGO_texture = Misc.GetTextureFromSprite(activeGO_sprite);
@@ -117,6 +125,13 @@ public class LevelEditorInspector : Editor {
                             GUILayout.Button(" Waiting... ");
                         }
                         GUILayout.EndHorizontal();
+
+                        GUILayout.Space(10);
+                        
+                        for (int i = 0; i < editor.colliderPoints.Count; i++) {
+                            Vector2 point = editor.colliderPoints[i];
+                            GUILayout.Label("Point: " + i + ": (x " + point.x + ", y " + point.y + ")");
+                        }
                 GUILayout.EndVertical();
                 GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();  

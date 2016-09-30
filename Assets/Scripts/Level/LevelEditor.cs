@@ -122,6 +122,9 @@ public class LevelEditor : MonoBehaviour {
                             colliderPoints.Add(point);
                         }
                     }
+                    if (e.isKey && e.keyCode == KeyCode.Return) {
+                        ColliderAssignPoints();
+                    }
                 }
              }
         }
@@ -207,7 +210,7 @@ public class LevelEditor : MonoBehaviour {
             if (colliderCreation) {
                 GUILayout.Label("Creating a new collider...");
                 GUILayout.Label("Right mouse click places a new collider point");
-                GUILayout.Label("Click 'Collider done' button when finished placing points");
+                GUILayout.Label("Click 'Collider done' button when finished placing points or press 'Enter'");
                 GUILayout.Label("Collider points: " + colliderPoints.Count);
             } else {
                 GUILayout.Label("Click 'Create New Collider' button to start placing points for a new collider");
@@ -285,6 +288,7 @@ public class LevelEditor : MonoBehaviour {
                 EdgeCollider2D eCollider = collider.GetComponent<EdgeCollider2D>();
                 if (eCollider != null) {
                     eCollider.points = colliderPoints.ToArray();
+                    colliderPoints.Clear();
                 }
             }
         } else {
