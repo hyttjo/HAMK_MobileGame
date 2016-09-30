@@ -5,9 +5,12 @@ public class PlayerHUD : MonoBehaviour {
 
     public GameObject player;
     private Health health;
+    private Score score;
     public Font font;
     public Sprite healthSprite;
+    public Sprite coinSprite;
     private Texture2D healthTexture;
+    private Texture2D coinTexture;
     public int numberOfHearts = 3;
     public int hudHeight = 50;
     public Rect padding = new Rect(10, 10, 10, 10);
@@ -22,9 +25,14 @@ public class PlayerHUD : MonoBehaviour {
             player = GameObject.FindGameObjectWithTag("Player");
 
             health = player.GetComponent<Health>();
+            score = player.GetComponent<Score>();
 
             if (healthSprite != null) {
                 healthTexture = Misc.GetTextureFromSprite(healthSprite);
+            }
+            if (coinSprite != null)
+            {
+                coinTexture = Misc.GetTextureFromSprite(coinSprite);
             }
         }
 
@@ -57,6 +65,22 @@ public class PlayerHUD : MonoBehaviour {
                     GUI.DrawTexture(rect, healthTexture);
                 }
             }
+        }
+
+        if (score != null) {
+            int coinsInt = (int)score.GetCoins();
+
+            if (coinsInt < 0) {
+                coinsInt = 0;
+            }
+
+            GUI.Label(new Rect(padding.x + 200, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Coins:");
+
+            Rect rect = new Rect(padding.x + 310 + 20 + 4, padding.y + 4, 20, 20);
+            GUI.DrawTexture(rect, coinTexture);
+
+            string coinCount = "*" + coinsInt;
+            GUI.Label(new Rect(padding.x + 350, padding.y, Screen.width - padding.width, hudHeight - padding.height), coinCount);
         }
     }
 }

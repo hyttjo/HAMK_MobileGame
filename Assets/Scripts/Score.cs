@@ -28,5 +28,10 @@ public class Score : MonoBehaviour {
 
     public void GainCoin() {
         score += coinValue;
+        coinsCollected++;
+    }
+
+    public int GetCoins() { // Palauttaa kerättyjen kolikoiden määrän. Tätä tarvitaan käyttöliittymää varten.
+        return coinsCollected;
     }
 }
