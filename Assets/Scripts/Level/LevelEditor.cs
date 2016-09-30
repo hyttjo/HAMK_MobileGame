@@ -34,8 +34,17 @@ public class LevelEditor : MonoBehaviour {
 
     public bool overwrite = false;
 
+    GUIStyle instruction;
+    GUIStyle info;
+
     public void OnEnable() {
         if (Application.isEditor) {
+            Texture2D texture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+            texture.SetPixel(0, 0, new Color(0f, 0f, 0f, 0.5f));
+            texture.Apply();
+            instruction = new GUIStyle { fontSize = 10, normal = new GUIStyleState { textColor = Color.red, background = texture }, padding = new RectOffset(10, 10, 2, 2) };
+            info = new GUIStyle { fontSize = 10, normal = new GUIStyleState { textColor = Color.white }, padding = new RectOffset(10, 10, 2, 2) };
+
             level = GetComponent<Level>();
 
             if (level == null) {
@@ -309,32 +318,33 @@ public class LevelEditor : MonoBehaviour {
 
     void OnScene(SceneView sceneView) {
         Handles.BeginGUI();
+
         if (Selection.activeGameObject == gameObject) {
             if (layer_index != 4) {
                 if (selectionCopying) {
                     if (copyObjects.Count == 0) {
-                        GUILayout.Label("Finish copy-area selection by releasing right mouse button");
+                        GUILayout.Label("Finish copy-area selection by releasing right mouse button", instruction);
                     } else {
-                        GUILayout.Label("Paste selected area by clicking right mouse button again on a new area");
+                        GUILayout.Label("Paste selected area by clicking right mouse button again on a new area", instruction);
                     }
                 } else {
-                    GUILayout.Label("Right mouse click places selected prefab to the selected layer");
-                    GUILayout.Label("Start Copy-Paste feature by dragging mouse while pressing right mouse button");
-                    GUILayout.Label("Selected layer: " + layers[layer_index].name);
-                    GUILayout.Label("Selected prefab: " + activeGo.name);//
+                    GUILayout.Label("Right mouse click places selected prefab to the selected layer", instruction);
+                    GUILayout.Label("Start Copy-Paste feature by dragging mouse while pressing right mouse button", instruction);
+                    GUILayout.Label("Selected layer: " + layers[layer_index].name, info);
+                    GUILayout.Label("Selected prefab: " + activeGo.name, info);
                 }
             } else {
                 if (colliderCreation) {
-                    GUILayout.Label("Creating a new collider...");
-                    GUILayout.Label("Right mouse click places a new collider point");
-                    GUILayout.Label("Click 'Collider done' button when finished placing points or press 'Enter'");
-                    GUILayout.Label("Collider points: " + colliderPoints.Count);
+                    GUILayout.Label("Creating a new collider...", info);
+                    GUILayout.Label("Right mouse click places a new collider point", instruction);
+                    GUILayout.Label("Click 'Collider done' button when finished placing points or press 'Enter'", instruction);
+                    GUILayout.Label("Collider points: " + colliderPoints.Count, info);
                 } else {
-                    GUILayout.Label("Click 'Create New Collider' button to start placing points for a new collider \n or right click on the starting point");
+                    GUILayout.Label("Click 'Create New Collider' button to start placing points for a new collider or right click on the starting point", instruction);
                 }
             }
         } else {
-            GUILayout.Label("Level GameObject not selected. You need to select it to use all the LevelEditor features");
+            GUILayout.Label("Level GameObject not selected. You need to select it to use all the LevelEditor features", instruction);
         }
         Handles.EndGUI();
     }
