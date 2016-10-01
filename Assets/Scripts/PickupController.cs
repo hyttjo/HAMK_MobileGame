@@ -31,7 +31,9 @@ public class PickupController : MonoBehaviour {
 	}
 
     void OnTriggerEnter2D(Collider2D col) {
-        if (behaviour == Pickups.Heart && col.gameObject.tag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.Heart
+        string colliderTag = col.gameObject.transform.parent.gameObject.tag;
+
+        if (behaviour == Pickups.Heart && colliderTag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.Heart
             Health health = col.GetComponentInParent<Health>(); // Haetaan pelaajan käyttämä Health-skripti
             if (health != null){ // Jos Health-skripti on olemassa...
                 health.GainHealthPickup(); // ...käytetään sen sisäistä funktiota pelaajan parantamiseen...
@@ -39,7 +41,7 @@ public class PickupController : MonoBehaviour {
             }
         }
 
-        if (behaviour == Pickups.Coin && col.gameObject.tag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.Coin
+        if (behaviour == Pickups.Coin && colliderTag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.Coin
             Score score = col.GetComponentInParent<Score>(); // Haetaan pelaajan käyttämä Score-skripti
             if (score != null) { // Jos Score-skripti on olemassa...
                 score.GainCoin(); // ...käytetään sen sisäistä funktiota siihen, että pelaajalle merkataan kerätty kolikko...
@@ -47,7 +49,7 @@ public class PickupController : MonoBehaviour {
             }
         }
 
-        if (behaviour == Pickups.Fireball && col.gameObject.tag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.IceShard
+        if (behaviour == Pickups.Fireball && colliderTag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.IceShard
             CharacterControl cControl = col.GetComponentInParent<CharacterControl>(); // Haetaan pelaajan käyttämä CharacterControl-skripti
             if (cControl != null)
             { // Jos CharacterControl-skripti on olemassa...
@@ -56,7 +58,7 @@ public class PickupController : MonoBehaviour {
             }
         }
 
-        if (behaviour == Pickups.IceShard && col.gameObject.tag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.IceShard
+        if (behaviour == Pickups.IceShard && colliderTag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.IceShard
             CharacterControl cControl = col.GetComponentInParent<CharacterControl>(); // Haetaan pelaajan käyttämä CharacterControl-skripti
             if (cControl != null) { // Jos CharacterControl-skripti on olemassa...
                 cControl.GainIceShard(); // ...käytetään sen sisäistä funktiota siihen, että pelaajalle annetaan kyky ampua jäätikkuja...
