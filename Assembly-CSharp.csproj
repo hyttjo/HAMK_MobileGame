@@ -49,13 +49,13 @@
      <Compile Include="Assets\Scripts\BreakableObject.cs" />
      <Compile Include="Assets\Scripts\CameraControl.cs" />
      <Compile Include="Assets\Scripts\CharacterControl.cs" />
+     <Compile Include="Assets\Scripts\ContainerController.cs" />
      <Compile Include="Assets\Scripts\Health.cs" />
      <Compile Include="Assets\Scripts\Level\Level.cs" />
      <Compile Include="Assets\Scripts\Level\LevelEditor.cs" />
      <Compile Include="Assets\Scripts\Level\LevelEditorInspector.cs" />
      <Compile Include="Assets\Scripts\Level\LevelLoader.cs" />
      <Compile Include="Assets\Scripts\Misc.cs" />
-     <Compile Include="Assets\Scripts\PickupControl.cs" />
      <Compile Include="Assets\Scripts\PickupController.cs" />
      <Compile Include="Assets\Scripts\PlayerControl.cs" />
      <Compile Include="Assets\Scripts\PlayerHUD.cs" />
