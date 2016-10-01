@@ -46,9 +46,12 @@ public class Health : MonoBehaviour {
 
         if (colliderTag == "DamageTypePit") {
             DeathByPit();
-        } else if (colliderTag == "DamageTypeFire") {
+        } else if (colliderTag == "DamageTypeFire" || colliderTag == "DamageTypeFireball") {
             if (!immuneToFire) {
                 DamageByFire(col);
+            }
+            if (colliderTag == "DamageTypeFireball") {
+                Destroy(col.gameObject);
             }
         } else if (colliderTag == "DamageTypeBite") {
             if (!immuneToBite) {
