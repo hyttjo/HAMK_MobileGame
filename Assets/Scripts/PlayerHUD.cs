@@ -5,10 +5,18 @@ public class PlayerHUD : MonoBehaviour
 {
 
     public GameObject player;
+    private CharacterControl cControl;
     private Health health;
+    private Score score;
     public Font font;
     public Sprite healthSprite;
+    public Sprite coinSprite;
+    public Sprite fireSprite;
+    public Sprite iceSprite;
     private Texture2D healthTexture;
+    private Texture2D coinTexture;
+    private Texture2D fireTexture;
+    private Texture2D iceTexture;
     public int numberOfHearts = 3;
     public int hudHeight = 50;
     public Rect padding = new Rect(10, 10, 10, 10);
@@ -23,12 +31,16 @@ public class PlayerHUD : MonoBehaviour
         if (player != null)
         {
             player = GameObject.FindGameObjectWithTag("Player");
-
+            cControl = player.GetComponent<CharacterControl>();
             health = player.GetComponent<Health>();
+            score = player.GetComponent<Score>();
 
             if (healthSprite != null)
             {
                 healthTexture = Misc.GetTextureFromSprite(healthSprite);
+                coinTexture = Misc.GetTextureFromSprite(coinSprite);
+                fireTexture = Misc.GetTextureFromSprite(fireSprite);
+                iceTexture = Misc.GetTextureFromSprite(iceSprite);
             }
         }
 
@@ -39,34 +51,86 @@ public class PlayerHUD : MonoBehaviour
 
     void OnGUI()
     {
+        DisplayBackground();
+        DisplayHealth();
+        DisplayCoins();
+        DisplayPowerUp();
+        DisplayScore();
+    }
+
+    void DisplayBackground() {
         GUI.skin.box.normal.background = background;
-
         GUI.Box(new Rect(0, 0, Screen.width, hudHeight), GUIContent.none);
+    }
 
-        if (font != null)
-        {
+    void DisplayHealth() {
+        if (font != null) {
             GUI.skin.font = font;
         }
 
-        if (health != null)
-        {
+        if (health != null) {
             int healthInt = (int)health.health;
 
-            if (healthInt < 0)
-            {
+            if (healthInt < 0) {
                 healthInt = 0;
             }
 
             GUI.Label(new Rect(padding.x, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Health:");
 
-            if (healthTexture != null)
-            {
-                for (int i = 0; i < health.health / Mathf.CeilToInt(100 / numberOfHearts); i++)
-                {
+            if (healthTexture != null) {
+                for (int i = 0; i < health.health / Mathf.CeilToInt(100 / numberOfHearts); i++) {
                     Rect rect = new Rect(padding.x + 110 + 20 * i + 4 * i, padding.y + 4, 20, 20);
                     GUI.DrawTexture(rect, healthTexture);
                 }
             }
+        }
+    }
+
+    void DisplayCoins() {
+        if (font != null) {
+            GUI.skin.font = font;
+        }
+
+        if (health != null) {
+            int coinInt = score.GetCoins();
+
+            GUI.Label(new Rect(padding.x + 200, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Coins:");
+
+            if (healthTexture != null) {
+                
+                Rect rect = new Rect(padding.x + 260 + 20 + 4, padding.y + 4, 20, 20);
+                GUI.DrawTexture(rect, coinTexture);
+            }
+            string coinText = "*" + coinInt;
+            GUI.Label(new Rect(padding.x + 310, padding.y, Screen.width - padding.width, hudHeight - padding.height), coinText);
+        }
+    }
+
+    void DisplayPowerUp() {
+        if (font != null) {
+            GUI.skin.font = font;
+        }
+
+        if (cControl != null) {
+
+            GUI.Label(new Rect(padding.x + 400, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Power:");
+
+            if (cControl.currentPower != null && cControl.currentPower.gameObject.tag == "DamageTypeFireball") {
+                Rect rect = new Rect(padding.x + 470 + 20 + 4, padding.y + 4, 20, 20);
+                GUI.DrawTexture(rect, fireTexture);
+            }
+        }
+    }
+
+    void DisplayScore() {
+        if (font != null) {
+            GUI.skin.font = font;
+        }
+
+        if (health != null) {
+            int coinInt = score.GetCoins();
+            string scoreText = "Score: " + score.GetScore();
+            GUI.Label(new Rect(padding.x + 550, padding.y, Screen.width - padding.width, hudHeight - padding.height), scoreText);
         }
     }
 }

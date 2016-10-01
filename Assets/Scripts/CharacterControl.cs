@@ -23,7 +23,7 @@ public class CharacterControl : MonoBehaviour {
     private float timer = 0;
     private bool canShoot = false;
 
-    private GameObject currentPower;
+    public GameObject currentPower;
     public GameObject firePower;
     public GameObject icePower;
 
