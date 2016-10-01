@@ -51,13 +51,4 @@ public class AIControl : MonoBehaviour {
             moveDirection *= -1;
         }
     }
-
-    void OnDestroy(){
-        if (Random.Range(0,100) <= lootChance) {
-            ContainerController containerController = GetComponent<ContainerController>();
-            if (containerController != null && containerController.pickup != null) {
-                containerController.SpawnPickup(transform.position);
-            }
-        }
-    }
 }

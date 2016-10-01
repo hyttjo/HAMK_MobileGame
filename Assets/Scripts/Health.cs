@@ -119,6 +119,13 @@ public class Health : MonoBehaviour {
             Destroy(deathEffect, 0.5f);
             this.enabled = false;
         }
+        AIControl aiControl = gameObject.GetComponent<AIControl>();
+        if (Random.Range(0, 100) <= aiControl.lootChance) {
+            ContainerController containerController = GetComponent<ContainerController>();
+            if (containerController != null && containerController.pickup != null) {
+                containerController.SpawnPickup(transform.position);
+            }
+        }
         GameObject.Destroy(_gameObject);
     }
 }
