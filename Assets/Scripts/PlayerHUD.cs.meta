@@ -1,14 +1,14 @@
 fileFormatVersion: 2
 guid: 7396a0886efdf2e4e833cc9b69dd3d02
-timeCreated: 1475279578
+timeCreated: 1475289144
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
-  - player: {fileID: 1000013279175588, guid: 993ec11e475d7bd46a73d379d8cba19c, type: 2}
-  - font: {fileID: 12800000, guid: 19b64fe540a2dfc4d80ce9935f9e8e4d, type: 3}
-  - healthSprite: {fileID: 21300002, guid: 3d2dbe543f520c7498ac4f932cef37a0, type: 3}
-  - coinSprite: {fileID: 21300016, guid: 3d2dbe543f520c7498ac4f932cef37a0, type: 3}
+  - player: {instanceID: 0}
+  - font: {instanceID: 0}
+  - healthSprite: {instanceID: 0}
+  - coinSprite: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

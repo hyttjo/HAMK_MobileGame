@@ -34,4 +34,9 @@ public class Score : MonoBehaviour {
     public int GetCoins() { // Palauttaa kerättyjen kolikoiden määrän. Tätä tarvitaan käyttöliittymää varten.
         return coinsCollected;
     }
+
+    public int GetScore()
+    { // Palauttaa kokonaispisteiden määrän. Tätä tarvitaan käyttöliittymää varten.
+        return score;
+    }
 }
