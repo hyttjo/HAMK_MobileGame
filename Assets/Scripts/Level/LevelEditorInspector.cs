@@ -18,9 +18,15 @@ public class LevelEditorInspector : Editor {
 
             for (int i = 0; i < editor.prefabs.Length; i++) {
                 GUIContent content = new GUIContent();
-                content.image = GetTextureFromObject(editor.prefabs[i]);
-                content.tooltip = editor.prefabs[i].name;
-                objects[i] = content;
+                Texture2D image = GetTextureFromObject(editor.prefabs[i]);
+
+                if (image != null) {
+                    content.image = image;
+                    content.tooltip = editor.prefabs[i].name;
+                    objects[i] = content;
+                } else {
+                    objects[i] = GUIContent.none;
+                }
             }
         }
 
@@ -70,7 +76,10 @@ public class LevelEditorInspector : Editor {
 
                     if (activeGO_sprite != null) {
                         activeGO_texture = Misc.GetTextureFromSprite(activeGO_sprite);
-                        activeGO_texture.filterMode = FilterMode.Point;
+
+                        if (activeGO_texture != null) {
+                            activeGO_texture.filterMode = FilterMode.Point;
+                        }
                     }
                 }
             }
@@ -139,6 +148,7 @@ public class LevelEditorInspector : Editor {
             GUILayout.Space(40);
         }
         editor.activeGo = editor.GetActiveGameObject();
+        editor.UpdateBottomPit();
 
         SceneView.RepaintAll();
     }
@@ -152,8 +162,11 @@ public class LevelEditorInspector : Editor {
 
                 if (sprite != null) {
                     Texture2D texture = Misc.GetTextureFromSprite(sprite);
-                    texture.filterMode = FilterMode.Point;
-                    return texture;
+
+                    if (texture != null) {
+                        texture.filterMode = FilterMode.Point;
+                        return texture;
+                    }
                 }
             }
         }

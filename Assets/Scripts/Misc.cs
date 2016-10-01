@@ -169,9 +169,14 @@ public static class Misc {
                                                          (int)sprite.textureRect.y,
                                                          (int)sprite.textureRect.width,
                                                          (int)sprite.textureRect.height);
-            newText.SetPixels(newColors);
-            newText.Apply();
-            return newText;
+
+            if (newColors.Length >= newText.width * newText.height) {
+                newText.SetPixels(newColors);
+                newText.Apply();
+                return newText;
+            } else {
+                return null;
+            }
         } else
             return sprite.texture;
     }

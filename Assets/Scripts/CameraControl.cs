@@ -10,13 +10,20 @@ public class CameraControl : MonoBehaviour {
 	public float offsetMultiplierY = 0.01f;
 	public float offsetClampY = 0.05f;
     public float cameraHeight = 1f;
-    public Rect cameraBounds = new Rect(7,3,1017,253);
+    public Rect cameraBounds = new Rect(8,8,1016,248);
     private Vector3 cameraPosition;
 	
 	void Start () {
 		if (player == null) {
             player = GameObject.FindGameObjectWithTag("Player");
 		}
+
+        Level level = GameObject.FindGameObjectWithTag("Level").GetComponent<Level>();
+
+        if (level != null) {
+            cameraBounds.width = level.width;
+            cameraBounds.height = level.height;
+        }
 
         if (background.Length > 0) {
 			backgroundMat = new Material[background.Length];

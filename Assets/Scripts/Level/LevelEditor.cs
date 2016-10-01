@@ -34,8 +34,10 @@ public class LevelEditor : MonoBehaviour {
 
     public bool overwrite = false;
 
-    GUIStyle instruction;
-    GUIStyle info;
+    private GameObject bottomPit;
+
+    private GUIStyle instruction;
+    private GUIStyle info;
 
     public void OnEnable() {
         if (Application.isEditor) {
@@ -67,6 +69,15 @@ public class LevelEditor : MonoBehaviour {
 
             if (prefabs != null) {
                 activeGo = GetActiveGameObject();
+                bottomPit = GameObject.FindGameObjectWithTag("DamageTypePit");
+
+                if (bottomPit == null) {
+                    bottomPit = GetBottomPit();
+                    Instantiate(bottomPit);
+                    UpdateBottomPit();
+                } else { 
+                    UpdateBottomPit();
+                }
             }
         }
     }
@@ -262,7 +273,6 @@ public class LevelEditor : MonoBehaviour {
                     } else {
                         foreach (KeyValuePair<Position, GameObject> pair in copyObjects) {
                             Position pos = pair.Key;
-                            GameObject _gameObject = pair.Value;
                             Vector3 objectPoint =  new Vector3(0.5f, 0.5f, 0) + new Vector3(pos.x, pos.y, 0)  - new Vector3(startPoint.x, startPoint.y, 0) + new Vector3(point.x, point.y, 0);
                             DrawRectangle(objectPoint, objectPoint, tileSize / 2, Color.cyan);
                         }
@@ -347,6 +357,27 @@ public class LevelEditor : MonoBehaviour {
         return prefabs.ToArray();
     }
 
+    GameObject GetBottomPit() {
+        GameObject bottomPit = null;
+
+        if (prefabs != null) {
+            foreach (GameObject _gameObject in prefabs) {
+                if (_gameObject.name == "BottomDamage") {
+                    bottomPit = _gameObject;
+                }
+            }
+        }
+        return bottomPit;
+    }
+
+    public void UpdateBottomPit() {
+        bottomPit.transform.position = Vector3.zero;
+        bottomPit.name.Replace("(Clone)", "");
+        EdgeCollider2D eCollider = bottomPit.GetComponent<EdgeCollider2D>();
+        eCollider.offset = new Vector2(0, -3);
+        eCollider.points = new Vector2[] { new Vector2(-10, 0), new Vector2(level.width + 10, 0) };
+    }
+
     public GameObject GetActiveGameObject() {
         if (prefabs != null) {
             return prefabs[activeGO_index];
@@ -403,6 +434,12 @@ public class LevelEditor : MonoBehaviour {
                 if (eCollider != null) {
                     eCollider.points = colliderPoints.ToArray();
                     colliderPoints.Clear();
+
+                    PhysicsMaterial2D physicsMaterial = (PhysicsMaterial2D)Resources.Load("Materials/Grass");
+
+                    if (physicsMaterial != null) {
+                        eCollider.sharedMaterial = physicsMaterial;
+                    }
                 }
             }
         } else {
