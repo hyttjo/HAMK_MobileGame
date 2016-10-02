@@ -5,19 +5,21 @@ using System.Collections;
 public class AIControl : MonoBehaviour {
 
     private CharacterControl cControl;
-    private Level level;
 
     private Vector2 moveDirection;
+    public Vector2[] path;
+
+    private int path_index = 0;
+    private bool path_increment_up = true;
 
     public int lootChance = 33;
 
     void Start () {
         cControl = GetComponent<CharacterControl>();
-        level = GameObject.FindGameObjectWithTag("Level").GetComponent<Level>();
 
         moveDirection = new Vector2(-1, 0);
 
-        InvokeRepeating("CheckObstacles", 1f, 1f);
+        InvokeRepeating("FollowPath", 0, 0.5f);
     }
 
     void FixedUpdate () {
@@ -34,21 +36,32 @@ public class AIControl : MonoBehaviour {
     	}
     }
 
-    void CheckObstacles() {
-        Vector2 position = cControl.character.transform.position;
-        Vector2 forward = position + moveDirection + Vector2.up * 0.5f;
-        Vector2 forwardDown = position + moveDirection + Vector2.down * 0.5f;
+    void FollowPath() {
+        if (path != null && path.Length > 0) {
+            Vector2 waypoint = path[path_index];
+            Vector2 position = cControl.character.transform.position;
+            float waypointDistance = Vector2.Distance(position, waypoint);
 
-        GameObject obstacle = level.GetGameObject(forwardDown);
-        
-        if (obstacle == null) {
-            moveDirection *= -1;
-        }
-        
-        obstacle = level.GetGameObject(forward);
+            if (waypointDistance < 1.5f) {
+                if (path_index == path.Length - 1) {
+                    path_increment_up = false;
+                } else if (path_index == 0) {
+                    path_increment_up = true;
+                }
 
-        if (obstacle != null) {
-            moveDirection *= -1;
+                if (path_increment_up) {
+                    path_index++;
+                } else {
+                    path_index--;
+                }
+            }
+
+            if (position.x < waypoint.x) {
+                moveDirection = Vector2.right;   
+            }
+            if (position.x > waypoint.x) {
+                moveDirection = Vector2.left;
+            }
         }
     }
 }

@@ -23,6 +23,10 @@ public class LevelEditor : MonoBehaviour {
     public Vector3 startPoint;
     public Vector3 endPoint;
 
+    public List<GameObject> pathObjects;
+    public List<Vector2> path;
+    public bool pathCreation = false;
+
     private Vector3 point;
 
     public int activeGO_index = 0;
@@ -61,6 +65,13 @@ public class LevelEditor : MonoBehaviour {
             objects = level.GetLevelData();
             colliders = new List<GameObject>();
             copyObjects = new Dictionary<Position, GameObject>();
+
+            path = new List<Vector2>();
+            pathObjects = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+
+            if (pathObjects == null) {
+                pathObjects = new List<GameObject>();
+            }
 
             SceneView.onSceneGUIDelegate += LevelUpdate;
             SceneView.onSceneGUIDelegate += OnScene;
@@ -143,6 +154,8 @@ public class LevelEditor : MonoBehaviour {
                                     } else {
                                         HandleAreaPaste();
                                     }
+                                } else if (pathCreation) {
+                                    HandlePathCreation();
                                 } else {
                                     HandleObjectPlacement();
                                 }
@@ -160,6 +173,9 @@ public class LevelEditor : MonoBehaviour {
                     if (e.keyCode == KeyCode.Return) {
                         if (colliderCreation) {
                              ColliderAssignPoints();
+                        }
+                        if (pathCreation) {
+                            AssignPath();
                         }
                     } else if (e.keyCode == KeyCode.Escape) {
                         if (colliderCreation) {
@@ -261,6 +277,23 @@ public class LevelEditor : MonoBehaviour {
         Selection.activeGameObject = gameObject;
     }
 
+    void HandlePathCreation() {
+        path.Add(point);
+    }
+
+    void AssignPath() {
+        if (pathObjects != null && pathObjects.Count > 0) {
+
+            AIControl aiControl = pathObjects.Last().GetComponent<AIControl>();
+
+            if (aiControl != null) {
+                aiControl.path = path.ToArray();
+            }
+        }
+        path.Clear();
+        pathCreation = false;
+    }
+
     void OnDrawGizmos() {
         Gizmos.color = Color.black;
 
@@ -292,6 +325,28 @@ public class LevelEditor : MonoBehaviour {
                             DrawRectangle(objectPoint, objectPoint, tileSize / 2, Color.cyan);
                         }
                     }
+                } else if (pathCreation) {
+                    DrawRectangle(point, point, tileSize / 5, Color.red);
+
+                    if (pathObjects.Count > 0) {
+                        Vector3 pathObjectPosition = pathObjects[pathObjects.Count - 1].transform.position;
+
+                        Gizmos.color = Color.yellow;
+
+                        if (path.Count == 0) {
+                            Gizmos.DrawLine(pathObjectPosition, point);
+                        } else if (path.Count > 0) {
+                            Gizmos.DrawLine(path.Last(), point);
+                        }
+
+                        Gizmos.color = Color.red;
+
+                        for (int i = 0; i < path.Count; i++) {
+                            if (i < path.Count - 1) {
+                                Gizmos.DrawLine(path[i], path[i + 1]);
+                            }
+                        }
+                    }
                 } else {
                     DrawRectangle(point, point, tileSize / 2, Color.red);
                 }
@@ -311,6 +366,24 @@ public class LevelEditor : MonoBehaviour {
 
                     if (colliderPoints.Count > 0) {
                         Gizmos.DrawLine(colliderPoints.Last(), point);
+                    }
+                }
+            }
+        }
+
+        Gizmos.color = Color.red;
+
+        for (int i = 0; i < pathObjects.Count; i++) {
+            if (pathObjects[i] != null) {
+                AIControl aiControl = pathObjects[i].GetComponent<AIControl>();
+
+                if (aiControl != null) {
+                    if (aiControl.path.Length > 1) {
+                        for (int j = 0; j < aiControl.path.Length; j++) {
+                            if (j < aiControl.path.Length - 1) {
+                                Gizmos.DrawLine(aiControl.path[j], aiControl.path[j + 1]);
+                            }
+                        }
                     }
                 }
             }
@@ -337,6 +410,11 @@ public class LevelEditor : MonoBehaviour {
                         GUILayout.Label("Paste selected area by clicking right mouse button again on a new area", instruction);
                         GUILayout.Label("Cancel area copying by pressing 'Esc'", instruction);
                     }
+                } else if (pathCreation) {
+                    GUILayout.Label("Creating a new path...", info);
+                    GUILayout.Label("Right mouse click places a new path point", instruction);
+                    GUILayout.Label("When finished placing path points press 'Enter'", instruction);
+                    GUILayout.Label("Path points: " + path.Count, info);
                 } else {
                     GUILayout.Label("Right mouse click places selected prefab to the selected layer", instruction);
                     GUILayout.Label("Start Copy-Paste feature by dragging mouse while pressing right mouse button", instruction);
@@ -415,6 +493,14 @@ public class LevelEditor : MonoBehaviour {
         obj.transform.parent = layers[layer_index].transform;
         objects.Add(pos, obj);
         Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
+
+        AIControl aiControl = obj.GetComponent<AIControl>();
+
+        if (aiControl != null) {
+            pathObjects.Add(obj);
+            pathCreation = true;
+            path.Clear();
+        }
     }
 
     public void LoadColliders() {
