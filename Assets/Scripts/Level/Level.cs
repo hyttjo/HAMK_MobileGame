@@ -6,6 +6,7 @@ public class Level : MonoBehaviour {
 
     public int width = 128;
     public int height = 32;
+    public float tileSize = 1;
 
     private GameObject[] layers;
 

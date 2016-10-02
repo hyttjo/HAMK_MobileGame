@@ -138,6 +138,30 @@ public static class Misc {
         return children.ToArray();
     }
 
+    public static bool IsSelectionValid(Vector3 start, Vector3 end) {
+        if (start.x > end.x) {
+            return false;
+        } else if (start.y > end.y) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static bool IsInsideGrid(Level level, Vector3 position) {
+        if (position.x < 0) {
+            return false;
+        } else if (position.y < 0) {
+            return false;
+        } else if (position.x > level.width * level.tileSize) {
+            return false;
+        } else if (position.y > level.height * level.tileSize) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public static Texture2D GetTextureFromSprite(Sprite sprite) {
         if (sprite.rect.width != sprite.texture.width) {
             Texture2D newText = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
@@ -145,9 +169,14 @@ public static class Misc {
                                                          (int)sprite.textureRect.y,
                                                          (int)sprite.textureRect.width,
                                                          (int)sprite.textureRect.height);
-            newText.SetPixels(newColors);
-            newText.Apply();
-            return newText;
+
+            if (newColors.Length >= newText.width * newText.height) {
+                newText.SetPixels(newColors);
+                newText.Apply();
+                return newText;
+            } else {
+                return null;
+            }
         } else
             return sprite.texture;
     }
