@@ -24,8 +24,6 @@ public class CharacterControl : MonoBehaviour {
     private bool canShoot = false;
 
     public GameObject currentPower;
-    public GameObject firePower;
-    public GameObject icePower;
 
     void Start () {
         if (character != null) {
@@ -109,18 +107,8 @@ public class CharacterControl : MonoBehaviour {
         }
     }
 
-    public void GainFireball(){
-        if (firePower != null){
-            currentPower = firePower;
-        }
-    }
-
-    public void GainIceShard()
-    {
-        if (icePower != null)
-        {
-            currentPower = icePower;
-        }
+    public void GainPowerUp(GameObject powerUp){
+        currentPower = powerUp;
     }
 
     public void Shoot() {

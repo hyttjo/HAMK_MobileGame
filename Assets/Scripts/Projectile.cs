@@ -21,6 +21,12 @@ public class Projectile : MonoBehaviour {
         }
     }
 
+    void OnCollisionEnter2D(Collision2D col) {
+        if (col.gameObject.tag == "Enemy") {
+            Destroy();
+        }
+    }
+
     void Update() {
         CheckDecay();
     }
@@ -33,13 +39,17 @@ public class Projectile : MonoBehaviour {
         aliveTimer += Time.deltaTime;
 
         if (aliveTimer > decayTime) {
-            if (decayEffect != null) {
-                decayEffect = (GameObject)Instantiate(decayEffect, transform.position, Quaternion.identity);
-                decayEffect.transform.localScale *= 0.75f;
-                Destroy(decayEffect, 0.5f);
-            }
-            Destroy(gameObject);
+            Destroy();
         }
+    }
+
+    void Destroy() {
+        if (decayEffect != null) {
+            decayEffect = (GameObject)Instantiate(decayEffect, transform.position, Quaternion.identity);
+            decayEffect.transform.localScale *= 0.75f;
+            Destroy(decayEffect, 0.5f);
+        }
+        Destroy(gameObject);
     }
 
     void Rotate() {

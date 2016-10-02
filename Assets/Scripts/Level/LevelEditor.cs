@@ -387,11 +387,13 @@ public class LevelEditor : MonoBehaviour {
     }
 
     public void UpdateBottomPit() {
-        bottomPit.transform.position = Vector3.zero;
-        bottomPit.name.Replace("(Clone)", "");
-        EdgeCollider2D eCollider = bottomPit.GetComponent<EdgeCollider2D>();
-        eCollider.offset = new Vector2(0, -3);
-        eCollider.points = new Vector2[] { new Vector2(-10, 0), new Vector2(level.width + 10, 0) };
+        if (bottomPit != null) {
+            bottomPit.transform.position = Vector3.zero;
+            bottomPit.name.Replace("(Clone)", "");
+            EdgeCollider2D eCollider = bottomPit.GetComponent<EdgeCollider2D>();
+            eCollider.offset = new Vector2(0, -3);
+            eCollider.points = new Vector2[] { new Vector2(-10, 0), new Vector2(level.width + 10, 0) };
+        }
     }
 
     public GameObject GetActiveGameObject() {

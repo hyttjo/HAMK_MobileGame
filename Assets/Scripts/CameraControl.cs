@@ -5,6 +5,7 @@ public class CameraControl : MonoBehaviour {
 
 	public GameObject player;
 	public GameObject[] background;
+    public float skySpeed = 50;
 	private Material[] backgroundMat;
 	public float offsetMultiplierX = 0.01f;
 	public float offsetMultiplierY = 0.01f;
@@ -83,7 +84,7 @@ public class CameraControl : MonoBehaviour {
                 Vector2 backgroundOffset = new Vector2(playerPosition.x * offsetMultiplierX * i, backgroundOffsetY);
 
                 if (i == background.Length - 1) {
-                    backgroundOffset += new Vector2(Time.fixedDeltaTime, 0);
+                    backgroundOffset += new Vector2(Time.time / skySpeed, 0);
                 }
                 backgroundMat[i].mainTextureOffset = backgroundOffset;
             }

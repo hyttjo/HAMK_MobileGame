@@ -46,12 +46,9 @@ public class Health : MonoBehaviour {
 
         if (colliderTag == "DamageTypePit") {
             DeathByPit();
-        } else if (colliderTag == "DamageTypeFire" || colliderTag == "DamageTypeFireball") {
+        } else if (colliderTag == "DamageTypeFire") {
             if (!immuneToFire) {
                 DamageByFire(col);
-            }
-            if (colliderTag == "DamageTypeFireball") {
-                Destroy(col.gameObject);
             }
         } else if (colliderTag == "DamageTypeBite") {
             if (!immuneToBite) {
@@ -120,10 +117,14 @@ public class Health : MonoBehaviour {
             this.enabled = false;
         }
         AIControl aiControl = gameObject.GetComponent<AIControl>();
-        if (Random.Range(0, 100) <= aiControl.lootChance) {
-            ContainerController containerController = GetComponent<ContainerController>();
-            if (containerController != null && containerController.pickup != null) {
-                containerController.SpawnPickup(transform.position);
+
+        if (aiControl != null) {
+            if (Random.Range(0, 100) <= aiControl.lootChance) {
+                ContainerController containerController = GetComponent<ContainerController>();
+
+                if (containerController != null && containerController.pickup != null) {
+                    containerController.SpawnPickup(transform.position);
+                }
             }
         }
         GameObject.Destroy(_gameObject);

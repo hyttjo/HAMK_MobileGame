@@ -9,8 +9,9 @@ public class PickupController : MonoBehaviour {
      * Pickpit käyttäytyvät eri tavoin, joten oikean "Behaviour" asetuksen valinta Unity Editorissa on tärkeää.
      */ 
 
-    public enum Pickups { Coin, Heart, Fireball, IceShard }
+    public enum Pickups { Coin, Heart, PowerUp }
     public Pickups behaviour; // Tämä näkyy vetovalikkona Editorissa. Muista valita oikea valinta pickupeja luodessa!
+    public GameObject powerUp;
 
     public bool ignoreDecay = false; // Onko pickupilla elinaika?
     public float decayTime = 5; // Pickupin elinaika sekunneissa.
@@ -19,6 +20,7 @@ public class PickupController : MonoBehaviour {
     public bool spawnJump = true; // Hypähtääkö pickup ilmaan sen syntyessä?
 
 	void Start () {
+
         if (spawnJump) {
             SpawnJump();
         }
@@ -31,38 +33,33 @@ public class PickupController : MonoBehaviour {
 	}
 
     void OnTriggerEnter2D(Collider2D col) {
-        string colliderTag = col.gameObject.transform.parent.gameObject.tag;
+        if (col.gameObject.transform.parent != null) {
+            string colliderTag = col.gameObject.transform.parent.gameObject.tag;
 
-        if (behaviour == Pickups.Heart && colliderTag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.Heart
-            Health health = col.GetComponentInParent<Health>(); // Haetaan pelaajan käyttämä Health-skripti
-            if (health != null){ // Jos Health-skripti on olemassa...
-                health.GainHealthPickup(); // ...käytetään sen sisäistä funktiota pelaajan parantamiseen...
-                Despawn(); // ...ja poistetaan tämä pickup pelimaailmasta.
-            }
-        }
+            if (colliderTag == "Player") { // Jos pelaaja osuu pickupiin
+                if (behaviour == Pickups.Heart) { 
+                    Health health = col.GetComponentInParent<Health>(); // Haetaan pelaajan käyttämä Health-skripti
+                    if (health != null){ // Jos Health-skripti on olemassa...
+                        health.GainHealthPickup(); // ...käytetään sen sisäistä funktiota pelaajan parantamiseen...
+                        Destroy(); // ...ja poistetaan tämä pickup pelimaailmasta.
+                    }
+                }
 
-        if (behaviour == Pickups.Coin && colliderTag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.Coin
-            Score score = col.GetComponentInParent<Score>(); // Haetaan pelaajan käyttämä Score-skripti
-            if (score != null) { // Jos Score-skripti on olemassa...
-                score.GainCoin(); // ...käytetään sen sisäistä funktiota siihen, että pelaajalle merkataan kerätty kolikko...
-                Despawn(); // ...ja poistetaan tämä pickup pelimaailmasta.
-            }
-        }
+                if (behaviour == Pickups.Coin) {
+                    Score score = col.GetComponentInParent<Score>(); // Haetaan pelaajan käyttämä Score-skripti
+                    if (score != null) { // Jos Score-skripti on olemassa...
+                        score.GainCoin(); // ...käytetään sen sisäistä funktiota siihen, että pelaajalle merkataan kerätty kolikko...
+                        Destroy(); // ...ja poistetaan tämä pickup pelimaailmasta.
+                    }
+                }
 
-        if (behaviour == Pickups.Fireball && colliderTag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.IceShard
-            CharacterControl cControl = col.GetComponentInParent<CharacterControl>(); // Haetaan pelaajan käyttämä CharacterControl-skripti
-            if (cControl != null)
-            { // Jos CharacterControl-skripti on olemassa...
-                cControl.GainFireball(); // ...käytetään sen sisäistä funktiota siihen, että pelaajalle annetaan kyky ampua tulipalloja...
-                Despawn(); // ...ja poistetaan tämä pickup pelimaailmasta.
-            }
-        }
-
-        if (behaviour == Pickups.IceShard && colliderTag == "Player") { // Jos pelaaja osuu pickupiin JA pickup on Pickups.IceShard
-            CharacterControl cControl = col.GetComponentInParent<CharacterControl>(); // Haetaan pelaajan käyttämä CharacterControl-skripti
-            if (cControl != null) { // Jos CharacterControl-skripti on olemassa...
-                cControl.GainIceShard(); // ...käytetään sen sisäistä funktiota siihen, että pelaajalle annetaan kyky ampua jäätikkuja...
-                Despawn(); // ...ja poistetaan tämä pickup pelimaailmasta.
+                if (behaviour == Pickups.PowerUp && colliderTag == "Player") {
+                    CharacterControl cControl = col.GetComponentInParent<CharacterControl>(); // Haetaan pelaajan käyttämä CharacterControl-skripti
+                    if (cControl != null) { // Jos CharacterControl-skripti on olemassa...
+                        cControl.GainPowerUp(powerUp); // ...käytetään sen sisäistä funktiota siihen, että pelaajalle annetaan kyky ampua tulipalloja...
+                        Destroy(); // ...ja poistetaan tämä pickup pelimaailmasta.
+                    }
+                }
             }
         }
     }
@@ -70,7 +67,7 @@ public class PickupController : MonoBehaviour {
     void Decay(){
         decayTimer += Time.deltaTime;
         if (decayTimer >= decayTime && !ignoreDecay){
-            Despawn();
+            Destroy();
         }
     }
 
@@ -82,7 +79,7 @@ public class PickupController : MonoBehaviour {
         }
     }
 
-    void Despawn() {
+    void Destroy() {
         Destroy(gameObject);
     }
 }

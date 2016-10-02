@@ -12,11 +12,9 @@ public class PlayerHUD : MonoBehaviour
     public Sprite healthSprite;
     public Sprite coinSprite;
     public Sprite fireSprite;
-    public Sprite iceSprite;
     private Texture2D healthTexture;
     private Texture2D coinTexture;
     private Texture2D fireTexture;
-    private Texture2D iceTexture;
     public int numberOfHearts = 3;
     public int hudHeight = 50;
     public Rect padding = new Rect(10, 10, 10, 10);
@@ -26,31 +24,31 @@ public class PlayerHUD : MonoBehaviour
     private Texture2D texture;
     private Texture2D background;
 
-    void Start()
-    {
-        if (player != null)
-        {
+    void Start() {
+        if (player == null) {
             player = GameObject.FindGameObjectWithTag("Player");
+        }
+        if (player != null) {
             cControl = player.GetComponent<CharacterControl>();
             health = player.GetComponent<Health>();
             score = player.GetComponent<Score>();
 
-            if (healthSprite != null)
-            {
+            if (healthSprite != null) {
                 healthTexture = Misc.GetTextureFromSprite(healthSprite);
+            }
+            if (coinSprite != null) {
                 coinTexture = Misc.GetTextureFromSprite(coinSprite);
+            }
+            if (fireSprite != null) {
                 fireTexture = Misc.GetTextureFromSprite(fireSprite);
-                iceTexture = Misc.GetTextureFromSprite(iceSprite);
             }
         }
-
         background = new Texture2D(1, 1);
         background.SetPixel(0, 0, hudBackgroundColor);
         background.Apply();
     }
 
-    void OnGUI()
-    {
+    void OnGUI() {
         DisplayBackground();
         DisplayHealth();
         DisplayCoins();
@@ -79,7 +77,7 @@ public class PlayerHUD : MonoBehaviour
 
             if (healthTexture != null) {
                 for (int i = 0; i < health.health / Mathf.CeilToInt(100 / numberOfHearts); i++) {
-                    Rect rect = new Rect(padding.x + 110 + 20 * i + 4 * i, padding.y + 4, 20, 20);
+                    Rect rect = new Rect(padding.x + 110 + 20 * i + 4 * i, padding.y + 2, 20, 20);
                     GUI.DrawTexture(rect, healthTexture);
                 }
             }
@@ -94,15 +92,14 @@ public class PlayerHUD : MonoBehaviour
         if (health != null) {
             int coinInt = score.GetCoins();
 
-            GUI.Label(new Rect(padding.x + 200, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Coins:");
+            GUI.Label(new Rect(padding.x + Screen.width / 3.5f, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Coins:");
 
-            if (healthTexture != null) {
-                
-                Rect rect = new Rect(padding.x + 260 + 20 + 4, padding.y + 4, 20, 20);
+            if (coinTexture != null) {  
+                Rect rect = new Rect(padding.x + Screen.width / 3.5f + 78, padding.y + 2, 20, 20);
                 GUI.DrawTexture(rect, coinTexture);
             }
             string coinText = "*" + coinInt;
-            GUI.Label(new Rect(padding.x + 310, padding.y, Screen.width - padding.width, hudHeight - padding.height), coinText);
+            GUI.Label(new Rect(padding.x + Screen.width / 3.5f + 100, padding.y, Screen.width - padding.width, hudHeight - padding.height), coinText);
         }
     }
 
@@ -113,10 +110,10 @@ public class PlayerHUD : MonoBehaviour
 
         if (cControl != null) {
 
-            GUI.Label(new Rect(padding.x + 400, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Power:");
+            GUI.Label(new Rect(padding.x + Screen.width / 1.8f, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Power:");
 
-            if (cControl.currentPower != null && cControl.currentPower.gameObject.tag == "DamageTypeFireball") {
-                Rect rect = new Rect(padding.x + 470 + 20 + 4, padding.y + 4, 20, 20);
+            if (cControl.currentPower != null && cControl.currentPower.gameObject.tag == "DamageTypeFire") {
+                Rect rect = new Rect(padding.x + Screen.width / 1.8f + 100, padding.y - 4, fireTexture.width, fireTexture.height);
                 GUI.DrawTexture(rect, fireTexture);
             }
         }
@@ -128,9 +125,8 @@ public class PlayerHUD : MonoBehaviour
         }
 
         if (health != null) {
-            int coinInt = score.GetCoins();
             string scoreText = "Score: " + score.GetScore();
-            GUI.Label(new Rect(padding.x + 550, padding.y, Screen.width - padding.width, hudHeight - padding.height), scoreText);
+            GUI.Label(new Rect(padding.x + Screen.width / 1.3f, padding.y, Screen.width - padding.width, hudHeight - padding.height), scoreText);
         }
     }
 }
