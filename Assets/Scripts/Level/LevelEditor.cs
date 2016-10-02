@@ -156,9 +156,21 @@ public class LevelEditor : MonoBehaviour {
                             e.Use();
                         break;
                     }
-                } else if (e.isKey && e.keyCode == KeyCode.Return) {
-                    if (colliderCreation) {
-                         ColliderAssignPoints();
+                } else if (e.isKey) {
+                    if (e.keyCode == KeyCode.Return) {
+                        if (colliderCreation) {
+                             ColliderAssignPoints();
+                        }
+                    } else if (e.keyCode == KeyCode.Escape) {
+                        if (colliderCreation) {
+                            colliderCreation = false;
+                            colliderPoints.Clear();
+                        }
+
+                        if (selectionCopying) {
+                            selectionCopying = false;
+                            copyObjects.Clear();
+                        }
                     }
                 }
             }
@@ -217,6 +229,7 @@ public class LevelEditor : MonoBehaviour {
             selectionCopying = false;
             Debug.Log("Copy-area was empty, copying cancelled!");
         }
+        objects = level.GetLevelData();
     }
 
     void HandleAreaPaste() {
@@ -238,12 +251,14 @@ public class LevelEditor : MonoBehaviour {
                     _gameObject.transform.parent = layers[pos.z].transform;
                     _gameObject.transform.position = new Vector3(posX, posY, 0);
                     _gameObject.name = target.name.Replace(pos.ToString(), pastePoint.ToString());
+                    Undo.RegisterCreatedObjectUndo(_gameObject, "Create " + _gameObject.name);
                 }
             } 
         }
         objects = level.GetLevelData();              
         Debug.Log(copyObjects.Count + " objects copied to Start " + startPaste.ToString());
         copyObjects.Clear();
+        Selection.activeGameObject = gameObject;
     }
 
     void OnDrawGizmos() {
@@ -320,6 +335,7 @@ public class LevelEditor : MonoBehaviour {
                         GUILayout.Label("Finish copy-area selection by releasing right mouse button", instruction);
                     } else {
                         GUILayout.Label("Paste selected area by clicking right mouse button again on a new area", instruction);
+                        GUILayout.Label("Cancel area copying by pressing 'Esc'", instruction);
                     }
                 } else {
                     GUILayout.Label("Right mouse click places selected prefab to the selected layer", instruction);

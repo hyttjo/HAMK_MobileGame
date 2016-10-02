@@ -80,8 +80,11 @@ public class CameraControl : MonoBehaviour {
                 } else if (backgroundOffsetY < -offsetClampY) {
                     backgroundOffsetY = -offsetClampY;
                 }
-
                 Vector2 backgroundOffset = new Vector2(playerPosition.x * offsetMultiplierX * i, backgroundOffsetY);
+
+                if (i == background.Length - 1) {
+                    backgroundOffset += new Vector2(Time.fixedDeltaTime, 0);
+                }
                 backgroundMat[i].mainTextureOffset = backgroundOffset;
             }
         }
