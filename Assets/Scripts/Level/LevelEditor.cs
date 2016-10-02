@@ -187,6 +187,11 @@ public class LevelEditor : MonoBehaviour {
                             selectionCopying = false;
                             copyObjects.Clear();
                         }
+
+                        if (pathCreation) {
+                            pathCreation = false;
+                            path.Clear();
+                        }
                     }
                 }
             }
@@ -342,6 +347,9 @@ public class LevelEditor : MonoBehaviour {
                         Gizmos.color = Color.red;
 
                         for (int i = 0; i < path.Count; i++) {
+                            if (i == 0) {
+                                Gizmos.DrawLine(pathObjectPosition, path[i]);
+                            }
                             if (i < path.Count - 1) {
                                 Gizmos.DrawLine(path[i], path[i + 1]);
                             }
@@ -413,7 +421,7 @@ public class LevelEditor : MonoBehaviour {
                 } else if (pathCreation) {
                     GUILayout.Label("Creating a new path...", info);
                     GUILayout.Label("Right mouse click places a new path point", instruction);
-                    GUILayout.Label("When finished placing path points press 'Enter'", instruction);
+                    GUILayout.Label("When finished placing path points press 'Enter' or cancel it by pressing 'Esc'", instruction);
                     GUILayout.Label("Path points: " + path.Count, info);
                 } else {
                     GUILayout.Label("Right mouse click places selected prefab to the selected layer", instruction);
