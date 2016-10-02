@@ -89,7 +89,7 @@ public class PlayerHUD : MonoBehaviour
             GUI.skin.font = font;
         }
 
-        if (health != null) {
+        if (score != null) {
             int coinInt = score.GetCoins();
 
             GUI.Label(new Rect(padding.x + Screen.width / 3.5f, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Coins:");
@@ -124,7 +124,7 @@ public class PlayerHUD : MonoBehaviour
             GUI.skin.font = font;
         }
 
-        if (health != null) {
+        if (score != null) {
             string scoreText = "Score: " + score.GetScore();
             GUI.Label(new Rect(padding.x + Screen.width / 1.3f, padding.y, Screen.width - padding.width, hudHeight - padding.height), scoreText);
         }
