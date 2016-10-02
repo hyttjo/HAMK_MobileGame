@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PickupController : MonoBehaviour {
+public class PickupControl : MonoBehaviour {
 
     /*
      * Tämä skripti käsittelee kaikkien pickup-tyylisten objektien toimintaa. Containereille on oma skriptinsä.

@@ -120,7 +120,7 @@ public class Health : MonoBehaviour {
 
         if (aiControl != null) {
             if (Random.Range(0, 100) <= aiControl.lootChance) {
-                ContainerController containerController = GetComponent<ContainerController>();
+                ContainerControl containerController = GetComponent<ContainerControl>();
 
                 if (containerController != null && containerController.pickup != null) {
                     containerController.SpawnPickup(transform.position);

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ContainerController : MonoBehaviour {
+public class ContainerControl : MonoBehaviour {
 
     /*
      * Tämä skripti on tarkoitettu erilaisille laatikoille ja vihollisille, joiden halutaan sisältävän pickup-tyypin esineen
