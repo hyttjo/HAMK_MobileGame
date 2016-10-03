@@ -108,7 +108,6 @@ public class PlayerHUD : MonoBehaviour {
         }
 
         if (mControl != null) {
-
             GUI.Label(new Rect(padding.x + Screen.width / 1.8f, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Power:");
 
             if (mControl.currentPower != null && mControl.currentPower.gameObject.tag == "DamageTypeFire") {

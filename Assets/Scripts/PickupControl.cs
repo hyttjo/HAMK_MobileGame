@@ -32,7 +32,7 @@ public class PickupControl : MonoBehaviour {
         }
 	}
 
-    void OnTriggerEnter2D(Collider2D col) {
+    private void OnTriggerEnter2D(Collider2D col) {
         if (col.gameObject.transform.parent != null) {
             string colliderTag = col.gameObject.transform.parent.gameObject.tag;
 
@@ -64,14 +64,14 @@ public class PickupControl : MonoBehaviour {
         }
     }
 
-    void Decay(){
+    private void Decay(){
         decayTimer += Time.deltaTime;
         if (decayTimer >= decayTime && !ignoreDecay){
             Destroy();
         }
     }
 
-    void SpawnJump() {
+    private void SpawnJump() {
         Rigidbody2D rBody = GetComponent<Rigidbody2D>();
 
         if (rBody != null){
@@ -79,7 +79,7 @@ public class PickupControl : MonoBehaviour {
         }
     }
 
-    void Destroy() {
+    private void Destroy() {
         Destroy(gameObject);
     }
 }

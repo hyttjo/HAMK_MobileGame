@@ -581,8 +581,6 @@ public class LevelEditor : MonoBehaviour {
     }
 
     private void DrawPaths() {
-        Gizmos.color = Color.red;
-
         for (int i = 0; i < pathObjects.Count; i++) {
             if (pathObjects[i] != null) {
                 AIControl aiControl = pathObjects[i].GetComponent<AIControl>();
@@ -590,8 +588,13 @@ public class LevelEditor : MonoBehaviour {
                 if (aiControl != null) {
                     if (aiControl.path.Length > 1) {
                         for (int j = 0; j < aiControl.path.Length; j++) {
+                            Vector2 pathpoint = aiControl.path[j];
+
+                            DrawRectangle(pathpoint, pathpoint, 0.1f, Color.yellow);
+                            Gizmos.color = Color.red;
+
                             if (j < aiControl.path.Length - 1) {
-                                Gizmos.DrawLine(aiControl.path[j], aiControl.path[j + 1]);
+                                Gizmos.DrawLine(pathpoint, aiControl.path[j + 1]);
                             }
                         }
                     }

@@ -36,7 +36,7 @@ public class AIControl : MonoBehaviour {
     	}
     }
 
-    void FollowPath() {
+    private void FollowPath() {
         if (path != null && path.Length > 0) {
             Vector2 waypoint = path[path_index];
             Vector2 position = mControl.character.transform.position;
