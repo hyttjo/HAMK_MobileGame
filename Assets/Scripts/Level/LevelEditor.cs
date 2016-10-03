@@ -212,7 +212,7 @@ public class LevelEditor : MonoBehaviour {
                 pathCreation = false;
                 path.Clear();
             }
-        } else if (e.keyCode == KeyCode.Delete) {
+        } else if (e.keyCode == KeyCode.D) {
             DeleteGameObjects();
         }
     }
@@ -277,7 +277,7 @@ public class LevelEditor : MonoBehaviour {
             GameObject obj;
 
             if (objects.TryGetValue(pos, out obj)) {
-                DestroyImmediate(obj);
+                Undo.DestroyObjectImmediate(obj);
                 deletedObjects++;
             }
         }

@@ -255,7 +255,7 @@ public class LevelEditorInspector : Editor {
         Rect rect = new Rect(10, Screen.height - 100, 300, 15);
         GUI.Label(rect, "CTRL+Z: UNDO", info);
         rect.y -= 15;
-        GUI.Label(rect, "DEL: DELETE", info);
+        GUI.Label(rect, "D: DELETE", info);
         rect.y -= 15;
         GUI.Label(rect, "ESC: " + esc, info);
         rect.y -= 15;
