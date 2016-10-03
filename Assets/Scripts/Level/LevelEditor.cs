@@ -532,7 +532,7 @@ public class LevelEditor : MonoBehaviour {
     private void DrawPathCreation() {
         DrawRectangle(point, point, tileSize / 5, Color.red);
 
-        if (pathObjects.Count > 0) {
+        if (pathObjects.Count >= 0) {
             Vector3 pathObjectPosition = pathObjects[pathObjects.Count - 1].transform.position;
 
             Gizmos.color = Color.yellow;
@@ -543,15 +543,15 @@ public class LevelEditor : MonoBehaviour {
                 Gizmos.DrawLine(path.Last(), point);
             }
 
-            Gizmos.color = Color.red;
-
             for (int i = 0; i < path.Count; i++) {
                 if (i == 0) {
                     Gizmos.DrawLine(pathObjectPosition, path[i]);
                 }
                 if (i < path.Count - 1) {
+                    Gizmos.color = Color.red;
                     Gizmos.DrawLine(path[i], path[i + 1]);
                 }
+                DrawRectangle(path[i], path[i], 0.1f, Color.yellow);
             }
         }
     }
