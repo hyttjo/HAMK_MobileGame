@@ -71,7 +71,7 @@ public class LevelEditorInspector : Editor {
         SceneView.RepaintAll();
     }
 
-    void DrawLevelDimensions() {
+    private void DrawLevelDimensions() {
         GUILayout.Space(10);
 
         GUILayout.BeginHorizontal();
@@ -85,7 +85,7 @@ public class LevelEditorInspector : Editor {
         GUILayout.EndHorizontal();
     }
 
-    void DrawLayerSelection() {
+    private void DrawLayerSelection() {
         GUILayout.Space(5);
 
         GUILayout.Label("Selected layer:");
@@ -94,7 +94,7 @@ public class LevelEditorInspector : Editor {
         GUILayout.EndHorizontal();
     }
 
-    void DrawPrefabSelection() {
+    private void DrawPrefabSelection() {
         editor.overwrite = GUILayout.Toggle(editor.overwrite, "Overwrite:");
 
         GUILayout.Space(5);
@@ -151,7 +151,7 @@ public class LevelEditorInspector : Editor {
         editor.activeGO_index = GUILayout.SelectionGrid(editor.activeGO_index, objects, 6);
     }
 
-    void DrawColliderCreation() {
+    private void DrawColliderCreation() {
         GUILayout.Space(10);
 
         GUILayout.BeginHorizontal();
@@ -194,70 +194,68 @@ public class LevelEditorInspector : Editor {
     /****** Scene istruction texts ******/
     /************************************/
 
-    void OnScene(SceneView sceneView) {
+    private void OnScene(SceneView sceneView) {
         Handles.BeginGUI();
         DrawSceneInstructions();
         Handles.EndGUI();
     }
 
-    void DrawSceneInstructions() {
+    private void DrawSceneInstructions() {
         string rmb = "";
         string hold_rmb = "";
         string enter = "";
         string esc = "";
 
-        if (Selection.activeGameObject == editor.gameObject) {
-            if (editor.layer_index != 4) {
-                if (editor.selectionCopying) {
-                    if (editor.copyObjects.Count == 0) {
-                        GUILayout.Label("Finish copy-area selection by releasing right mouse button", instruction);
-                        rmb = "COPY AREA";
-                        esc = "CANCEL";
-                    } else {
-                        GUILayout.Label("Paste selected area by clicking right mouse button again on a new area", instruction);
-                        GUILayout.Label("Cancel area copying by pressing 'Esc'", instruction);
-                        rmb = "PASTE AREA";
-                        esc = "CANCEL";
-                    }
-                } else if (editor.pathCreation) {
-                    GUILayout.Label("Creating a new path...", info);
-                    GUILayout.Label("Right mouse click places a new path point", instruction);
-                    GUILayout.Label("When finished placing path points press 'Enter' or cancel it by pressing 'Esc'", instruction);
-                    GUILayout.Label("Path points: " + editor.path.Count, info);
-                    rmb = "ADD POINT";
-                    enter = "FINISHED";
+        if (editor.layer_index != 4) {
+            if (editor.selectionCopying) {
+                if (editor.copyObjects.Count == 0) {
+                    GUILayout.Label("Finish copy-area selection by releasing right mouse button", instruction);
+                    rmb = "COPY AREA";
                     esc = "CANCEL";
                 } else {
-                    GUILayout.Label("Right mouse click places selected prefab to the selected layer", instruction);
-                    GUILayout.Label("Start Copy-Paste feature by dragging mouse while pressing right mouse button", instruction);
-                    GUILayout.Label("Selected layer: " + editor.layers[editor.layer_index].name, info);
-                    GUILayout.Label("Selected prefab: " + editor.activeGo.name, info);
-                    rmb = "PLACE OBJECT";
-                    hold_rmb = "START COPY SELECTION";
+                    GUILayout.Label("Paste selected area by clicking right mouse button again on a new area", instruction);
+                    GUILayout.Label("Cancel area copying by pressing 'Esc'", instruction);
+                    rmb = "PASTE AREA";
+                    esc = "CANCEL";
                 }
+            } else if (editor.pathCreation) {
+                GUILayout.Label("Creating a new path...", info);
+                GUILayout.Label("Right mouse click places a new path point", instruction);
+                GUILayout.Label("When finished placing path points press 'Enter' or cancel it by pressing 'Esc'", instruction);
+                GUILayout.Label("Path points: " + editor.path.Count, info);
+                rmb = "ADD POINT";
+                enter = "FINISHED";
+                esc = "CANCEL";
             } else {
-                if (editor.colliderCreation) {
-                    GUILayout.Label("Creating a new collider...", info);
-                    GUILayout.Label("Right mouse click places a new collider point", instruction);
-                    GUILayout.Label("Click 'Collider done' button when finished placing points or press 'Enter'", instruction);
-                    GUILayout.Label("Collider points: " + editor.colliderPoints.Count, info);
-                    rmb = "ADD POINT";
-                    enter = "FINISHED";
-                    esc = "CANCEL";
-                } else {
-                    GUILayout.Label("Click 'Create New Collider' button to start placing points for a new collider or right click on the starting point", instruction);
-                    rmb = "CREATE COLLIDER";
-                }
+                GUILayout.Label("Right mouse click places selected prefab to the selected layer", instruction);
+                GUILayout.Label("Start Copy-Paste feature by dragging mouse while pressing right mouse button", instruction);
+                GUILayout.Label("Selected layer: " + editor.layers[editor.layer_index].name, info);
+                GUILayout.Label("Selected prefab: " + editor.activeGo.name, info);
+                rmb = "PLACE OBJECT";
+                hold_rmb = "START COPY SELECTION";
             }
         } else {
-            GUILayout.Label("Level GameObject not selected. You need to select it to use all the LevelEditor features", instruction);
+            if (editor.colliderCreation) {
+                GUILayout.Label("Creating a new collider...", info);
+                GUILayout.Label("Right mouse click places a new collider point", instruction);
+                GUILayout.Label("Click 'Collider done' button when finished placing points or press 'Enter'", instruction);
+                GUILayout.Label("Collider points: " + editor.colliderPoints.Count, info);
+                rmb = "ADD POINT";
+                enter = "FINISHED";
+                esc = "CANCEL";
+            } else {
+                GUILayout.Label("Click 'Create New Collider' button to start placing points for a new collider or right click on the starting point", instruction);
+                rmb = "CREATE COLLIDER";
+            }
         }
         DrawSceneInputCommands(rmb, hold_rmb, enter, esc);
     }
 
-    void DrawSceneInputCommands(string rmb, string hold_rmb, string enter, string esc) {
+    private void DrawSceneInputCommands(string rmb, string hold_rmb, string enter, string esc) {
         Rect rect = new Rect(10, Screen.height - 100, 300, 15);
         GUI.Label(rect, "CTRL+Z: UNDO", info);
+        rect.y -= 15;
+        GUI.Label(rect, "DEL: DELETE", info);
         rect.y -= 15;
         GUI.Label(rect, "ESC: " + esc, info);
         rect.y -= 15;

@@ -81,18 +81,20 @@ public class LevelEditor : MonoBehaviour {
                 }
             }
         }
+        SceneView.onSceneGUIDelegate += OnScene;
     }
 
     public void OnDisable() {
         SceneView.onSceneGUIDelegate -= LevelUpdate;
+        SceneView.onSceneGUIDelegate -= OnScene;
     }
 
     /**************************************************/
     /****** Handle user's input and update level ******/
     /**************************************************/
 
-    void LevelUpdate(SceneView sceneview) {
-        UpdateLevelDimesnions();
+    private void LevelUpdate(SceneView sceneview) {
+        UpdateLevelDimensions();
 
         Event e = Event.current;
         Camera camera = Camera.current;
@@ -112,13 +114,13 @@ public class LevelEditor : MonoBehaviour {
         }   
     }
 
-    void UpdateLevelDimesnions() {
+    private void UpdateLevelDimensions() {
         level.width = width;
         level.height = height;
         level.tileSize = tileSize;
     }
 
-    void UpdatePosition(Vector3 position) {
+    private void UpdatePosition(Vector3 position) {
         if (activeGo != null) {
             activeGo = GetActiveGameObject();
             activeGo.transform.position = point;
@@ -133,7 +135,7 @@ public class LevelEditor : MonoBehaviour {
         }
     }
 
-    void HandleMouseControls(Event e) {
+    private void HandleMouseControls(Event e) {
         if (e.button == 1) { // Right mouse button
             int controlID = GUIUtility.GetControlID (FocusType.Passive);
 
@@ -183,10 +185,10 @@ public class LevelEditor : MonoBehaviour {
         }
     }
 
-    void HandleKeyboardControls(Event e) {
+    private void HandleKeyboardControls(Event e) {
         if (e.keyCode == KeyCode.Return) {
             if (colliderCreation) {
-                    ColliderAssignPoints();
+                ColliderAssignPoints();
             }
             if (pathCreation) {
                 AssignPath();
@@ -206,98 +208,16 @@ public class LevelEditor : MonoBehaviour {
                 pathCreation = false;
                 path.Clear();
             }
+        } else if (e.keyCode == KeyCode.Delete) {
+            DeleteGameObjects();
         }
-    }
-
-    /****************************/
-    /******* Area copying *******/
-    /****************************/
-
-    void HandleAreaCopy() {
-        if (startPoint == point || !Misc.IsSelectionValid(startPoint, point)) {
-            endPoint = startPoint;
-        } else {
-            endPoint = point;
-        }
-
-        Position start = new Position(startPoint);
-        Position end = new Position(endPoint);
-
-        for (int x = 0; x < end.x + 1 - start.x; x++) {
-            for (int y = 0; y < end.y + 1 - start.y; y++) {
-                for (int z = 0; z < 4; z++) {
-                    Position pos = new Position(start.x + x, start.y + y, z);
-
-                    GameObject obj;
-                    if (objects.TryGetValue(pos, out obj)) {
-                        copyObjects.Add(pos, obj);
-                    }
-                }
-            }
-        }
-        if (copyObjects.Count == 0) {
-            copyObjects.Clear();
-            selectionCopying = false;
-            Debug.Log("Copy-area was empty, copying cancelled!");
-        }
-        objects = level.GetLevelData();
-    }
-
-    void HandleAreaPaste() {
-        selectionCopying = false;
-        Position startPaste = new Position(point);
-
-        foreach (Position pos in copyObjects.Keys) {
-            GameObject _gameObject;
-            GameObject target;
-
-            float posX = pos.x - startPoint.x + startPaste.x + 1;
-            float posY = pos.y - startPoint.y + startPaste.y + 1;
-            Position pastePoint = new Position(new Vector3(posX, posY, pos.z));
-
-            if (!objects.ContainsKey(pastePoint)) {
-                target = copyObjects[pos];
-                if (target != null) {
-                    _gameObject = Instantiate(target);
-                    _gameObject.transform.parent = layers[pos.z].transform;
-                    _gameObject.transform.position = new Vector3(posX, posY, 0);
-                    _gameObject.name = target.name.Replace(pos.ToString(), pastePoint.ToString());
-                    Undo.RegisterCreatedObjectUndo(_gameObject, "Create " + _gameObject.name);
-                }
-            } 
-        }
-        objects = level.GetLevelData();              
-        Debug.Log(copyObjects.Count + " objects copied to Start " + startPaste.ToString());
-        copyObjects.Clear();
-        Selection.activeGameObject = gameObject;
-    }
-
-    /****************************/
-    /******* Path creation ******/
-    /****************************/
-
-    void HandlePathCreation() {
-        path.Add(point);
-    }
-
-    void AssignPath() {
-        if (pathObjects != null && pathObjects.Count > 0) {
-
-            AIControl aiControl = pathObjects.Last().GetComponent<AIControl>();
-
-            if (aiControl != null) {
-                aiControl.path = path.ToArray();
-            }
-        }
-        path.Clear();
-        pathCreation = false;
     }
 
     /******************************************************/
     /****** Load prefabs and handle object placement ******/
     /******************************************************/
 
-    void HandleObjectPlacement() {
+    private void HandleObjectPlacement() {
         if (activeGo != null) {
             Position pos = new Position(new Vector3(point.x, point.y, layer_index));
 
@@ -344,6 +264,24 @@ public class LevelEditor : MonoBehaviour {
         }
     }
 
+    private void DeleteGameObjects() {
+        int deletedObjects = 0;
+
+        for (int z = 0; z < layers.Length; z++) {
+            Position pos = new Position((int)point.x, (int)point.y, z);
+
+            GameObject obj;
+
+            if (objects.TryGetValue(pos, out obj)) {
+                DestroyImmediate(obj);
+                deletedObjects++;
+            }
+        }
+        Debug.Log("Deleted " + deletedObjects + " objects at " + new Position(point).ToString());
+
+        objects = level.GetLevelData();
+    }
+
     public GameObject GetActiveGameObject() {
         if (prefabs != null) {
             return prefabs[activeGO_index];
@@ -351,7 +289,7 @@ public class LevelEditor : MonoBehaviour {
         return null;
     }
 
-    GameObject[] LoadPrefabs() {
+    private GameObject[] LoadPrefabs() {
         GameObject[] prefabsArray = Resources.LoadAll<GameObject>("Prefabs");
         List<GameObject> prefabs = prefabsArray.ToList();
 
@@ -365,11 +303,95 @@ public class LevelEditor : MonoBehaviour {
         return prefabs.ToArray();
     }
 
+    /****************************/
+    /******* Area copying *******/
+    /****************************/
+
+    private void HandleAreaCopy() {
+        if (startPoint == point || !Misc.IsSelectionValid(startPoint, point)) {
+            endPoint = startPoint;
+        } else {
+            endPoint = point;
+        }
+
+        Position start = new Position(startPoint);
+        Position end = new Position(endPoint);
+
+        for (int x = 0; x < end.x + 1 - start.x; x++) {
+            for (int y = 0; y < end.y + 1 - start.y; y++) {
+                for (int z = 0; z < 4; z++) {
+                    Position pos = new Position(start.x + x, start.y + y, z);
+
+                    GameObject obj;
+                    if (objects.TryGetValue(pos, out obj)) {
+                        copyObjects.Add(pos, obj);
+                    }
+                }
+            }
+        }
+        if (copyObjects.Count == 0) {
+            copyObjects.Clear();
+            selectionCopying = false;
+            Debug.Log("Copy-area was empty, copying cancelled!");
+        }
+        objects = level.GetLevelData();
+    }
+
+    private void HandleAreaPaste() {
+        selectionCopying = false;
+        Position startPaste = new Position(point);
+
+        foreach (Position pos in copyObjects.Keys) {
+            GameObject _gameObject;
+            GameObject target;
+
+            float posX = pos.x - startPoint.x + startPaste.x + 1;
+            float posY = pos.y - startPoint.y + startPaste.y + 1;
+            Position pastePoint = new Position(new Vector3(posX, posY, pos.z));
+
+            if (!objects.ContainsKey(pastePoint)) {
+                target = copyObjects[pos];
+                if (target != null) {
+                    _gameObject = Instantiate(target);
+                    _gameObject.transform.parent = layers[pos.z].transform;
+                    _gameObject.transform.position = new Vector3(posX, posY, 0);
+                    _gameObject.name = target.name.Replace(pos.ToString(), pastePoint.ToString());
+                    Undo.RegisterCreatedObjectUndo(_gameObject, "Create " + _gameObject.name);
+                }
+            } 
+        }
+        objects = level.GetLevelData();              
+        Debug.Log(copyObjects.Count + " objects copied to Start " + startPaste.ToString());
+        copyObjects.Clear();
+        Selection.activeGameObject = gameObject;
+    }
+
+    /****************************/
+    /******* Path creation ******/
+    /****************************/
+
+    private void HandlePathCreation() {
+        path.Add(point);
+    }
+
+    private void AssignPath() {
+        if (pathObjects != null && pathObjects.Count > 0) {
+
+            AIControl aiControl = pathObjects.Last().GetComponent<AIControl>();
+
+            if (aiControl != null) {
+                aiControl.path = path.ToArray();
+            }
+        }
+        path.Clear();
+        pathCreation = false;
+    }
+
     /**************************************************/
     /****** Handle automatic bottom pit creation ******/
     /**************************************************/
 
-    GameObject GetBottomPit() {
+    private GameObject GetBottomPit() {
         GameObject bottomPit = null;
 
         if (prefabs != null) {
@@ -448,7 +470,7 @@ public class LevelEditor : MonoBehaviour {
     /****** Gizmos drawing ******/
     /****************************/
 
-    void OnDrawGizmos() {
+    private void OnDrawGizmos() {
         DrawGrid();
 
         if (Misc.IsInsideGrid(level, point)) {
@@ -472,7 +494,7 @@ public class LevelEditor : MonoBehaviour {
         DrawPaths();
     }
 
-    void DrawGrid() {
+    private void DrawGrid() {
         Gizmos.color = Color.black;
 
         for (int y = 0; y < height; y++) {
@@ -489,7 +511,7 @@ public class LevelEditor : MonoBehaviour {
         DrawRectangle(Vector3.zero, new Vector3(width, height, 0), 0, Color.white);
     }
 
-    void DrawSelectionCopy() {
+    private void DrawSelectionCopy() {
         if (copyObjects.Count == 0) {
             if (!Misc.IsSelectionValid(startPoint, point)) {
                 point = startPoint;
@@ -504,7 +526,7 @@ public class LevelEditor : MonoBehaviour {
         }
     }
 
-    void DrawPathCreation() {
+    private void DrawPathCreation() {
         DrawRectangle(point, point, tileSize / 5, Color.red);
 
         if (pathObjects.Count > 0) {
@@ -531,15 +553,15 @@ public class LevelEditor : MonoBehaviour {
         }
     }
 
-    void DrawObjectPlacement() {
+    private void DrawObjectPlacement() {
         DrawRectangle(point, point, tileSize / 2, Color.red);
     }
 
-    void DrawPointPlacement() {
+    private void DrawPointPlacement() {
         DrawRectangle(point, point, tileSize / 5, Color.red);
     }
 
-    void DrawColliderCreation() {
+    private void DrawColliderCreation() {
         Gizmos.color = Color.green;
 
         for (int i = 0; i < colliderPoints.Count; i++) {
@@ -555,7 +577,7 @@ public class LevelEditor : MonoBehaviour {
         }
     }
 
-    void DrawPaths() {
+    private void DrawPaths() {
         Gizmos.color = Color.red;
 
         for (int i = 0; i < pathObjects.Count; i++) {
@@ -581,5 +603,13 @@ public class LevelEditor : MonoBehaviour {
         Gizmos.DrawLine(new Vector3(end.x, start.y, 0) + new Vector3(offset * tileSize, -offset * tileSize, 0), end + new Vector3(offset * tileSize, offset * tileSize, 0));
         Gizmos.DrawLine(end + new Vector3(offset * tileSize, offset * tileSize, 0), new Vector3(start.x, end.y, 0) + new Vector3(-offset * tileSize, offset * tileSize, 0));
         Gizmos.DrawLine(new Vector3(start.x, end.y, 0) + new Vector3(-offset * tileSize, offset * tileSize, 0), start + new Vector3(-offset * tileSize, -offset * tileSize, 0));
+    }
+
+    private void OnScene(SceneView sceneView) {
+        Handles.BeginGUI();
+        if (Selection.activeGameObject != gameObject) {
+            GUILayout.Label("Level GameObject not selected. You need to select it to use all the LevelEditor features");
+        }
+        Handles.EndGUI();
     }
 }
