@@ -57,39 +57,36 @@ public class CharacterControl : MonoBehaviour {
     
     public void Move() {
         float moveSpeed = speed;
-        
-        if (move.y > 0.1) {
-            moveSpeed = speed * 3f;
-        } else if (move.y < -0.1) {
-            moveSpeed = speed * 1.2f;
-        }
 
         if (character != null && rBody != null) {
-            rBody.AddForce(move * moveSpeed, ForceMode2D.Force);
-
             if (rBody.velocity.sqrMagnitude > maxSpeed) {
                 rBody.velocity *= 0.99f;
+            } else if (rBody.velocity.sqrMagnitude < maxSpeed / 2) {
+                moveSpeed *= 5f;
             }
+
+            rBody.AddForce(move * moveSpeed, ForceMode2D.Force);
 
             anim.SetFloat("Speed", move.x);
         }
-
-        UpdateFacingDir();
     }
 
     public void MoveTo(Vector2 vector) {
         move = (vector - (Vector2)transform.position).normalized;
+        UpdateFacingDir();
     }
     
     public void MoveLeft() {
         if (character != null) {
             move.x = -1;
+            sRenderer.flipX = true;
         }
     }
     
     public void MoveRight() {
         if (character != null) {
             move.x = 1;
+            sRenderer.flipX = false;
         }
     }
     
