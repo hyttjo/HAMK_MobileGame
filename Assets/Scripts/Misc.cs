@@ -182,4 +182,24 @@ public static class Misc {
         } else
             return sprite.texture;
     }
+
+    public static Texture2D GetTextureFromObject(GameObject gameObject) {
+        if (gameObject != null) {
+            SpriteRenderer sRenderer = gameObject.GetComponentInChildren<SpriteRenderer>();
+
+            if (sRenderer != null) {
+                Sprite sprite = sRenderer.sprite;
+
+                if (sprite != null) {
+                    Texture2D texture = GetTextureFromSprite(sprite);
+
+                    if (texture != null) {
+                        texture.filterMode = FilterMode.Point;
+                        return texture;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

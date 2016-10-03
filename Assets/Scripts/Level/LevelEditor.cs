@@ -10,7 +10,7 @@ public class LevelEditor : MonoBehaviour {
     private Level level;
 
     private Dictionary<Position, GameObject> objects;
-    private GameObject[] layers;
+    public GameObject[] layers;
     public GameObject[] prefabs;
     public GameObject activeGo;
 
@@ -18,7 +18,7 @@ public class LevelEditor : MonoBehaviour {
     public List<Vector2> colliderPoints;
     public bool colliderCreation = false;
 
-    private Dictionary<Position, GameObject> copyObjects;
+    public Dictionary<Position, GameObject> copyObjects;
     public bool selectionCopying = false;
     public Vector3 startPoint;
     public Vector3 endPoint;
@@ -40,17 +40,8 @@ public class LevelEditor : MonoBehaviour {
 
     private GameObject bottomPit;
 
-    private GUIStyle instruction;
-    private GUIStyle info;
-
     public void OnEnable() {
         if (Application.isEditor) {
-            Texture2D texture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-            texture.SetPixel(0, 0, new Color(0f, 0f, 0f, 0.5f));
-            texture.Apply();
-            instruction = new GUIStyle { fontSize = 10, normal = new GUIStyleState { textColor = Color.red, background = texture }, padding = new RectOffset(10, 10, 2, 2) };
-            info = new GUIStyle { fontSize = 10, normal = new GUIStyleState { textColor = Color.white }, padding = new RectOffset(10, 10, 2, 2) };
-
             level = GetComponent<Level>();
 
             if (level == null) {
@@ -74,7 +65,6 @@ public class LevelEditor : MonoBehaviour {
             }
 
             SceneView.onSceneGUIDelegate += LevelUpdate;
-            SceneView.onSceneGUIDelegate += OnScene;
             
             prefabs = LoadPrefabs();
 
@@ -95,13 +85,14 @@ public class LevelEditor : MonoBehaviour {
 
     public void OnDisable() {
         SceneView.onSceneGUIDelegate -= LevelUpdate;
-        SceneView.onSceneGUIDelegate -= OnScene;
     }
 
+    /**************************************************/
+    /****** Handle user's input and update level ******/
+    /**************************************************/
+
     void LevelUpdate(SceneView sceneview) {
-        level.width = width;
-        level.height = height;
-        level.tileSize = tileSize;
+        UpdateLevelDimesnions();
 
         Event e = Event.current;
         Camera camera = Camera.current;
@@ -110,118 +101,117 @@ public class LevelEditor : MonoBehaviour {
             Vector3 position = camera.ScreenToWorldPoint(new Vector3(e.mousePosition.x, -e.mousePosition.y + Screen.height - 40, 0));
 
             if (Misc.IsInsideGrid(level, position)) {
-                if (activeGo != null) {
-                    activeGo = GetActiveGameObject();
-                    activeGo.transform.position = point;
-                }
+                UpdatePosition(position);
 
-                if (layer_index != 4) {
-                    point = new Vector3(Mathf.Floor(position.x / tileSize) * tileSize + tileSize / 2.0f,
-                                        Mathf.Floor(position.y / tileSize) * tileSize + tileSize / 2.0f, 0);
-                } else {
-                    point = new Vector3(Mathf.Round(position.x / tileSize) * tileSize,
-                                        Mathf.Round(position.y / tileSize) * tileSize, 0);
-                }
-
-                if (e.isMouse && e.button == 1) {
-                    int controlID = GUIUtility.GetControlID (FocusType.Passive);
-
-                    switch (e.GetTypeForControl (controlID)) {
-                        case EventType.MouseDown:
-                            GUIUtility.hotControl = controlID;
-                            if (!selectionCopying) {
-                                startPoint = point;
-                                copyObjects.Clear();
-                            }
-                            e.Use();
-                        break;
-
-                        case EventType.MouseUp:
-                            GUIUtility.hotControl = 0;
-                            if (layer_index == 4) {
-                                if (colliderCreation) {
-                                    if (colliderPoints != null) {
-                                        colliderPoints.Add(point);
-                                    }
-                                } else {
-                                    CreateCollider();
-                                    colliderPoints.Add(point);
-                                }
-                            } else {
-                                if (selectionCopying) {
-                                    if (copyObjects.Count == 0) {
-                                        HandleAreaCopy();
-                                    } else {
-                                        HandleAreaPaste();
-                                    }
-                                } else if (pathCreation) {
-                                    HandlePathCreation();
-                                } else {
-                                    HandleObjectPlacement();
-                                }
-                            }
-                            e.Use();
-                        break;
-
-                        case EventType.MouseDrag:
-                            GUIUtility.hotControl = controlID;
-                            selectionCopying = true;
-                            e.Use();
-                        break;
-                    }
+                if (e.isMouse) {
+                    HandleMouseControls(e);
                 } else if (e.isKey) {
-                    if (e.keyCode == KeyCode.Return) {
-                        if (colliderCreation) {
-                             ColliderAssignPoints();
-                        }
-                        if (pathCreation) {
-                            AssignPath();
-                        }
-                    } else if (e.keyCode == KeyCode.Escape) {
-                        if (colliderCreation) {
-                            colliderCreation = false;
-                            colliderPoints.Clear();
-                        }
-
-                        if (selectionCopying) {
-                            selectionCopying = false;
-                            copyObjects.Clear();
-                        }
-
-                        if (pathCreation) {
-                            pathCreation = false;
-                            path.Clear();
-                        }
-                    }
+                    HandleKeyboardControls(e);
                 }
             }
         }   
     }
 
-    void HandleObjectPlacement() {
+    void UpdateLevelDimesnions() {
+        level.width = width;
+        level.height = height;
+        level.tileSize = tileSize;
+    }
+
+    void UpdatePosition(Vector3 position) {
         if (activeGo != null) {
-            Position pos = new Position(new Vector3(point.x, point.y, layer_index));
+            activeGo = GetActiveGameObject();
+            activeGo.transform.position = point;
+        }
 
-            if (!objects.ContainsKey(pos)) {
-                PlaceGameObject(pos, point);
-            } else {
-                GameObject obj = objects[pos];
+        if (layer_index != 4) {
+            point = new Vector3(Mathf.Floor(position.x / tileSize) * tileSize + tileSize / 2.0f,
+                                Mathf.Floor(position.y / tileSize) * tileSize + tileSize / 2.0f, 0);
+        } else {
+            point = new Vector3(Mathf.Round(position.x / tileSize) * tileSize,
+                                Mathf.Round(position.y / tileSize) * tileSize, 0);
+        }
+    }
 
-                if (obj == null) {
-                    objects.Remove(pos);
-                    PlaceGameObject(pos, point);
-                } else {
-                    if (overwrite) {
-                        DestroyImmediate(obj);
-                        objects.Remove(pos);
-                        PlaceGameObject(pos, point);
-                    } else {
-                        Debug.Log(pos.ToString() + " is already taken by an object!");
+    void HandleMouseControls(Event e) {
+        if (e.button == 1) { // Right mouse button
+            int controlID = GUIUtility.GetControlID (FocusType.Passive);
+
+            switch (e.GetTypeForControl (controlID)) {
+                case EventType.MouseDown:
+                    GUIUtility.hotControl = controlID;
+                    if (!selectionCopying) {
+                        startPoint = point;
+                        copyObjects.Clear();
                     }
-                }
+                    e.Use();
+                break;
+
+                case EventType.MouseUp:
+                    GUIUtility.hotControl = 0;
+                    if (layer_index == 4) {
+                        if (colliderCreation) {
+                            if (colliderPoints != null) {
+                                colliderPoints.Add(point);
+                            }
+                        } else {
+                            CreateCollider();
+                            colliderPoints.Add(point);
+                        }
+                    } else {
+                        if (selectionCopying) {
+                            if (copyObjects.Count == 0) {
+                                HandleAreaCopy();
+                            } else {
+                                HandleAreaPaste();
+                            }
+                        } else if (pathCreation) {
+                            HandlePathCreation();
+                        } else {
+                            HandleObjectPlacement();
+                        }
+                    }
+                    e.Use();
+                break;
+
+                case EventType.MouseDrag:
+                    GUIUtility.hotControl = controlID;
+                    selectionCopying = true;
+                    e.Use();
+                break;
             }
         }
     }
+
+    void HandleKeyboardControls(Event e) {
+        if (e.keyCode == KeyCode.Return) {
+            if (colliderCreation) {
+                    ColliderAssignPoints();
+            }
+            if (pathCreation) {
+                AssignPath();
+            }
+        } else if (e.keyCode == KeyCode.Escape) {
+            if (colliderCreation) {
+                colliderCreation = false;
+                colliderPoints.Clear();
+            }
+
+            if (selectionCopying) {
+                selectionCopying = false;
+                copyObjects.Clear();
+            }
+
+            if (pathCreation) {
+                pathCreation = false;
+                path.Clear();
+            }
+        }
+    }
+
+    /****************************/
+    /******* Area copying *******/
+    /****************************/
 
     void HandleAreaCopy() {
         if (startPoint == point || !Misc.IsSelectionValid(startPoint, point)) {
@@ -282,6 +272,10 @@ public class LevelEditor : MonoBehaviour {
         Selection.activeGameObject = gameObject;
     }
 
+    /****************************/
+    /******* Path creation ******/
+    /****************************/
+
     void HandlePathCreation() {
         path.Add(point);
     }
@@ -299,150 +293,62 @@ public class LevelEditor : MonoBehaviour {
         pathCreation = false;
     }
 
-    void OnDrawGizmos() {
-        Gizmos.color = Color.black;
+    /******************************************************/
+    /****** Load prefabs and handle object placement ******/
+    /******************************************************/
 
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                float x_size = Mathf.Floor(x / tileSize) * tileSize;
+    void HandleObjectPlacement() {
+        if (activeGo != null) {
+            Position pos = new Position(new Vector3(point.x, point.y, layer_index));
 
-                Gizmos.DrawLine(new Vector3(x_size, 0, 0), new Vector3(x_size, height, 0));
-            }
-            float y_size = Mathf.Floor(y / tileSize) * tileSize;
-
-            Gizmos.DrawLine(new Vector3(0, y_size, 0), new Vector3(width, y_size, 0));
-        }
-
-        DrawRectangle(Vector3.zero, new Vector3(width, height, 0), 0, Color.white);
-
-        if (Misc.IsInsideGrid(level, point)) {
-            if (layer_index != 4) {
-                if (selectionCopying) {
-                    if (copyObjects.Count == 0) {
-                        if (!Misc.IsSelectionValid(startPoint, point)) {
-                            point = startPoint;
-                        }
-                        DrawRectangle(startPoint, point, tileSize / 2, Color.yellow);
-                    } else {
-                        foreach (KeyValuePair<Position, GameObject> pair in copyObjects) {
-                            Position pos = pair.Key;
-                            Vector3 objectPoint =  new Vector3(0.5f, 0.5f, 0) + new Vector3(pos.x, pos.y, 0)  - new Vector3(startPoint.x, startPoint.y, 0) + new Vector3(point.x, point.y, 0);
-                            DrawRectangle(objectPoint, objectPoint, tileSize / 2, Color.cyan);
-                        }
-                    }
-                } else if (pathCreation) {
-                    DrawRectangle(point, point, tileSize / 5, Color.red);
-
-                    if (pathObjects.Count > 0) {
-                        Vector3 pathObjectPosition = pathObjects[pathObjects.Count - 1].transform.position;
-
-                        Gizmos.color = Color.yellow;
-
-                        if (path.Count == 0) {
-                            Gizmos.DrawLine(pathObjectPosition, point);
-                        } else if (path.Count > 0) {
-                            Gizmos.DrawLine(path.Last(), point);
-                        }
-
-                        Gizmos.color = Color.red;
-
-                        for (int i = 0; i < path.Count; i++) {
-                            if (i == 0) {
-                                Gizmos.DrawLine(pathObjectPosition, path[i]);
-                            }
-                            if (i < path.Count - 1) {
-                                Gizmos.DrawLine(path[i], path[i + 1]);
-                            }
-                        }
-                    }
-                } else {
-                    DrawRectangle(point, point, tileSize / 2, Color.red);
-                }
+            if (!objects.ContainsKey(pos)) {
+                PlaceGameObject(pos, point);
             } else {
-                DrawRectangle(point, point, tileSize / 5, Color.red);
+                GameObject obj = objects[pos];
 
-                Gizmos.color = Color.green;
-
-                if (colliderCreation) {
-                    for (int i = 0; i < colliderPoints.Count; i++) {
-                        if (i < colliderPoints.Count - 1) {
-                            Gizmos.DrawLine(colliderPoints[i], colliderPoints[i + 1]);
-                        }
-                    }
-
-                    Gizmos.color = Color.yellow;
-
-                    if (colliderPoints.Count > 0) {
-                        Gizmos.DrawLine(colliderPoints.Last(), point);
-                    }
-                }
-            }
-        }
-
-        Gizmos.color = Color.red;
-
-        for (int i = 0; i < pathObjects.Count; i++) {
-            if (pathObjects[i] != null) {
-                AIControl aiControl = pathObjects[i].GetComponent<AIControl>();
-
-                if (aiControl != null) {
-                    if (aiControl.path.Length > 1) {
-                        for (int j = 0; j < aiControl.path.Length; j++) {
-                            if (j < aiControl.path.Length - 1) {
-                                Gizmos.DrawLine(aiControl.path[j], aiControl.path[j + 1]);
-                            }
-                        }
+                if (obj == null) {
+                    objects.Remove(pos);
+                    PlaceGameObject(pos, point);
+                } else {
+                    if (overwrite) {
+                        DestroyImmediate(obj);
+                        objects.Remove(pos);
+                        PlaceGameObject(pos, point);
+                    } else {
+                        Debug.Log(pos.ToString() + " is already taken by an object!");
                     }
                 }
             }
         }
     }
 
-    private void DrawRectangle(Vector3 start, Vector3 end, float offset, Color color) {
-        Gizmos.color = color;
-        Gizmos.DrawLine(start + new Vector3(-offset * tileSize, -offset * tileSize, 0), new Vector3(end.x, start.y, 0) + new Vector3(offset * tileSize, -offset * tileSize, 0));
-        Gizmos.DrawLine(new Vector3(end.x, start.y, 0) + new Vector3(offset * tileSize, -offset * tileSize, 0), end + new Vector3(offset * tileSize, offset * tileSize, 0));
-        Gizmos.DrawLine(end + new Vector3(offset * tileSize, offset * tileSize, 0), new Vector3(start.x, end.y, 0) + new Vector3(-offset * tileSize, offset * tileSize, 0));
-        Gizmos.DrawLine(new Vector3(start.x, end.y, 0) + new Vector3(-offset * tileSize, offset * tileSize, 0), start + new Vector3(-offset * tileSize, -offset * tileSize, 0));
+    private void PlaceGameObject(Position pos, Vector3 position) {
+        GameObject obj = (GameObject)Instantiate(activeGo);
+        obj.name = activeGo.name + " - " + pos.ToString();
+        SpriteRenderer sRenderer = obj.GetComponentInChildren<SpriteRenderer>();
+
+        if (sRenderer != null) {
+            sRenderer.sortingOrder = layer_index;
+        }
+        obj.transform.position = position;
+        obj.transform.parent = layers[layer_index].transform;
+        objects.Add(pos, obj);
+        Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
+
+        AIControl aiControl = obj.GetComponent<AIControl>();
+
+        if (aiControl != null) {
+            pathObjects.Add(obj);
+            pathCreation = true;
+            path.Clear();
+        }
     }
 
-    void OnScene(SceneView sceneView) {
-        Handles.BeginGUI();
-
-        if (Selection.activeGameObject == gameObject) {
-            if (layer_index != 4) {
-                if (selectionCopying) {
-                    if (copyObjects.Count == 0) {
-                        GUILayout.Label("Finish copy-area selection by releasing right mouse button", instruction);
-                    } else {
-                        GUILayout.Label("Paste selected area by clicking right mouse button again on a new area", instruction);
-                        GUILayout.Label("Cancel area copying by pressing 'Esc'", instruction);
-                    }
-                } else if (pathCreation) {
-                    GUILayout.Label("Creating a new path...", info);
-                    GUILayout.Label("Right mouse click places a new path point", instruction);
-                    GUILayout.Label("When finished placing path points press 'Enter' or cancel it by pressing 'Esc'", instruction);
-                    GUILayout.Label("Path points: " + path.Count, info);
-                } else {
-                    GUILayout.Label("Right mouse click places selected prefab to the selected layer", instruction);
-                    GUILayout.Label("Start Copy-Paste feature by dragging mouse while pressing right mouse button", instruction);
-                    GUILayout.Label("Selected layer: " + layers[layer_index].name, info);
-                    GUILayout.Label("Selected prefab: " + activeGo.name, info);
-                }
-            } else {
-                if (colliderCreation) {
-                    GUILayout.Label("Creating a new collider...", info);
-                    GUILayout.Label("Right mouse click places a new collider point", instruction);
-                    GUILayout.Label("Click 'Collider done' button when finished placing points or press 'Enter'", instruction);
-                    GUILayout.Label("Collider points: " + colliderPoints.Count, info);
-                } else {
-                    GUILayout.Label("Click 'Create New Collider' button to start placing points for a new collider or right click on the starting point", instruction);
-                }
-            }
-        } else {
-            GUILayout.Label("Level GameObject not selected. You need to select it to use all the LevelEditor features", instruction);
+    public GameObject GetActiveGameObject() {
+        if (prefabs != null) {
+            return prefabs[activeGO_index];
         }
-        Handles.EndGUI();
+        return null;
     }
 
     GameObject[] LoadPrefabs() {
@@ -458,6 +364,10 @@ public class LevelEditor : MonoBehaviour {
         }
         return prefabs.ToArray();
     }
+
+    /**************************************************/
+    /****** Handle automatic bottom pit creation ******/
+    /**************************************************/
 
     GameObject GetBottomPit() {
         GameObject bottomPit = null;
@@ -482,34 +392,9 @@ public class LevelEditor : MonoBehaviour {
         }
     }
 
-    public GameObject GetActiveGameObject() {
-        if (prefabs != null) {
-            return prefabs[activeGO_index];
-        }
-        return null;
-    }
-
-    private void PlaceGameObject(Position pos, Vector3 position) {
-        GameObject obj = (GameObject)Instantiate(activeGo);
-        obj.name = activeGo.name + " - " + pos.ToString();
-        SpriteRenderer sRenderer = obj.GetComponentInChildren<SpriteRenderer>();
-
-        if (sRenderer != null) {
-            sRenderer.sortingOrder = layer_index;
-        }
-        obj.transform.position = position;
-        obj.transform.parent = layers[layer_index].transform;
-        objects.Add(pos, obj);
-        Undo.RegisterCreatedObjectUndo(obj, "Create " + obj.name);
-
-        AIControl aiControl = obj.GetComponent<AIControl>();
-
-        if (aiControl != null) {
-            pathObjects.Add(obj);
-            pathCreation = true;
-            path.Clear();
-        }
-    }
+    /*******************************/
+    /****** Collider creation ******/
+    /*******************************/
 
     public void LoadColliders() {
         colliders = Misc.GetChildren(layers[layer_index]).ToList();
@@ -557,5 +442,144 @@ public class LevelEditor : MonoBehaviour {
         } else {
             Debug.Log("Not creating currently a new collider, you need to create an active one first to assign points to it.");
         }
+    }
+
+    /****************************/
+    /****** Gizmos drawing ******/
+    /****************************/
+
+    void OnDrawGizmos() {
+        DrawGrid();
+
+        if (Misc.IsInsideGrid(level, point)) {
+            if (layer_index != 4) {
+                if (selectionCopying) {
+                    DrawSelectionCopy();
+                } else if (pathCreation) {
+                    DrawPathCreation();
+                } else {
+                    DrawObjectPlacement();
+                }
+            } else {
+                DrawPointPlacement();
+
+                if (colliderCreation) {
+                    DrawColliderCreation();
+                }
+            }
+        }
+
+        DrawPaths();
+    }
+
+    void DrawGrid() {
+        Gizmos.color = Color.black;
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                float x_size = Mathf.Floor(x / tileSize) * tileSize;
+
+                Gizmos.DrawLine(new Vector3(x_size, 0, 0), new Vector3(x_size, height, 0));
+            }
+            float y_size = Mathf.Floor(y / tileSize) * tileSize;
+
+            Gizmos.DrawLine(new Vector3(0, y_size, 0), new Vector3(width, y_size, 0));
+        }
+
+        DrawRectangle(Vector3.zero, new Vector3(width, height, 0), 0, Color.white);
+    }
+
+    void DrawSelectionCopy() {
+        if (copyObjects.Count == 0) {
+            if (!Misc.IsSelectionValid(startPoint, point)) {
+                point = startPoint;
+            }
+            DrawRectangle(startPoint, point, tileSize / 2, Color.yellow);
+        } else {
+            foreach (KeyValuePair<Position, GameObject> pair in copyObjects) {
+                Position pos = pair.Key;
+                Vector3 objectPoint =  new Vector3(0.5f, 0.5f, 0) + new Vector3(pos.x, pos.y, 0)  - new Vector3(startPoint.x, startPoint.y, 0) + new Vector3(point.x, point.y, 0);
+                DrawRectangle(objectPoint, objectPoint, tileSize / 2, Color.cyan);
+            }
+        }
+    }
+
+    void DrawPathCreation() {
+        DrawRectangle(point, point, tileSize / 5, Color.red);
+
+        if (pathObjects.Count > 0) {
+            Vector3 pathObjectPosition = pathObjects[pathObjects.Count - 1].transform.position;
+
+            Gizmos.color = Color.yellow;
+
+            if (path.Count == 0) {
+                Gizmos.DrawLine(pathObjectPosition, point);
+            } else if (path.Count > 0) {
+                Gizmos.DrawLine(path.Last(), point);
+            }
+
+            Gizmos.color = Color.red;
+
+            for (int i = 0; i < path.Count; i++) {
+                if (i == 0) {
+                    Gizmos.DrawLine(pathObjectPosition, path[i]);
+                }
+                if (i < path.Count - 1) {
+                    Gizmos.DrawLine(path[i], path[i + 1]);
+                }
+            }
+        }
+    }
+
+    void DrawObjectPlacement() {
+        DrawRectangle(point, point, tileSize / 2, Color.red);
+    }
+
+    void DrawPointPlacement() {
+        DrawRectangle(point, point, tileSize / 5, Color.red);
+    }
+
+    void DrawColliderCreation() {
+        Gizmos.color = Color.green;
+
+        for (int i = 0; i < colliderPoints.Count; i++) {
+            if (i < colliderPoints.Count - 1) {
+                Gizmos.DrawLine(colliderPoints[i], colliderPoints[i + 1]);
+            }
+        }
+
+        Gizmos.color = Color.yellow;
+
+        if (colliderPoints.Count > 0) {
+            Gizmos.DrawLine(colliderPoints.Last(), point);
+        }
+    }
+
+    void DrawPaths() {
+        Gizmos.color = Color.red;
+
+        for (int i = 0; i < pathObjects.Count; i++) {
+            if (pathObjects[i] != null) {
+                AIControl aiControl = pathObjects[i].GetComponent<AIControl>();
+
+                if (aiControl != null) {
+                    if (aiControl.path.Length > 1) {
+                        for (int j = 0; j < aiControl.path.Length; j++) {
+                            if (j < aiControl.path.Length - 1) {
+                                Gizmos.DrawLine(aiControl.path[j], aiControl.path[j + 1]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void DrawRectangle(Vector3 start, Vector3 end, float offset, Color color) {
+        Gizmos.color = color;
+        Gizmos.DrawLine(start + new Vector3(-offset * tileSize, -offset * tileSize, 0), new Vector3(end.x, start.y, 0) + new Vector3(offset * tileSize, -offset * tileSize, 0));
+        Gizmos.DrawLine(new Vector3(end.x, start.y, 0) + new Vector3(offset * tileSize, -offset * tileSize, 0), end + new Vector3(offset * tileSize, offset * tileSize, 0));
+        Gizmos.DrawLine(end + new Vector3(offset * tileSize, offset * tileSize, 0), new Vector3(start.x, end.y, 0) + new Vector3(-offset * tileSize, offset * tileSize, 0));
+        Gizmos.DrawLine(new Vector3(start.x, end.y, 0) + new Vector3(-offset * tileSize, offset * tileSize, 0), start + new Vector3(-offset * tileSize, -offset * tileSize, 0));
     }
 }
