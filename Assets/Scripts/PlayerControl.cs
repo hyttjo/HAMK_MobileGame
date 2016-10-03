@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(CharacterControl))]
+[RequireComponent(typeof(MovementControl))]
 public class PlayerControl : MonoBehaviour {
 
-    private CharacterControl cControl;
+    private MovementControl mControl;
     
     public KeyCode moveLeft = KeyCode.A;
     public KeyCode moveRight = KeyCode.D;
@@ -12,24 +12,24 @@ public class PlayerControl : MonoBehaviour {
     public KeyCode shoot = KeyCode.Space;
 
     void Start () {
-        cControl = GetComponent<CharacterControl>();
+        mControl = GetComponent<MovementControl>();
     }
 
     void FixedUpdate () {
     	if (Input.GetKey(moveLeft)) {
-    		cControl.MoveLeft();
+    		mControl.MoveLeft();
     	} else if (Input.GetKey(moveRight)) {
-    		cControl.MoveRight();
+    		mControl.MoveRight();
     	} else {
-    		cControl.Idle();
+    		mControl.Idle();
     	}
     	
     	if (Input.GetKey(jump)) {
-    		cControl.Jump();
+    		mControl.Jump();
     	}
 
         if (Input.GetKey(shoot)) {
-            cControl.Shoot();
+            mControl.Shoot();
         }
     }
 }

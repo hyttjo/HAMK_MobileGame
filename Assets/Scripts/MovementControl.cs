@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class CharacterControl : MonoBehaviour {
+public class MovementControl : MonoBehaviour {
 
     public GameObject character;
     private Animator anim;
@@ -67,7 +67,9 @@ public class CharacterControl : MonoBehaviour {
 
             rBody.AddForce(move * moveSpeed, ForceMode2D.Force);
 
-            anim.SetFloat("Speed", move.x);
+            if (anim != null) {
+                anim.SetFloat("Speed", move.x);
+            }
         }
     }
 

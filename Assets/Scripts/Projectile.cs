@@ -3,7 +3,7 @@
 public class Projectile : MonoBehaviour {
 
     public GameObject parent;
-    private CharacterControl cControl;
+    private MovementControl mControl;
     private Rigidbody2D rBody;
     public GameObject decayEffect;
 
@@ -13,11 +13,11 @@ public class Projectile : MonoBehaviour {
     private float aliveTimer;
 
     void Start() {
-        cControl = parent.GetComponent<CharacterControl>();
+        mControl = parent.GetComponent<MovementControl>();
         rBody = GetComponent<Rigidbody2D>();
 
-        if (rBody != null && cControl != null) {
-            rBody.AddForce(new Vector2(speedX * cControl.GetFacingDir(), speedY), ForceMode2D.Impulse);
+        if (rBody != null && mControl != null) {
+            rBody.AddForce(new Vector2(speedX * mControl.GetFacingDir(), speedY), ForceMode2D.Impulse);
         }
     }
 

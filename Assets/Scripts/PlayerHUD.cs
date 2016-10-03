@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerHUD : MonoBehaviour
-{
+public class PlayerHUD : MonoBehaviour { 
 
     public GameObject player;
-    private CharacterControl cControl;
+    private MovementControl mControl;
     private Health health;
     private Score score;
     public Font font;
@@ -29,7 +28,7 @@ public class PlayerHUD : MonoBehaviour
             player = GameObject.FindGameObjectWithTag("Player");
         }
         if (player != null) {
-            cControl = player.GetComponent<CharacterControl>();
+            mControl = player.GetComponent<MovementControl>();
             health = player.GetComponent<Health>();
             score = player.GetComponent<Score>();
 
@@ -108,11 +107,11 @@ public class PlayerHUD : MonoBehaviour
             GUI.skin.font = font;
         }
 
-        if (cControl != null) {
+        if (mControl != null) {
 
             GUI.Label(new Rect(padding.x + Screen.width / 1.8f, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Power:");
 
-            if (cControl.currentPower != null && cControl.currentPower.gameObject.tag == "DamageTypeFire") {
+            if (mControl.currentPower != null && mControl.currentPower.gameObject.tag == "DamageTypeFire") {
                 Rect rect = new Rect(padding.x + Screen.width / 1.8f + 100, padding.y - 4, fireTexture.width, fireTexture.height);
                 GUI.DrawTexture(rect, fireTexture);
             }

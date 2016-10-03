@@ -14,6 +14,7 @@ public class LevelEditorInspector : Editor {
 
     private GUIStyle instruction;
     private GUIStyle info;
+    private GUIStyle selectionGrid;
 
     public void OnEnable() {
         editor = (LevelEditor)target;
@@ -125,30 +126,30 @@ public class LevelEditorInspector : Editor {
         }
 
         GUILayout.Space(5);
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-        GUILayout.Label("Selected prefab:");
-        GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-        GUILayout.Box(activeGO_texture);
-        GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("Selected prefab:");
+            GUILayout.FlexibleSpace();
+                GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                        GUILayout.FlexibleSpace();
+                            GUILayout.Box(activeGO_texture);
+                        GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
 
-        string activeGoName = "null";
-        if (editor.activeGo != null) {
-            activeGoName = editor.activeGo.name.Replace("(Clone)", "");
-        }
-        GUILayout.Label(activeGoName);
+            string activeGoName = "null";
+            if (editor.activeGo != null) {
+                activeGoName = editor.activeGo.name.Replace("(Clone)", "");
+            }
+            GUILayout.Label(activeGoName);
 
-        GUILayout.FlexibleSpace();
+            GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
         GUILayout.Space(10);
         
-        editor.activeGO_index = GUILayout.SelectionGrid(editor.activeGO_index, objects, 6);
+        editor.activeGO_index = GUILayout.SelectionGrid(editor.activeGO_index, objects, 6, GUILayout.MaxHeight(800), GUILayout.MaxWidth(400));
     }
 
     private void DrawColliderCreation() {

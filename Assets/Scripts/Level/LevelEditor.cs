@@ -23,7 +23,7 @@ public class LevelEditor : MonoBehaviour {
     public Vector3 startPoint;
     public Vector3 endPoint;
 
-    public List<GameObject> pathObjects;
+    public List<AIControl> pathObjects;
     public List<Vector2> path;
     public bool pathCreation = false;
 
@@ -62,10 +62,10 @@ public class LevelEditor : MonoBehaviour {
             copyObjects = new Dictionary<Position, GameObject>();
 
             path = new List<Vector2>();
-            pathObjects = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+            pathObjects = GameObject.FindObjectsOfType<AIControl>().ToList();
 
             if (pathObjects == null) {
-                pathObjects = new List<GameObject>();
+                pathObjects = new List<AIControl>();
             }
 
             SceneView.onSceneGUIDelegate += LevelUpdate;
@@ -262,7 +262,7 @@ public class LevelEditor : MonoBehaviour {
         AIControl aiControl = obj.GetComponent<AIControl>();
 
         if (aiControl != null) {
-            pathObjects.Add(obj);
+            pathObjects.Add(aiControl);
             pathCreation = true;
             path.Clear();
         }
@@ -494,7 +494,6 @@ public class LevelEditor : MonoBehaviour {
                 }
             }
         }
-
         DrawPaths();
     }
 
