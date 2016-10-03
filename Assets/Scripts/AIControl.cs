@@ -23,10 +23,8 @@ public class AIControl : MonoBehaviour {
     }
 
     void FixedUpdate () {
-        if (moveDirection.x < 0) {
-    		cControl.MoveLeft();
-    	} else if (moveDirection.x > 0) {
-    		cControl.MoveRight();
+        if (path != null && path.Length > 0) {
+    		cControl.MoveTo(path[path_index]);
     	} else {
     		cControl.Idle();
     	}
@@ -54,13 +52,6 @@ public class AIControl : MonoBehaviour {
                 } else {
                     path_index--;
                 }
-            }
-
-            if (position.x < waypoint.x) {
-                moveDirection = Vector2.right;   
-            }
-            if (position.x > waypoint.x) {
-                moveDirection = Vector2.left;
             }
         }
     }
