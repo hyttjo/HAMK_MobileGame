@@ -40,6 +40,8 @@ public class LevelEditor : MonoBehaviour {
 
     private GameObject bottomPit;
 
+    private GUIStyle info;
+
     public void OnEnable() {
         if (Application.isEditor) {
             level = GetComponent<Level>();
@@ -51,6 +53,8 @@ public class LevelEditor : MonoBehaviour {
             width = level.width;
             height = level.height;
             tileSize = level.tileSize;
+
+            info = new GUIStyle { fontSize = 10, normal = new GUIStyleState { textColor = Color.white }, padding = new RectOffset(10, 10, 2, 2) };
 
             layers = level.GetLayerGameObjects();
             objects = level.GetLevelData();
@@ -608,7 +612,11 @@ public class LevelEditor : MonoBehaviour {
     private void OnScene(SceneView sceneView) {
         Handles.BeginGUI();
         if (Selection.activeGameObject != gameObject) {
-            GUILayout.Label("Level GameObject not selected. You need to select it to use all the LevelEditor features");
+            GUILayout.Label("Level GameObject not selected. You need to select it to use all the LevelEditor features", info);
+
+            if (GUILayout.Button("Select Level GameObject")) {
+                Selection.activeGameObject = gameObject;
+            }
         }
         Handles.EndGUI();
     }
