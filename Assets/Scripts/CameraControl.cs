@@ -19,7 +19,12 @@ public class CameraControl : MonoBehaviour {
             player = GameObject.FindGameObjectWithTag("Player");
 		}
 
-        Level level = GameObject.FindGameObjectWithTag("Level").GetComponent<Level>();
+        GameObject gameObject_Level = GameObject.FindGameObjectWithTag("Level");
+        Level level = null;
+
+        if (gameObject_Level != null) {
+            level = gameObject_Level.GetComponent<Level>();
+        }
 
         if (level != null) {
             cameraBounds.width = level.width;
