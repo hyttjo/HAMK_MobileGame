@@ -48,11 +48,13 @@ public class PlayerHUD : MonoBehaviour {
     }
 
     void OnGUI() {
-        DisplayBackground();
-        DisplayHealth();
-        DisplayCoins();
-        DisplayPowerUp();
-        DisplayScore();
+        if (player != null) {
+            DisplayBackground();
+            DisplayHealth();
+            DisplayCoins();
+            DisplayPowerUp();
+            DisplayScore();
+        }
     }
 
     void DisplayBackground() {

@@ -19,11 +19,11 @@ public class CameraControl : MonoBehaviour {
             player = GameObject.FindGameObjectWithTag("Player");
 		}
 
-        GameObject gameObject_Level = GameObject.FindGameObjectWithTag("Level");
+        GameObject gameObjectLevel = GameObject.FindGameObjectWithTag("Level");
         Level level = null;
 
-        if (gameObject_Level != null) {
-            level = gameObject_Level.GetComponent<Level>();
+        if (gameObjectLevel != null) {
+            level = gameObjectLevel.GetComponent<Level>();
         }
 
         if (level != null) {
@@ -41,19 +41,21 @@ public class CameraControl : MonoBehaviour {
 	}
 	
 	void FixedUpdate () {
-		if (player != null) {
-            UpdateCameraPosition();
+        UpdateCameraPosition();
 			
-			if (background.Length > 0) {
-                UpdateParallaxBackground();
-			}
+		if (background.Length > 0) {
+            UpdateParallaxBackground();
 		}
 	}
 
     void UpdateCameraPosition() {
-        Vector3 playerPosition = player.transform.position;
+        Vector3 targetPosition = Vector3.zero;
 
-        cameraPosition = new Vector3(playerPosition.x, playerPosition.y + cameraHeight, transform.position.z);
+        if (player != null) {
+            targetPosition = player.transform.position;
+        }
+
+        cameraPosition = new Vector3(targetPosition.x, targetPosition.y + cameraHeight, transform.position.z);
 
         if (cameraPosition.x < cameraBounds.x) {
             cameraPosition.x = cameraBounds.x;
@@ -72,21 +74,25 @@ public class CameraControl : MonoBehaviour {
     }
 
     void UpdateParallaxBackground() {
-        Vector3 playerPosition = player.transform.position;
+        Vector3 targetPosition = Vector3.zero;
+
+        if (player != null) {
+            targetPosition = player.transform.position;
+        }
 
         for (int i = 0; i < background.Length; i++) {
             if (background[i] != null) {
                 Vector3 backgroundPosition = new Vector3(cameraPosition.x, cameraPosition.y, 10 + background.Length - i);
                 background[i].transform.position = backgroundPosition;
 
-                float backgroundOffsetY = playerPosition.y * offsetMultiplierY * i;
+                float backgroundOffsetY = targetPosition.y * offsetMultiplierY * i;
 
                 if (backgroundOffsetY > offsetClampY) {
                     backgroundOffsetY = offsetClampY;
                 } else if (backgroundOffsetY < -offsetClampY) {
                     backgroundOffsetY = -offsetClampY;
                 }
-                Vector2 backgroundOffset = new Vector2(playerPosition.x * offsetMultiplierX * i, backgroundOffsetY);
+                Vector2 backgroundOffset = new Vector2(targetPosition.x * offsetMultiplierX * i, backgroundOffsetY);
 
                 if (i == background.Length - 1) {
                     backgroundOffset += new Vector2(Time.time / skySpeed, 0);
