@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 3d2dbe543f520c7498ac4f932cef37a0
-timeCreated: 1475277205
+timeCreated: 1475608985
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -18,6 +18,11 @@ TextureImporter:
     21300022: Pickup_Coin_3
     21300024: Pickup_Coin_4
     21300026: Pickup_Coin_5
+    21300028: Pickup_Iceball_0
+    21300030: Pickup_Iceball_1
+    21300032: Pickup_Iceball_2
+    21300034: Pickup_Iceball_3
+    21300036: Iceblock
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -235,6 +240,71 @@ TextureImporter:
         y: 73
         width: 16
         height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Pickup_Iceball_0
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 29
+        width: 16
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Pickup_Iceball_1
+      rect:
+        serializedVersion: 2
+        x: 74
+        y: 29
+        width: 16
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Pickup_Iceball_2
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 29
+        width: 15
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Pickup_Iceball_3
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 29
+        width: 16
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Iceblock
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
