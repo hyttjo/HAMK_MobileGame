@@ -50,4 +50,16 @@ public class PlayerControl : MonoBehaviour {
             }
         }
     }
+
+    void OnTriggerEnter2D(Collider2D col) {
+        if (col.gameObject.tag == "Finish") {
+            LevelFinish levelFinish = gameObject.GetComponent<LevelFinish>();
+
+            if (levelFinish != null) {
+                levelFinish.enabled = true;
+            } else {
+                levelFinish = gameObject.AddComponent<LevelFinish>();
+            }
+        }
+    }
 }
