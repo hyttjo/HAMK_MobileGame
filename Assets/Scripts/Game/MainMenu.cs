@@ -38,7 +38,7 @@ public class MainMenu : MonoBehaviour {
     }
 
     public void StartGame() {
-        GM.SetGameState(GameState.NextLevel);
+        GM.SetGameState(GameState.LoadLevel);
     }
 
     public void Quit() {

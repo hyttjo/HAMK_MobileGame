@@ -166,7 +166,7 @@ public static class Misc {
 
     public static Texture2D GetTextureFromSprite(Sprite sprite) {
         if (sprite.rect.width != sprite.texture.width) {
-            Texture2D newText = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
+            Texture2D newText = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height, TextureFormat.RGBA32, false);
             Color[] newColors = sprite.texture.GetPixels((int)sprite.textureRect.x,
                                                          (int)sprite.textureRect.y,
                                                          (int)sprite.textureRect.width,

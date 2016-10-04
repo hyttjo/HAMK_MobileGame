@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public enum GameState { Intro, MainMenu, GameOver, Paused, NextLevel, Playing }
+public enum GameState { Intro, MainMenu, GameOver, Paused, LoadLevel, NextLevel, Playing, GameFinished }
 
 public class GameManager : MonoBehaviour {
     public GameState gameState { get; private set; }
@@ -42,17 +42,31 @@ public class GameManager : MonoBehaviour {
 
             case GameState.NextLevel:
                 if (levels != null && levels.Length > 0) {
+                    if (level_index < levels.Length) {
+                        level_index++;
+                    } else {
+                        SetGameState(GameState.GameFinished);
+                    }
+                }
+                SetGameState(GameState.LoadLevel);
+                break;
+
+            case GameState.LoadLevel:
+                if (levels != null && levels.Length > 0) {
                     string level = levels[level_index];
 
                     if (scene.name != level) {
                         SceneManager.LoadScene(levels[level_index]);
-                        level_index++;
                     }
                 }
                 SetGameState(GameState.Playing);
                 break;
 
             case GameState.Playing:
+                break;
+
+            case GameState.GameFinished:
+                Debug.Log("Congratulations, you have finished the Game!");
                 break;
         }
 	}
