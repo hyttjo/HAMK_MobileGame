@@ -11,9 +11,11 @@ public class PlayerHUD : MonoBehaviour {
     public Sprite healthSprite;
     public Sprite coinSprite;
     public Sprite fireSprite;
+    public Sprite iceSprite;
     private Texture2D healthTexture;
     private Texture2D coinTexture;
     private Texture2D fireTexture;
+    private Texture2D iceTexture;
     public int numberOfHearts = 3;
     public int hudHeight = 50;
     public Rect padding = new Rect(10, 10, 10, 10);
@@ -40,6 +42,10 @@ public class PlayerHUD : MonoBehaviour {
             }
             if (fireSprite != null) {
                 fireTexture = Misc.GetTextureFromSprite(fireSprite);
+            }
+            if (fireSprite != null)
+            {
+                fireTexture = Misc.GetTextureFromSprite(iceSprite);
             }
         }
         background = new Texture2D(1, 1);
@@ -115,6 +121,11 @@ public class PlayerHUD : MonoBehaviour {
             if (mControl.currentPower != null && mControl.currentPower.gameObject.tag == "DamageTypeFire") {
                 Rect rect = new Rect(padding.x + Screen.width / 1.8f + 100, padding.y - 4, fireTexture.width, fireTexture.height);
                 GUI.DrawTexture(rect, fireTexture);
+            }
+
+            if (mControl.currentPower != null && mControl.currentPower.gameObject.tag == "DamageTypeIce") {
+                Rect rect = new Rect(padding.x + Screen.width / 1.8f + 100, padding.y - 4, iceTexture.width, iceTexture.height);
+                GUI.DrawTexture(rect, iceTexture);
             }
         }
     }
