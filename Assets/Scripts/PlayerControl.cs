@@ -13,6 +13,8 @@ public class PlayerControl : MonoBehaviour {
 
     void Start () {
         mControl = GetComponent<MovementControl>();
+
+        InvokeRepeating("CheckPlayerState", 1f, 1f);
     }
 
     void FixedUpdate () {
@@ -32,14 +34,20 @@ public class PlayerControl : MonoBehaviour {
             if (Input.GetKey(shoot)) {
                 mControl.Shoot();
             }
-
-            CheckPlayerState();
         }
     }
 
     void CheckPlayerState() {
-        if (mControl.character == null) {
-            gameObject.AddComponent<GameOver>();
+        if (mControl != null) {
+            if (mControl.character == null) {
+                GameOver gameOver = gameObject.GetComponent<GameOver>();
+
+                if (gameOver != null) {
+                    gameOver.enabled = true;
+                } else {
+                    gameOver = gameObject.AddComponent<GameOver>();
+                }
+            }
         }
     }
 }

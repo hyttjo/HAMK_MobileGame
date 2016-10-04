@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CameraControl : MonoBehaviour {
 
-	public GameObject player;
+	public GameObject target;
 	public GameObject[] background;
     public float skySpeed = 50;
 	private Material[] backgroundMat;
@@ -15,8 +15,8 @@ public class CameraControl : MonoBehaviour {
     private Vector3 cameraPosition;
 	
 	void Start () {
-		if (player == null) {
-            player = GameObject.FindGameObjectWithTag("Player");
+		if (target == null) {
+            target = GameObject.FindGameObjectWithTag("Player");
 		}
 
         GameObject gameObjectLevel = GameObject.FindGameObjectWithTag("Level");
@@ -51,8 +51,8 @@ public class CameraControl : MonoBehaviour {
     void UpdateCameraPosition() {
         Vector3 targetPosition = Vector3.zero;
 
-        if (player != null) {
-            targetPosition = player.transform.position;
+        if (target != null) {
+            targetPosition = target.transform.position;
         }
 
         cameraPosition = new Vector3(targetPosition.x, targetPosition.y + cameraHeight, transform.position.z);
@@ -76,8 +76,8 @@ public class CameraControl : MonoBehaviour {
     void UpdateParallaxBackground() {
         Vector3 targetPosition = Vector3.zero;
 
-        if (player != null) {
-            targetPosition = player.transform.position;
+        if (target != null) {
+            targetPosition = target.transform.position;
         }
 
         for (int i = 0; i < background.Length; i++) {

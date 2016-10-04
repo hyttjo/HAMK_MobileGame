@@ -15,6 +15,12 @@ public class GameOver : MonoBehaviour {
         background = (Texture2D)Resources.Load("Textures/Background");
     }
 
+    void OnEnable() {
+        if (GM != null) {
+            GM.SetGameState(GameState.GameOver);
+        }
+    }
+
     public void OnGUI() {
         if (gameOver != null) {
             GUI.DrawTexture(new Rect(Screen.width / 2 - gameOver.width / 2, Screen.height / 2 - 225, gameOver.width, gameOver.height), gameOver);
@@ -33,11 +39,13 @@ public class GameOver : MonoBehaviour {
     }
 
     public void GoToMainMenu() {
-        GM.SetGameState(GameState.MainMenu);
+        if (GM != null) {
+            GM.SetGameState(GameState.MainMenu);
+        }
     }
 
     public void Quit() {
-        Debug.Log("Apllication Quit!");
+        Debug.Log("Application Quit!");
         Application.Quit();
     }
 }

@@ -7,18 +7,22 @@ public class MainMenu : MonoBehaviour {
 
     private Texture2D logo;
     private Texture2D mainmenu;
+    private Texture2D background;
 
     void Awake() {
         GM = FindObjectOfType<GameManager>();
 
         logo = (Texture2D)Resources.Load("Textures/MobileGame");
         mainmenu = (Texture2D)Resources.Load("Textures/MainMenu");
+        background = (Texture2D)Resources.Load("Textures/Background");
     }
 
     public void OnGUI() {
         if (logo != null) {
             GUI.DrawTexture(new Rect(Screen.width / 2 - logo.width / 2, Screen.height / 2 - 250, logo.width, logo.height), logo);
         }
+
+        GUI.DrawTexture(new Rect(Screen.width / 2 - 125, Screen.height / 2 - 90, 250, 225), background);
 
         GUI.BeginGroup (new Rect (Screen.width / 2 - 100, Screen.height / 2 - 75, 200, 800));
             if (mainmenu != null) {
@@ -38,7 +42,7 @@ public class MainMenu : MonoBehaviour {
     }
 
     public void Quit() {
-        Debug.Log("Apllication Quit!");
+        Debug.Log("Application Quit!");
         Application.Quit();
     }
 }
