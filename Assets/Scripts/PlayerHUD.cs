@@ -43,9 +43,8 @@ public class PlayerHUD : MonoBehaviour {
             if (fireSprite != null) {
                 fireTexture = Misc.GetTextureFromSprite(fireSprite);
             }
-            if (fireSprite != null)
-            {
-                fireTexture = Misc.GetTextureFromSprite(iceSprite);
+            if (iceSprite != null) {
+                iceTexture = Misc.GetTextureFromSprite(iceSprite);
             }
         }
         background = new Texture2D(1, 1);
