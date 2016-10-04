@@ -16,20 +16,30 @@ public class PlayerControl : MonoBehaviour {
     }
 
     void FixedUpdate () {
-    	if (Input.GetKey(moveLeft)) {
-    		mControl.MoveLeft();
-    	} else if (Input.GetKey(moveRight)) {
-    		mControl.MoveRight();
-    	} else {
-    		mControl.Idle();
-    	}
+        if (mControl != null) {
+    	    if (Input.GetKey(moveLeft)) {
+    		    mControl.MoveLeft();
+    	    } else if (Input.GetKey(moveRight)) {
+    		    mControl.MoveRight();
+    	    } else {
+    		    mControl.Idle();
+    	    }
     	
-    	if (Input.GetKey(jump)) {
-    		mControl.Jump();
-    	}
+    	    if (Input.GetKey(jump)) {
+    		    mControl.Jump();
+    	    }
 
-        if (Input.GetKey(shoot)) {
-            mControl.Shoot();
+            if (Input.GetKey(shoot)) {
+                mControl.Shoot();
+            }
+
+            CheckPlayerState();
+        }
+    }
+
+    void CheckPlayerState() {
+        if (mControl.character == null) {
+            gameObject.AddComponent<GameOver>();
         }
     }
 }

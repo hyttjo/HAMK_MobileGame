@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\CameraControl.cs" />
     <Compile Include="Assets\Scripts\ContainerControl.cs" />
     <Compile Include="Assets\Scripts\Game\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Game\GameOver.cs" />
     <Compile Include="Assets\Scripts\Game\Intro.cs" />
     <Compile Include="Assets\Scripts\Game\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Health.cs" />
