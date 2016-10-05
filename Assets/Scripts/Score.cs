@@ -38,7 +38,9 @@ public class Score : MonoBehaviour {
 
     void Start() {
         GM = FindObjectOfType<GameManager>();
-        GM.scores.Add(GM.levels[GM.level_index], this);
+        if (GM != null) {
+            GM.scores.Add(GM.levels[GM.level_index], this);
+        }
 
         heartTexture = Misc.GetTextureFromSprite(heartSprite);
         coinTexture = Misc.GetTextureFromSprite(coinSprite);

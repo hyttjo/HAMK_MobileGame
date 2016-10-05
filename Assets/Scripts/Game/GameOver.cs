@@ -20,7 +20,9 @@ public class GameOver : MonoBehaviour {
         GM = FindObjectOfType<GameManager>();
 
         camControl = Camera.main.GetComponent<CameraControl>();
-        score = GM.scores[GM.levels[GM.level_index]];
+        if (GM != null) {
+            score = GM.scores[GM.levels[GM.level_index]];
+        }
 
         scoreStyle = new GUIStyle();
         scoreStyle.normal.textColor = Color.white;

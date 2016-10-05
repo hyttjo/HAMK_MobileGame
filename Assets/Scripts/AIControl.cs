@@ -34,6 +34,10 @@ public class AIControl : MonoBehaviour {
     	if (moveDirection.y > 0) {
     		mControl.Jump();
     	}
+
+        if (mControl.currentPower != null) {
+            mControl.Shoot();
+        }
     }
 
     private void FollowPath() {

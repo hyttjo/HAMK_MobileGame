@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerHUD : MonoBehaviour { 
+public class PlayerHUD : MonoBehaviour {
+
+    GameManager GM;
 
     public GameObject player;
     private MovementControl mControl;
@@ -29,6 +31,8 @@ public class PlayerHUD : MonoBehaviour {
         if (player == null) {
             player = GameObject.FindGameObjectWithTag("Player");
         }
+        GM = FindObjectOfType<GameManager>();
+
         if (player != null) {
             mControl = player.GetComponent<MovementControl>();
             health = player.GetComponent<Health>();
@@ -135,7 +139,13 @@ public class PlayerHUD : MonoBehaviour {
         }
 
         if (score != null) {
-            string scoreText = "Score: " + score.GetTotalScore();
+            string scoreText;
+
+            if (GM != null) {
+                scoreText = "Score: " + score.GetTotalScore();
+            } else {
+                scoreText = "Score: " + score.GetScore();
+            }
             GUI.Label(new Rect(padding.x + Screen.width / 1.3f, padding.y, Screen.width - padding.width, hudHeight - padding.height), scoreText);
         }
     }

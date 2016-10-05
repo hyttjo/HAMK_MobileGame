@@ -20,7 +20,8 @@ public class LevelFinish : MonoBehaviour {
         GM = FindObjectOfType<GameManager>();
 
         camControl = Camera.main.GetComponent<CameraControl>();
-        score = GM.scores[GM.levels[GM.level_index]];
+
+        score = GetComponentInChildren<Score>();
 
         scoreStyle = new GUIStyle();
         scoreStyle.normal.textColor = Color.white;
