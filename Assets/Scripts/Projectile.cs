@@ -17,6 +17,10 @@ public class Projectile : MonoBehaviour {
         mControl = parent.GetComponent<MovementControl>();
         rBody = GetComponent<Rigidbody2D>();
 
+        if (parent.tag == "Enemy") {
+            gameObject.layer = 12;
+        }
+
         if (rBody != null && mControl != null) {
             rBody.AddForce(new Vector2(speedX * mControl.GetFacingDir(), speedY), ForceMode2D.Impulse);
         }
@@ -33,7 +37,6 @@ public class Projectile : MonoBehaviour {
    void HandleHit(GameObject target) {
         if (target.tag == "Enemy") {
             if (hitEffect != null) {
-                Debug.Log("hit proj");
                 Instantiate(hitEffect, target.transform.position, Quaternion.identity);
             }
             Destroy(transform.position);

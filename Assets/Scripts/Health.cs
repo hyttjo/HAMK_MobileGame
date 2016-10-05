@@ -48,11 +48,11 @@ public class Health : MonoBehaviour {
         }
     }
 
-    void OnCollisionStay2D(Collision2D col) {
+    void OnCollisionEnter2D(Collision2D col) {
         HandleDamage(col.gameObject);
     }
 
-    void OnTriggerStay2D(Collider2D col) {
+    void OnTriggerEnter2D(Collider2D col) {
         HandleDamage(col.gameObject);
     }
 
@@ -91,7 +91,6 @@ public class Health : MonoBehaviour {
     }
 
     void DamageByIce(GameObject col) {
-        Debug.Log("Hit healt");
         StartCoroutine(ShowFlashDamage(damageShowDuration));
         health -= damageIce;
     }

@@ -4,11 +4,14 @@ using System.Collections;
 [RequireComponent(typeof(MovementControl))]
 public class AIControl : MonoBehaviour {
 
+    private GameObject player;
     private MovementControl mControl;
     private Rigidbody2D rBody;
 
     private Vector2 moveDirection;
     public Vector2[] path;
+
+    public float shootingDistance = 10f;
 
     private int path_index = 0;
     private bool path_increment_up = true;
@@ -16,12 +19,17 @@ public class AIControl : MonoBehaviour {
     public int lootChance = 33;
 
     void Start () {
+        player = GameObject.FindGameObjectWithTag("Player");
         mControl = GetComponent<MovementControl>();
         rBody = GetComponentInChildren<Rigidbody2D>();
 
         moveDirection = new Vector2(-1, 0);
 
         InvokeRepeating("FollowPath", 0, 0.5f);
+
+        if (player != null && mControl != null) {
+            InvokeRepeating("CheckShooting", 1f, 1 / mControl.shotsPerSecond);
+        }
     }
 
     void FixedUpdate () {
@@ -34,9 +42,22 @@ public class AIControl : MonoBehaviour {
     	if (moveDirection.y > 0) {
     		mControl.Jump();
     	}
+    }
 
+    private void CheckShooting() {
         if (mControl.currentPower != null) {
-            mControl.Shoot();
+            if (Vector2.Distance(player.transform.position, transform.position) < shootingDistance) {
+                int facingDirToPlayer = (int)player.transform.position.x - (int)transform.position.x;
+                if (facingDirToPlayer < 0) {
+                    facingDirToPlayer = -1;
+                } else {
+                    facingDirToPlayer = 1;
+                }
+
+                if (mControl.GetFacingDir() == facingDirToPlayer) {
+                    mControl.Shoot();
+                }
+            }
         }
     }
 
