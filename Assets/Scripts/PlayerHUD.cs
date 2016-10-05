@@ -135,7 +135,7 @@ public class PlayerHUD : MonoBehaviour {
         }
 
         if (score != null) {
-            string scoreText = "Score: " + score.GetScore();
+            string scoreText = "Score: " + score.GetTotalScore();
             GUI.Label(new Rect(padding.x + Screen.width / 1.3f, padding.y, Screen.width - padding.width, hudHeight - padding.height), scoreText);
         }
     }

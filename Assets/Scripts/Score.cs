@@ -10,6 +10,8 @@ public class Score : MonoBehaviour {
      * Jäljellä olevat sekunnit lisätään pisteisiin vasta kentän lopussa ja sitä varten on oma funktionsa.
      */
 
+    GameManager GM;
+
     public Sprite coinSprite;
     public Sprite heartSprite;
     public Sprite powerUpSprite;
@@ -35,6 +37,9 @@ public class Score : MonoBehaviour {
     public int enemyValue = 100;
 
     void Start() {
+        GM = FindObjectOfType<GameManager>();
+        GM.scores.Add(GM.levels[GM.level_index], this);
+
         heartTexture = Misc.GetTextureFromSprite(heartSprite);
         coinTexture = Misc.GetTextureFromSprite(coinSprite);
         powerUpTexture = Misc.GetTextureFromSprite(powerUpSprite);
@@ -114,5 +119,53 @@ public class Score : MonoBehaviour {
                powerUpsCollected * powerUpValue + 
                bricksDestroyed * brickValue + 
                enemiesKilled * enemyValue;
+    }
+
+    public int GetTotalHearts() {
+        int totalHearts = 0;
+        foreach(var score in GM.scores.Values) {
+            totalHearts += score.GetHeartsCollected();
+        }
+        return totalHearts;
+    }
+
+    public int GetTotalCoins() {
+        int totalCoins = 0;
+        foreach(var score in GM.scores.Values) {
+            totalCoins += score.GetCoinsCollected();
+        }
+        return totalCoins;
+    }
+
+    public int GetTotalPowerUps() {
+        int totalPowerUps = 0;
+        foreach(var score in GM.scores.Values) {
+            totalPowerUps += score.GetPowerUpsCollected();
+        }
+        return totalPowerUps;
+    }
+
+    public int GetTotalBricks() {
+        int totalBricks = 0;
+        foreach(var score in GM.scores.Values) {
+            totalBricks += score.GetBricksDestroyed();
+        }
+        return totalBricks;
+    }
+
+    public int GetTotalEnemies() {
+        int totalEnemies = 0;
+        foreach(var score in GM.scores.Values) {
+            totalEnemies += score.GetEnemiesKilled();
+        }
+        return totalEnemies;
+    }
+
+    public int GetTotalScore() {
+        int totalScore = 0;
+        foreach(var score in GM.scores.Values) {
+            totalScore += score.GetScore();
+        }
+        return totalScore;
     }
 }

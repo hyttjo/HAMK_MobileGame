@@ -20,7 +20,7 @@ public class GameOver : MonoBehaviour {
         GM = FindObjectOfType<GameManager>();
 
         camControl = Camera.main.GetComponent<CameraControl>();
-        score = FindObjectOfType<Score>();
+        score = GM.scores[GM.levels[GM.level_index]];
 
         scoreStyle = new GUIStyle();
         scoreStyle.normal.textColor = Color.white;
@@ -48,24 +48,24 @@ public class GameOver : MonoBehaviour {
             if (score != null) {
                 scoreStyle.fontSize = 16;
 
-                GUI.Label(new Rect(20, 20, 180, 20), "Score: " + score.GetScore(), scoreStyle);
+                GUI.Label(new Rect(20, 20, 180, 20), "Score: " + score.GetTotalScore(), scoreStyle);
                 
                 scoreStyle.fontSize = 8;
 
                 GUI.DrawTexture(new Rect(0, 60, 20, 25), score.GetEnemyTexture());
-                GUI.Label(new Rect(30, 65, 180, 20), "Enemies killed: " + score.GetEnemiesKilled(), scoreStyle);
+                GUI.Label(new Rect(30, 65, 180, 20), "Enemies killed: " + score.GetTotalEnemies(), scoreStyle);
 
                 GUI.DrawTexture(new Rect(0, 90, 20, 20), score.GetCoinTexture());
-                GUI.Label(new Rect(30, 93, 180, 20), "Coins collected: " + score.GetCoinsCollected(), scoreStyle);
+                GUI.Label(new Rect(30, 93, 180, 20), "Coins collected: " + score.GetTotalCoins(), scoreStyle);
 
                 GUI.DrawTexture(new Rect(0, 115, 20, 20), score.GetHeartTexture());
-                GUI.Label(new Rect(30, 119, 180, 20), "Hearts collected: " + score.GetHeartsCollected(), scoreStyle);
+                GUI.Label(new Rect(30, 119, 180, 20), "Hearts collected: " + score.GetTotalHearts(), scoreStyle);
 
                 GUI.DrawTexture(new Rect(0, 138, 20, 25), score.GetPowerUpTexture());
-                GUI.Label(new Rect(30, 145, 180, 20), "PowerUps collected: " + score.GetPowerUpsCollected(), scoreStyle);
+                GUI.Label(new Rect(30, 145, 180, 20), "PowerUps collected: " + score.GetTotalPowerUps(), scoreStyle);
 
                 GUI.DrawTexture(new Rect(0, 170, 20, 20), score.GetBrickTexture());
-                GUI.Label(new Rect(30, 172, 180, 20), "Bricks destroyed: " + score.GetBricksDestroyed(), scoreStyle);
+                GUI.Label(new Rect(30, 172, 180, 20), "Bricks destroyed: " + score.GetTotalBricks(), scoreStyle);
             }
 
             if (GUI.Button(new Rect(10, 210, 180, 40), "Main Menu")) {
