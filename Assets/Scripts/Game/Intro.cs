@@ -22,6 +22,12 @@ public class Intro : MonoBehaviour {
         PlayIntroTransition();
     }
 
+    private void Update() {
+        if (Input.anyKey) {
+            GM.SetGameState(GameState.MainMenu);
+        }
+    }
+
     private void OnGUI() {
         if (logo != null) {
             GUI.DrawTexture(new Rect(Screen.width / 2 - logo.width / 2, Screen.height / 2 - 250, logo.width, logo.height), logo);
