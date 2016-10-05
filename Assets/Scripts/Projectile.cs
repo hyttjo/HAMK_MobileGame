@@ -40,10 +40,10 @@ public class Projectile : MonoBehaviour {
                 Instantiate(hitEffect, target.transform.position, Quaternion.identity);
             }
             Destroy(transform.position);
-        }
-
-        if (gameObject.tag == "DamageTypeFire") {
-            if (target.tag == "Iceblock") {
+        } else if (target.tag == "Player") {
+            Destroy(transform.position);
+        } else if (target.tag == "Iceblock") {
+            if (gameObject.tag == "DamageTypeFire") {
                 Destroy(target);
                 Destroy(target.transform.position);
             }

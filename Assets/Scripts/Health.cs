@@ -21,6 +21,9 @@ public class Health : MonoBehaviour {
     public int damageCrush = 100;
     public float damageShowDuration = 0.25f;
     public Color32 damageColor = new Color32(255, 128, 128, 255);
+    public Color32 freezeColor = new Color32(45, 170, 245, 255);
+    public float freezeTime = 1f;
+    public float freezeSpeed = 0.25f;
     public float pushBackForce = 10f;
     private Rigidbody2D rBody;
     private SpriteRenderer sRenderer;
@@ -67,7 +70,7 @@ public class Health : MonoBehaviour {
             }
         } else if (colliderTag == "DamageTypeIce") {
             if (!immuneToIce) {
-                DamageByIce(col);
+                DamageByIce();
             }
         } else if (colliderTag == "DamageTypeBite") {
             if (!immuneToBite) {
@@ -86,24 +89,34 @@ public class Health : MonoBehaviour {
 
     void DamageByFire(GameObject col) {
         PushBack(col);
-        StartCoroutine(ShowFlashDamage(damageShowDuration));
+        StartCoroutine(ShowFlashDamage(damageColor, damageShowDuration));
         health -= damageFire;
     }
 
-    void DamageByIce(GameObject col) {
-        StartCoroutine(ShowFlashDamage(damageShowDuration));
+    void DamageByIce() {
+        StartCoroutine(ChangeSpeed(freezeSpeed, freezeTime));
+        StartCoroutine(ShowFlashDamage(freezeColor, freezeTime));
         health -= damageIce;
     }
 
     void DamageByBite(GameObject col) {
         PushBack(col);
-        StartCoroutine(ShowFlashDamage(damageShowDuration));
+        StartCoroutine(ShowFlashDamage(damageColor, damageShowDuration));
         health -= damageBite;
     }
 
     void DamageByCrush(GameObject col) {
         health -= damageCrush;
     }
+
+    IEnumerator ChangeSpeed(float speedMultiplier, float duration) {
+        MovementControl mControl = gameObject.GetComponentInChildren<MovementControl>();
+        if (mControl != null) {
+            mControl.speed *= speedMultiplier;
+            yield return new WaitForSeconds(duration);
+            mControl.speed /= speedMultiplier;
+        }
+    } 
 
     void PushBack(GameObject col) {
         if (rBody != null) {
@@ -114,7 +127,7 @@ public class Health : MonoBehaviour {
         }
     }
 
-    IEnumerator ShowFlashDamage(float duration) {
+    IEnumerator ShowFlashDamage(Color32 damageColor, float duration) {
         ChangeColor(damageColor);
         yield return new WaitForSeconds(duration);
         ChangeColor(Color.white);
