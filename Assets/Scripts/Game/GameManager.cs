@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public enum GameState { Intro, MainMenu, GameOver, Paused, LoadLevel, NextLevel, Playing, GameFinished }
+public enum GameState { Intro, MainMenu, GameOver, Paused, LoadLevel, NextLevel, Playing, GameFinished, QuitGame }
 
 public class GameManager : MonoBehaviour {
     public GameState gameState { get; private set; }
@@ -67,6 +67,11 @@ public class GameManager : MonoBehaviour {
 
             case GameState.GameFinished:
                 Debug.Log("Congratulations, you have finished the Game!");
+                break;
+
+            case GameState.QuitGame:
+                Debug.Log("Application Quit!");
+                Application.Quit();
                 break;
         }
 	}

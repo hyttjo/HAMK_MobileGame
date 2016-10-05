@@ -50,7 +50,7 @@ public class MovementControl : MonoBehaviour {
         if (hitDirection == Vector2.up) {
             if (jumping) {
                 jumping = false;
-                speed = speed * airSpeed;
+                speed = speed * airSpeed;  
             }
         }
     }

@@ -5,12 +5,19 @@ public class MainMenu : MonoBehaviour {
 
     GameManager GM;
 
+    public Transition startGameTransition = Transition.BoxIn;
+    public Transition quitGameTransition = Transition.HorizontalIn;
+
+    private CameraControl camControl;
+
     private Texture2D logo;
     private Texture2D mainmenu;
     private Texture2D background;
 
     void Awake() {
         GM = FindObjectOfType<GameManager>();
+
+        camControl = Camera.main.GetComponent<CameraControl>();
 
         logo = (Texture2D)Resources.Load("Textures/MobileGame");
         mainmenu = (Texture2D)Resources.Load("Textures/MainMenu");
@@ -29,20 +36,35 @@ public class MainMenu : MonoBehaviour {
                 GUI.Box(new Rect (10, 0, 180, 40), mainmenu);
             }
             if (GUI.Button (new Rect (10, 40, 180, 40), "Start")) {
-                StartGame();
+                PlayStartGameTransition();
             }
             if (GUI.Button (new Rect (10, 120, 180, 40), "Quit")) {
-                Quit();
+                PlayQuitGameTransition();
             }
         GUI.EndGroup();
     }
 
+    private void PlayStartGameTransition() {
+        if (camControl != null) {
+            CameraControl.transitionFinishDelegate += StartGame;
+            camControl.transition = startGameTransition;
+        }
+    }
+
     public void StartGame() {
+        CameraControl.transitionFinishDelegate -= StartGame;
         GM.SetGameState(GameState.LoadLevel);
     }
 
-    public void Quit() {
-        Debug.Log("Application Quit!");
-        Application.Quit();
+    private void PlayQuitGameTransition() {
+        if (camControl != null) {
+            CameraControl.transitionFinishDelegate += QuitGame;
+            camControl.transition = quitGameTransition;
+        }
+    }
+
+    public void QuitGame() {
+        CameraControl.transitionFinishDelegate -= QuitGame;
+        GM.SetGameState(GameState.QuitGame);
     }
 }

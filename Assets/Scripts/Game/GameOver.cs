@@ -5,11 +5,18 @@ public class GameOver : MonoBehaviour {
 
     GameManager GM;
 
+    public Transition mainMenuTransition = Transition.BoxIn;
+    public Transition quitGameTransition = Transition.HorizontalIn;
+
+    private CameraControl camControl;
+
     private Texture2D gameOver;
     private Texture2D background;
 
     void Awake() {
         GM = FindObjectOfType<GameManager>();
+
+        camControl = Camera.main.GetComponent<CameraControl>();
 
         gameOver = (Texture2D)Resources.Load("Textures/GameOver");
         background = (Texture2D)Resources.Load("Textures/Background");
@@ -30,22 +37,35 @@ public class GameOver : MonoBehaviour {
 
         GUI.BeginGroup(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 75, 200, 800));
             if (GUI.Button(new Rect(10, 40, 180, 40), "Main Menu")) {
-                GoToMainMenu();
+                PlayMainMenuTransition();
             }
             if (GUI.Button(new Rect(10, 120, 180, 40), "Quit")) {
-                Quit();
+                PlayQuitGameTransition();
             }
         GUI.EndGroup();
     }
 
-    public void GoToMainMenu() {
-        if (GM != null) {
-            GM.SetGameState(GameState.MainMenu);
+    private void PlayMainMenuTransition() {
+        if (camControl != null) {
+            CameraControl.transitionFinishDelegate += GoToMainMenu;
+            camControl.transition = mainMenuTransition;
         }
     }
 
-    public void Quit() {
-        Debug.Log("Application Quit!");
-        Application.Quit();
+    public void GoToMainMenu() {
+        CameraControl.transitionFinishDelegate -= GoToMainMenu;
+        GM.SetGameState(GameState.MainMenu);
+    }
+
+    private void PlayQuitGameTransition() {
+        if (camControl != null) {
+            CameraControl.transitionFinishDelegate += QuitGame;
+            camControl.transition = quitGameTransition;
+        }
+    }
+
+    public void QuitGame() {
+        CameraControl.transitionFinishDelegate -= QuitGame;
+        GM.SetGameState(GameState.QuitGame);
     }
 }

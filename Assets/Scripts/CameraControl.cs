@@ -1,20 +1,33 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum Transition { None, VerticalOut, HorizontalOut, BoxOut, CornerOut,
+                         VerticalIn, HorizontalIn, BoxIn, CornerIn } 
+
 public class CameraControl : MonoBehaviour {
 
 	public GameObject target;
 	public GameObject[] background;
+
     public float skySpeed = 50;
 	private Material[] backgroundMat;
 	public float offsetMultiplierX = 0.01f;
 	public float offsetMultiplierY = 0.01f;
 	public float offsetClampY = 0.05f;
     public float cameraHeight = 1f;
+
+    public delegate void OnTransitionFinishDelegate();
+    public static event OnTransitionFinishDelegate transitionFinishDelegate;
+    public Transition transition;
+    public float transitionSpeed = 50f;
+    private Texture2D mask;
+    public Color maskColor = new Color(0,0,0,1);
+    private float timer;
+
     public Rect cameraBounds = new Rect(8,8,1016,248);
     private Vector3 cameraPosition;
 	
-	void Start () {
+	void Start() {
 		if (target == null) {
             target = GameObject.FindGameObjectWithTag("Player");
 		}
@@ -38,9 +51,13 @@ public class CameraControl : MonoBehaviour {
 				backgroundMat[i] = background[i].GetComponent<MeshRenderer>().material;
 			}
 		}
+
+        mask = new Texture2D(1, 1);
+        mask.SetPixel(0, 0, maskColor);
+        mask.Apply();
 	}
 	
-	void FixedUpdate () {
+	void FixedUpdate() {
         UpdateCameraPosition();
 			
 		if (background.Length > 0) {
@@ -99,6 +116,109 @@ public class CameraControl : MonoBehaviour {
                 }
                 backgroundMat[i].mainTextureOffset = backgroundOffset;
             }
+        }
+    }
+
+    void OnGUI() {
+        if (transition != Transition.None) {
+            timer += Time.deltaTime;
+            float deltaTransition = timer * transitionSpeed * 10;
+
+            float Upper_Left_x = 0;
+            float Upper_Right_x = 0;
+            float Upper_Left_y = 0;
+            float Upper_Right_y = 0;
+            float Lower_Left_x = 0;
+            float Lower_Right_x = 0;
+            float Lower_Left_y = 0;
+            float Lower_Right_y = 0;
+
+            switch (transition) {
+                case Transition.HorizontalOut:
+                    Upper_Left_x = Screen.width / 2 - deltaTransition;
+                    Upper_Left_y = Screen.height;
+                    Lower_Right_x = Screen.width / 2 + deltaTransition;
+                    if (Upper_Left_x < 0) { transition = Transition.None; OnTransitionFinish(); }
+                    break;
+
+                case Transition.VerticalOut:
+                    Upper_Left_x = Screen.width;
+                    Upper_Left_y = Screen.height / 2 - deltaTransition;
+                    Lower_Right_y = Screen.height / 2 + deltaTransition;
+                    if (Upper_Left_y < 0) { transition = Transition.None; OnTransitionFinish(); }
+                    break;
+
+                case Transition.BoxOut:
+                    Upper_Left_x = Screen.width / 2 - deltaTransition;
+                    Lower_Left_x = Screen.width;
+                    Lower_Right_x = Screen.width / 2 + deltaTransition;
+                    Upper_Left_y = Screen.height;
+                    Upper_Right_y = Screen.height / 2 - deltaTransition;
+                    Lower_Left_y = Screen.height / 2 + deltaTransition;
+                    if (Upper_Left_x < 0) { transition = Transition.None; OnTransitionFinish(); }
+                    break;
+
+                case Transition.CornerOut:
+                    Upper_Left_x = Screen.width / 2 - deltaTransition;
+                    Upper_Right_x = Screen.width / 2 + deltaTransition;
+                    Lower_Left_x = Screen.width / 2 - deltaTransition;
+                    Lower_Right_x = Screen.width / 2 + deltaTransition;
+                    Upper_Left_y = Screen.height / 2 - deltaTransition;
+                    Upper_Right_y = Screen.height / 2 - deltaTransition;
+                    Lower_Left_y = Screen.height / 2 + deltaTransition;
+                    Lower_Right_y = Screen.height / 2 + deltaTransition;
+                    if (Upper_Left_x < 0) { transition = Transition.None; OnTransitionFinish(); }
+                    break;
+
+                case Transition.HorizontalIn:
+                    Upper_Left_x += deltaTransition;
+                    Lower_Right_x = Screen.width - deltaTransition;
+                    Upper_Left_y = Screen.height;
+                    if (Upper_Left_x > Screen.width / 2) { OnTransitionFinish(); }
+                    break;
+
+                case Transition.VerticalIn:
+                    Upper_Left_x = Screen.width;
+                    Upper_Left_y += deltaTransition;
+                    Lower_Right_y = Screen.height - deltaTransition;
+                    if (Upper_Left_y > Screen.height / 2) { OnTransitionFinish(); }
+                    break;
+
+                case Transition.BoxIn:
+                    Upper_Left_x = Screen.width;
+                    Upper_Right_x = Screen.width - deltaTransition;
+                    Lower_Left_x += deltaTransition;
+                    Upper_Left_y += deltaTransition;
+                    Upper_Right_y = Screen.height;
+                    Lower_Right_y = Screen.height - deltaTransition;
+                    if (Upper_Left_y > Screen.height / 2) { OnTransitionFinish(); }
+                    break;
+
+                case Transition.CornerIn:
+                    Upper_Left_x += deltaTransition;
+                    Upper_Right_x = Screen.width - deltaTransition;
+                    Lower_Left_x += deltaTransition;
+                    Lower_Right_x = Screen.width - deltaTransition;
+                    Upper_Left_y += deltaTransition;
+                    Upper_Right_y += deltaTransition;
+                    Lower_Left_y = Screen.height - deltaTransition;
+                    Lower_Right_y = Screen.height - deltaTransition;
+                    if (Upper_Left_x > Screen.width / 2) { OnTransitionFinish(); }
+                    break;
+            }
+
+            GUI.DrawTexture(new Rect(0, 0, Upper_Left_x, Upper_Left_y), mask);
+            GUI.DrawTexture(new Rect(Upper_Right_x, 0, Screen.width, Upper_Right_y), mask);
+            GUI.DrawTexture(new Rect(Lower_Right_x, Lower_Right_y, Screen.width, Screen.height), mask);
+            GUI.DrawTexture(new Rect(0, Lower_Left_y, Lower_Left_x, Screen.height), mask);
+        } else {
+            timer = 0;
+        }
+    }
+
+    public void OnTransitionFinish() {
+        if (transitionFinishDelegate != null) { 
+            transitionFinishDelegate();
         }
     }
 }
