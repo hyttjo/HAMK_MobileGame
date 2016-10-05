@@ -7,7 +7,7 @@ public enum GameState { Intro, MainMenu, GameOver, Paused, LoadLevel, NextLevel,
 public class GameManager : MonoBehaviour {
     public GameState gameState { get; private set; }
 
-    public string[] levels = new string[] { "LevelEditor", "Level-1" };
+    public string[] levels = new string[] { "Level-0", "Level-1" };
     public int level_index = 0;
 
     public Scene scene;

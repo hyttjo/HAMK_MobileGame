@@ -12,9 +12,11 @@ public class Health : MonoBehaviour {
     public int maxHealth = 100;
     public int healFromHeart = 34;
     public bool immuneToFire = false;
-    public int damageFire = 33;
+    public int damageFire = 34;
+    public bool immuneToIce = false;
+    public int damageIce = 100;
     public bool immuneToBite = false;
-    public int damageBite = 33;
+    public int damageBite = 34;
     public bool immuneToCrush = false;
     public int damageCrush = 100;
     public float damageShowDuration = 0.25f;
@@ -23,7 +25,7 @@ public class Health : MonoBehaviour {
     private Rigidbody2D rBody;
     private SpriteRenderer sRenderer;
 
-    void Start () {
+    void Start() {
 	    if (_gameObject == null) {
             _gameObject = gameObject;
         }
@@ -36,25 +38,36 @@ public class Health : MonoBehaviour {
         sRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 	
-	void Update () {
+	void Update() {
 	    if (health <= 0) {
             Destroy();
         }
 
-        if (health > maxHealth)
-        {
+        if (health > maxHealth) {
             health = maxHealth;
         }
     }
 
-    void OnTriggerEnter2D(Collider2D col) {
-        string colliderTag = col.gameObject.tag;
+    void OnCollisionStay2D(Collision2D col) {
+        HandleDamage(col.gameObject);
+    }
+
+    void OnTriggerStay2D(Collider2D col) {
+        HandleDamage(col.gameObject);
+    }
+
+    void HandleDamage(GameObject col) {
+        string colliderTag = col.tag;
 
         if (colliderTag == "DamageTypePit") {
             DeathByPit();
         } else if (colliderTag == "DamageTypeFire") {
             if (!immuneToFire) {
                 DamageByFire(col);
+            }
+        } else if (colliderTag == "DamageTypeIce") {
+            if (!immuneToIce) {
+                DamageByIce(col);
             }
         } else if (colliderTag == "DamageTypeBite") {
             if (!immuneToBite) {
@@ -71,23 +84,29 @@ public class Health : MonoBehaviour {
         health = 0;
     }
 
-    void DamageByFire(Collider2D col) {
+    void DamageByFire(GameObject col) {
         PushBack(col);
         StartCoroutine(ShowFlashDamage(damageShowDuration));
         health -= damageFire;
     }
 
-    void DamageByBite(Collider2D col) {
+    void DamageByIce(GameObject col) {
+        Debug.Log("Hit healt");
+        StartCoroutine(ShowFlashDamage(damageShowDuration));
+        health -= damageIce;
+    }
+
+    void DamageByBite(GameObject col) {
         PushBack(col);
         StartCoroutine(ShowFlashDamage(damageShowDuration));
         health -= damageBite;
     }
 
-    void DamageByCrush(Collider2D col) {
+    void DamageByCrush(GameObject col) {
         health -= damageCrush;
     }
 
-    void PushBack(Collider2D col) {
+    void PushBack(GameObject col) {
         if (rBody != null) {
             Vector2 colPosition = col.transform.position;
             Vector2 position = transform.position;

@@ -5,6 +5,7 @@ public class Projectile : MonoBehaviour {
     public GameObject parent;
     private MovementControl mControl;
     private Rigidbody2D rBody;
+    public GameObject hitEffect;
     public GameObject decayEffect;
 
     public float speedX = 5;
@@ -22,18 +23,27 @@ public class Projectile : MonoBehaviour {
     }
 
     void OnCollisionEnter2D(Collision2D col) {
-        if (col.gameObject.tag == "Enemy") {
-            Destroy();
-        }
-        if (col.gameObject.tag == "Iceblock") {
-            // Tämä koodi tässä on sama kuin alla Destroy() funktio, mutta decayEffect tapahtuukin siinä col-objektin kohdalla, eli jääkuutio pössähtää
-            if (decayEffect != null) {
-                decayEffect = (GameObject)Instantiate(decayEffect, col.transform.position, Quaternion.identity);
-                decayEffect.transform.localScale *= 0.75f;
-                Destroy(decayEffect, 0.5f);
+        HandleHit(col.gameObject);
+    }
+
+    void OnTriggerEnter2D(Collider2D col) {
+        HandleHit(col.gameObject);
+    }
+
+   void HandleHit(GameObject target) {
+        if (target.tag == "Enemy") {
+            if (hitEffect != null) {
+                Debug.Log("hit proj");
+                Instantiate(hitEffect, target.transform.position, Quaternion.identity);
             }
-            Destroy(gameObject);
-            Destroy(col.gameObject);
+            Destroy(transform.position);
+        }
+
+        if (gameObject.tag == "DamageTypeFire") {
+            if (target.tag == "Iceblock") {
+                Destroy(target);
+                Destroy(target.transform.position);
+            }
         }
     }
 
@@ -49,13 +59,13 @@ public class Projectile : MonoBehaviour {
         aliveTimer += Time.deltaTime;
 
         if (aliveTimer > decayTime) {
-            Destroy();
+            Destroy(transform.position);
         }
     }
 
-    void Destroy() {
+    void Destroy(Vector3 effectPosition) {
         if (decayEffect != null) {
-            decayEffect = (GameObject)Instantiate(decayEffect, transform.position, Quaternion.identity);
+            decayEffect = (GameObject)Instantiate(decayEffect, effectPosition, Quaternion.identity);
             decayEffect.transform.localScale *= 0.75f;
             Destroy(decayEffect, 0.5f);
         }
