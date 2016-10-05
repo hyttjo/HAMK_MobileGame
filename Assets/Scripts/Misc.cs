@@ -165,22 +165,27 @@ public static class Misc {
     }
 
     public static Texture2D GetTextureFromSprite(Sprite sprite) {
-        if (sprite.rect.width != sprite.texture.width) {
-            Texture2D newText = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height, TextureFormat.RGBA32, false);
-            Color[] newColors = sprite.texture.GetPixels((int)sprite.textureRect.x,
-                                                         (int)sprite.textureRect.y,
-                                                         (int)sprite.textureRect.width,
-                                                         (int)sprite.textureRect.height);
+        if (sprite != null) {
+            if (sprite.rect.width != sprite.texture.width) {
+                Texture2D newText = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height, TextureFormat.RGBA32, false);
+                Color[] newColors = sprite.texture.GetPixels((int)sprite.textureRect.x,
+                                                             (int)sprite.textureRect.y,
+                                                             (int)sprite.textureRect.width,
+                                                             (int)sprite.textureRect.height);
 
-            if (newColors.Length >= newText.width * newText.height) {
-                newText.SetPixels(newColors);
-                newText.Apply();
-                return newText;
+                if (newColors.Length >= newText.width * newText.height) {
+                    newText.SetPixels(newColors);
+                    newText.Apply();
+                    return newText;
+                } else {
+                    return null;
+                }
             } else {
-                return null;
+                return sprite.texture;
             }
-        } else
-            return sprite.texture;
+        } else {
+            return null;
+        }
     }
 
     public static Texture2D GetTextureFromObject(GameObject gameObject) {
