@@ -25,6 +25,16 @@ public class Projectile : MonoBehaviour {
         if (col.gameObject.tag == "Enemy") {
             Destroy();
         }
+        if (col.gameObject.tag == "Iceblock") {
+            // Tämä koodi tässä on sama kuin alla Destroy() funktio, mutta decayEffect tapahtuukin siinä col-objektin kohdalla, eli jääkuutio pössähtää
+            if (decayEffect != null) {
+                decayEffect = (GameObject)Instantiate(decayEffect, col.transform.position, Quaternion.identity);
+                decayEffect.transform.localScale *= 0.75f;
+                Destroy(decayEffect, 0.5f);
+            }
+            Destroy(gameObject);
+            Destroy(col.gameObject);
+        }
     }
 
     void Update() {
