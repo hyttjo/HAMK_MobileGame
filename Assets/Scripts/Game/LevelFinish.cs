@@ -41,13 +41,13 @@ public class LevelFinish : MonoBehaviour {
 
     private void PlayNextLevelTransition() {
         if (camControl != null) {
-            CameraControl.transitionFinishDelegate += NextLevel;
+            CameraControl.OnTransitionFinish += NextLevel;
             camControl.transition = nextLevelTransition;
         }
     }
 
     private void NextLevel() {
-        CameraControl.transitionFinishDelegate -= NextLevel;
+        CameraControl.OnTransitionFinish -= NextLevel;
         if (GM != null) {
             GM.SetGameState(GameState.NextLevel);
         }
@@ -55,13 +55,13 @@ public class LevelFinish : MonoBehaviour {
 
     private void PlayQuitGameTransition() {
         if (camControl != null) {
-            CameraControl.transitionFinishDelegate += QuitGame;
+            CameraControl.OnTransitionFinish += QuitGame;
             camControl.transition = quitGameTransition;
         }
     }
 
     private void QuitGame() {
-        CameraControl.transitionFinishDelegate -= QuitGame;
+        CameraControl.OnTransitionFinish -= QuitGame;
         GM.SetGameState(GameState.QuitGame);
     }
 }

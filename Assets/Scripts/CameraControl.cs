@@ -17,9 +17,9 @@ public class CameraControl : MonoBehaviour {
     public float cameraHeight = 1f;
 
     public delegate void OnTransitionFinishDelegate();
-    public static event OnTransitionFinishDelegate transitionFinishDelegate;
+    public static event OnTransitionFinishDelegate OnTransitionFinish;
     public Transition transition;
-    public float transitionSpeed = 50f;
+    public float transitionSpeed = 30f;
     private Texture2D mask;
     public Color maskColor = new Color(0,0,0,1);
     private float timer;
@@ -138,14 +138,14 @@ public class CameraControl : MonoBehaviour {
                     Upper_Left_x = Screen.width / 2 - deltaTransition;
                     Upper_Left_y = Screen.height;
                     Lower_Right_x = Screen.width / 2 + deltaTransition;
-                    if (Upper_Left_x < 0) { transition = Transition.None; OnTransitionFinish(); }
+                    if (Upper_Left_x < 0) { transition = Transition.None; TransitionFinish(); }
                     break;
 
                 case Transition.VerticalOut:
                     Upper_Left_x = Screen.width;
                     Upper_Left_y = Screen.height / 2 - deltaTransition;
                     Lower_Right_y = Screen.height / 2 + deltaTransition;
-                    if (Upper_Left_y < 0) { transition = Transition.None; OnTransitionFinish(); }
+                    if (Upper_Left_y < 0) { transition = Transition.None; TransitionFinish(); }
                     break;
 
                 case Transition.BoxOut:
@@ -155,7 +155,7 @@ public class CameraControl : MonoBehaviour {
                     Upper_Left_y = Screen.height;
                     Upper_Right_y = Screen.height / 2 - deltaTransition;
                     Lower_Left_y = Screen.height / 2 + deltaTransition;
-                    if (Upper_Left_x < 0) { transition = Transition.None; OnTransitionFinish(); }
+                    if (Upper_Left_x < 0) { transition = Transition.None; TransitionFinish(); }
                     break;
 
                 case Transition.CornerOut:
@@ -167,21 +167,21 @@ public class CameraControl : MonoBehaviour {
                     Upper_Right_y = Screen.height / 2 - deltaTransition;
                     Lower_Left_y = Screen.height / 2 + deltaTransition;
                     Lower_Right_y = Screen.height / 2 + deltaTransition;
-                    if (Upper_Left_x < 0) { transition = Transition.None; OnTransitionFinish(); }
+                    if (Upper_Left_x < 0) { transition = Transition.None; TransitionFinish(); }
                     break;
 
                 case Transition.HorizontalIn:
                     Upper_Left_x += deltaTransition;
                     Lower_Right_x = Screen.width - deltaTransition;
                     Upper_Left_y = Screen.height;
-                    if (Upper_Left_x > Screen.width / 2) { OnTransitionFinish(); }
+                    if (Upper_Left_x > Screen.width / 2) { TransitionFinish(); }
                     break;
 
                 case Transition.VerticalIn:
                     Upper_Left_x = Screen.width;
                     Upper_Left_y += deltaTransition;
                     Lower_Right_y = Screen.height - deltaTransition;
-                    if (Upper_Left_y > Screen.height / 2) { OnTransitionFinish(); }
+                    if (Upper_Left_y > Screen.height / 2) { TransitionFinish(); }
                     break;
 
                 case Transition.BoxIn:
@@ -191,7 +191,7 @@ public class CameraControl : MonoBehaviour {
                     Upper_Left_y += deltaTransition;
                     Upper_Right_y = Screen.height;
                     Lower_Right_y = Screen.height - deltaTransition;
-                    if (Upper_Left_y > Screen.height / 2) { OnTransitionFinish(); }
+                    if (Upper_Left_y > Screen.height / 2) { TransitionFinish(); }
                     break;
 
                 case Transition.CornerIn:
@@ -203,7 +203,7 @@ public class CameraControl : MonoBehaviour {
                     Upper_Right_y += deltaTransition;
                     Lower_Left_y = Screen.height - deltaTransition;
                     Lower_Right_y = Screen.height - deltaTransition;
-                    if (Upper_Left_x > Screen.width / 2) { OnTransitionFinish(); }
+                    if (Upper_Left_x > Screen.width / 2) { TransitionFinish(); }
                     break;
             }
 
@@ -216,9 +216,9 @@ public class CameraControl : MonoBehaviour {
         }
     }
 
-    public void OnTransitionFinish() {
-        if (transitionFinishDelegate != null) { 
-            transitionFinishDelegate();
+    private void TransitionFinish() {
+        if (OnTransitionFinish != null) { 
+            OnTransitionFinish();
         }
     }
 }

@@ -34,6 +34,10 @@ public class MovementControl : MonoBehaviour {
             sRenderer = GetComponentInChildren<SpriteRenderer>();
             rBody = GetComponentInChildren<Rigidbody2D>();
         }
+
+        if (gameObject.tag == "Player") {
+            PickupControl.OnPowerUpCollected += GainPowerUp;
+        }
     }
 
     void Update() {
@@ -129,8 +133,8 @@ public class MovementControl : MonoBehaviour {
         move = Vector2.zero;
     }
 
-    public void GainPowerUp(GameObject powerUp){
-        currentPower = powerUp;
+    public void GainPowerUp(GameObject e){
+        currentPower = e;
     }
 
     public void Shoot() {

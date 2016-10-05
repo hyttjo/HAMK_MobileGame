@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Health : MonoBehaviour {
 
+    public static event OnScoreDelegate OnEnemyKilled;
+
     public GameObject _gameObject;
     public GameObject deathEffect;
     public int health = 100;
@@ -24,6 +26,10 @@ public class Health : MonoBehaviour {
     void Start () {
 	    if (_gameObject == null) {
             _gameObject = gameObject;
+        }
+
+        if (gameObject.tag == "Player") {
+            PickupControl.OnHeartCollected += GainHealth;
         }
 
         rBody = GetComponent<Rigidbody2D>();
@@ -102,11 +108,15 @@ public class Health : MonoBehaviour {
         }
     }
 
-    public void GainHealthPickup() {
+    public void GainHealth(GameObject e) {
         health += healFromHeart;
     }
 
     void Destroy() {
+        if (gameObject.tag == "Enemy") {
+            OnEnemyKilled();
+        }
+
         if (rBody != null) {
             rBody.isKinematic = true;
         }
@@ -127,6 +137,6 @@ public class Health : MonoBehaviour {
                 }
             }
         }
-        GameObject.Destroy(_gameObject);
+        Destroy(_gameObject);
     }
 }

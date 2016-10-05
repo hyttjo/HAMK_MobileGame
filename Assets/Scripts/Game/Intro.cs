@@ -3,21 +3,26 @@
 public class Intro : MonoBehaviour {
 
     GameManager GM;
-    public float introTime = 3f;
+
+    public Transition introTransition = Transition.BoxOut;
+    private CameraControl camControl;
+    public float introTime = 1f;
 
     private Texture2D logo;
     private Texture2D credits;
 
-    void Awake() {
+    private void Awake() {
         GM = FindObjectOfType<GameManager>();
+
+        camControl = Camera.main.GetComponent<CameraControl>();
 
         logo = (Texture2D)Resources.Load("Textures/MobileGame");
         credits = (Texture2D)Resources.Load("Textures/MadeBy");
 
-        Invoke("LoadMainMenu", introTime);
+        PlayIntroTransition();
     }
 
-    public void OnGUI() {
+    private void OnGUI() {
         if (logo != null) {
             GUI.DrawTexture(new Rect(Screen.width / 2 - logo.width / 2, Screen.height / 2 - 250, logo.width, logo.height), logo);
         }
@@ -26,7 +31,19 @@ public class Intro : MonoBehaviour {
         }
     }
 
-    public void LoadMainMenu() {
+    private void PlayIntroTransition() {
+        if (camControl != null) {
+            CameraControl.OnTransitionFinish += IntroTransitionFinished;
+            camControl.transition = introTransition;
+        }
+    }
+
+    private void IntroTransitionFinished() {
+        CameraControl.OnTransitionFinish -= IntroTransitionFinished;
+        Invoke("GoToMainMenu", introTime);
+    }
+
+    private void GoToMainMenu() {
         GM.SetGameState(GameState.MainMenu);
     }
 }

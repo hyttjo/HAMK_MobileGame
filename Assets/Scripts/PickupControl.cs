@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public delegate void OnPickUpDelegate(GameObject e);
+
 public class PickupControl : MonoBehaviour {
 
     /*
@@ -8,6 +10,10 @@ public class PickupControl : MonoBehaviour {
      * Erilaisia pickupeja ovat (Coin, Heart, Fireball, Iceshard) ja ainahan lisää voi tehdä, jos vain haluaa.
      * Pickpit käyttäytyvät eri tavoin, joten oikean "Behaviour" asetuksen valinta Unity Editorissa on tärkeää.
      */ 
+
+    public static event OnPickUpDelegate OnCoinCollected;
+    public static event OnPickUpDelegate OnHeartCollected;
+    public static event OnPickUpDelegate OnPowerUpCollected;
 
     public enum Pickups { Coin, Heart, PowerUp }
     public Pickups behaviour; // Tämä näkyy vetovalikkona Editorissa. Muista valita oikea valinta pickupeja luodessa!
@@ -20,7 +26,6 @@ public class PickupControl : MonoBehaviour {
     public bool spawnJump = true; // Hypähtääkö pickup ilmaan sen syntyessä?
 
 	void Start () {
-
         if (spawnJump) {
             SpawnJump();
         }
@@ -37,28 +42,19 @@ public class PickupControl : MonoBehaviour {
             string colliderTag = col.gameObject.transform.parent.gameObject.tag;
 
             if (colliderTag == "Player") { // Jos pelaaja osuu pickupiin
-                if (behaviour == Pickups.Heart) { 
-                    Health health = col.GetComponentInParent<Health>(); // Haetaan pelaajan käyttämä Health-skripti
-                    if (health != null){ // Jos Health-skripti on olemassa...
-                        health.GainHealthPickup(); // ...käytetään sen sisäistä funktiota pelaajan parantamiseen...
-                        Destroy(); // ...ja poistetaan tämä pickup pelimaailmasta.
-                    }
+                if (behaviour == Pickups.Heart) {
+                    OnHeartCollected(null);
+                    Destroy(); // Poistetaan tämä pickup pelimaailmasta.
                 }
 
                 if (behaviour == Pickups.Coin) {
-                    Score score = col.GetComponentInParent<Score>(); // Haetaan pelaajan käyttämä Score-skripti
-                    if (score != null) { // Jos Score-skripti on olemassa...
-                        score.GainCoin(); // ...käytetään sen sisäistä funktiota siihen, että pelaajalle merkataan kerätty kolikko...
-                        Destroy(); // ...ja poistetaan tämä pickup pelimaailmasta.
-                    }
+                    OnCoinCollected(null);
+                    Destroy(); // Poistetaan tämä pickup pelimaailmasta.
                 }
 
-                if (behaviour == Pickups.PowerUp && colliderTag == "Player") {
-                    MovementControl mControl = col.GetComponentInParent<MovementControl>(); // Haetaan pelaajan käyttämä MovementControl-skripti
-                    if (mControl != null) { // Jos MovementControl-skripti on olemassa...
-                        mControl.GainPowerUp(powerUp); // ...käytetään sen sisäistä funktiota siihen, että pelaajalle annetaan kyky ampua tulipalloja...
-                        Destroy(); // ...ja poistetaan tämä pickup pelimaailmasta.
-                    }
+                if (behaviour == Pickups.PowerUp) {
+                    OnPowerUpCollected(powerUp);
+                    Destroy(); // Poistetaan tämä pickup pelimaailmasta.
                 }
             }
         }

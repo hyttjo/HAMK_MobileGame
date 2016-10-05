@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour {
 		GetThisGameManager();
 	}
 	
-	void Update () {
+	void Update() {
         scene = SceneManager.GetActiveScene();
 
 	    switch (gameState) {

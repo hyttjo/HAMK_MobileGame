@@ -47,25 +47,25 @@ public class GameOver : MonoBehaviour {
 
     private void PlayMainMenuTransition() {
         if (camControl != null) {
-            CameraControl.transitionFinishDelegate += GoToMainMenu;
+            CameraControl.OnTransitionFinish += GoToMainMenu;
             camControl.transition = mainMenuTransition;
         }
     }
 
     public void GoToMainMenu() {
-        CameraControl.transitionFinishDelegate -= GoToMainMenu;
+        CameraControl.OnTransitionFinish -= GoToMainMenu;
         GM.SetGameState(GameState.MainMenu);
     }
 
     private void PlayQuitGameTransition() {
         if (camControl != null) {
-            CameraControl.transitionFinishDelegate += QuitGame;
+            CameraControl.OnTransitionFinish += QuitGame;
             camControl.transition = quitGameTransition;
         }
     }
 
     public void QuitGame() {
-        CameraControl.transitionFinishDelegate -= QuitGame;
+        CameraControl.OnTransitionFinish -= QuitGame;
         GM.SetGameState(GameState.QuitGame);
     }
 }

@@ -46,25 +46,25 @@ public class MainMenu : MonoBehaviour {
 
     private void PlayStartGameTransition() {
         if (camControl != null) {
-            CameraControl.transitionFinishDelegate += StartGame;
+            CameraControl.OnTransitionFinish += StartGame;
             camControl.transition = startGameTransition;
         }
     }
 
     public void StartGame() {
-        CameraControl.transitionFinishDelegate -= StartGame;
+        CameraControl.OnTransitionFinish -= StartGame;
         GM.SetGameState(GameState.LoadLevel);
     }
 
     private void PlayQuitGameTransition() {
         if (camControl != null) {
-            CameraControl.transitionFinishDelegate += QuitGame;
+            CameraControl.OnTransitionFinish += QuitGame;
             camControl.transition = quitGameTransition;
         }
     }
 
     public void QuitGame() {
-        CameraControl.transitionFinishDelegate -= QuitGame;
+        CameraControl.OnTransitionFinish -= QuitGame;
         GM.SetGameState(GameState.QuitGame);
     }
 }

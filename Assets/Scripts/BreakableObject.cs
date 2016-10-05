@@ -3,6 +3,8 @@ using System.Collections;
 
 public class BreakableObject : MonoBehaviour {
 
+    public static event OnScoreDelegate OnBrickDestroyed;
+
     public GameObject debris;
     public Vector2[] breakDirections = new Vector2[] { Vector2.up };
     public float debrisLifetime = 2f;
@@ -16,7 +18,7 @@ public class BreakableObject : MonoBehaviour {
 
                 if (hitDirection == vector) {
                     ActivateDebris();
-                    Destroy();
+                    DestroyObject();
                 }
             }
         }
@@ -34,7 +36,9 @@ public class BreakableObject : MonoBehaviour {
         }
     }
 
-    void Destroy() {
+    void DestroyObject() {
+        OnBrickDestroyed();
+
         SpriteRenderer sRenderer = GetComponent<SpriteRenderer>();
         
         if (sRenderer != null) {
