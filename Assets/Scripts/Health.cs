@@ -88,7 +88,7 @@ public class Health : MonoBehaviour {
     }
 
     void DamageByFire(GameObject col) {
-        PushBack(col);
+        PushBack(col, gameObject);
         StartCoroutine(ShowFlashDamage(damageColor, damageShowDuration));
         health -= damageFire;
     }
@@ -100,12 +100,13 @@ public class Health : MonoBehaviour {
     }
 
     void DamageByBite(GameObject col) {
-        PushBack(col);
+        PushBack(col, gameObject);
         StartCoroutine(ShowFlashDamage(damageColor, damageShowDuration));
         health -= damageBite;
     }
 
     void DamageByCrush(GameObject col) {
+        PushBack(gameObject, col);
         health -= damageCrush;
     }
 
@@ -118,12 +119,13 @@ public class Health : MonoBehaviour {
         }
     } 
 
-    void PushBack(GameObject col) {
-        if (rBody != null) {
-            Vector2 colPosition = col.transform.position;
-            Vector2 position = transform.position;
+    void PushBack(GameObject pusher, GameObject target) {
+        Rigidbody2D rBodyTarget = target.GetComponentInParent<Rigidbody2D>();
+        if (rBodyTarget != null) {
+            Vector2 colPosition = pusher.transform.position;
+            Vector2 position = target.transform.position;
             Vector2 direction = -(colPosition - position).normalized;
-            rBody.velocity = direction * pushBackForce;
+            rBodyTarget.velocity = direction * pushBackForce;
         }
     }
 
