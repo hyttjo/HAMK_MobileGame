@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Health : MonoBehaviour {
 
+    GameManager GM;
+
     public static event OnScoreDelegate OnEnemyKilled;
 
     public GameObject _gameObject;
@@ -29,6 +31,8 @@ public class Health : MonoBehaviour {
     private SpriteRenderer sRenderer;
 
     void Start() {
+        GM = FindObjectOfType<GameManager>();
+
 	    if (_gameObject == null) {
             _gameObject = gameObject;
         }
@@ -121,6 +125,7 @@ public class Health : MonoBehaviour {
 
     void PushBack(GameObject pusher, GameObject target) {
         Rigidbody2D rBodyTarget = target.GetComponentInParent<Rigidbody2D>();
+
         if (rBodyTarget != null) {
             Vector2 colPosition = pusher.transform.position;
             Vector2 position = target.transform.position;

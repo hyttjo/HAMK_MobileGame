@@ -533,7 +533,6 @@ public class LevelEditor : MonoBehaviour {
                 } else if (tileSize > 1) {
                     tileSize = (int)Mathf.Sqrt(tileSize);
                 }
-                Debug.Log(spriteSize + " " + pixelScaling + " " + tileSize);
             }
         }
     }
