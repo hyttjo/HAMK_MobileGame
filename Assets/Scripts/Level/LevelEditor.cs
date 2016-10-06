@@ -553,8 +553,15 @@ public class LevelEditor : MonoBehaviour {
         } else {
             foreach (KeyValuePair<Position, GameObject> pair in copyObjects) {
                 Position pos = pair.Key;
-                Vector3 objectPoint =  new Vector3(tileSize, tileSize, 0) + new Vector3(pos.x, pos.y, 0)  - new Vector3(startPoint.x, startPoint.y, 0) + new Vector3(point.x, point.y, 0);
-                DrawRectangle(objectPoint, objectPoint, tileSize / gizmoSize, Color.cyan);
+                float offset = tileSize / gizmoSize;
+                if (tileSize > 1) {
+                    offset = gizmoSize / tileSize;
+                }
+                Vector3 objectPoint =  new Vector3(offset, offset, 0) + new Vector3(pos.x, pos.y, 0)  - new Vector3(startPoint.x, startPoint.y, 0) + new Vector3(point.x, point.y, 0);
+                if (tileSize > 1) {
+                    offset = tileSize / gizmoSize;
+                }
+                DrawRectangle(objectPoint, objectPoint, offset, Color.cyan);
             }
         }
     }
