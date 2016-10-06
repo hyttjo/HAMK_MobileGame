@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
     public GameState gameState { get; private set; }
 
     public Dictionary<string, Score> scores;
-    public string[] levels = new string[] { "Level-0", "Level-1" };
+    public string[] levels = new string[] { "Level-0", "Level-1", "Level-2" };
     public int level_index = 0;
 
     public Scene scene;
@@ -51,11 +51,11 @@ public class GameManager : MonoBehaviour {
                 if (levels != null && levels.Length > 0) {
                     if (level_index < levels.Length) {
                         level_index++;
+                        SetGameState(GameState.LoadLevel);
                     } else {
                         SetGameState(GameState.GameFinished);
                     }
                 }
-                SetGameState(GameState.LoadLevel);
                 break;
 
             case GameState.LoadLevel:
