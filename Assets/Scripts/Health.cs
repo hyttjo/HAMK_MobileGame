@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 public class Health : MonoBehaviour {
 
-    GameManager GM;
-
     public static event OnScoreDelegate OnEnemyKilled;
 
     public GameObject _gameObject;
@@ -31,8 +29,6 @@ public class Health : MonoBehaviour {
     private SpriteRenderer sRenderer;
 
     void Start() {
-        GM = FindObjectOfType<GameManager>();
-
 	    if (_gameObject == null) {
             _gameObject = gameObject;
         }
