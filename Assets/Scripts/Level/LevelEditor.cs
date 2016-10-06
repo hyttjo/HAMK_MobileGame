@@ -29,12 +29,15 @@ public class LevelEditor : MonoBehaviour {
 
     private Vector3 point;
 
+    
+
     public int activeGO_index = 0;
     public int layer_index = 0;
 
     public int width = 128;
     public int height = 32;
     public float tileSize = 1;
+    private int gizmoSize = 1;
 
     public bool overwrite = false;
 
@@ -349,8 +352,8 @@ public class LevelEditor : MonoBehaviour {
             GameObject _gameObject;
             GameObject target;
 
-            float posX = pos.x - startPoint.x + startPaste.x + 1;
-            float posY = pos.y - startPoint.y + startPaste.y + 1;
+            float posX = pos.x - startPoint.x + startPaste.x + tileSize;
+            float posY = pos.y - startPoint.y + startPaste.y + tileSize;
             Position pastePoint = new Position(new Vector3(posX, posY, pos.z));
 
             if (!objects.ContainsKey(pastePoint)) {
@@ -514,23 +517,56 @@ public class LevelEditor : MonoBehaviour {
         DrawRectangle(Vector3.zero, new Vector3(width, height, 0), 0, Color.white);
     }
 
+    public void UpdateGridValues() {
+        SpriteRenderer sRenderer = activeGo.GetComponentInChildren<SpriteRenderer>();
+
+        if (sRenderer != null) {
+            Sprite sprite = sRenderer.sprite;
+
+            if (sprite != null) {
+                int spriteSize = (int)sprite.rect.width * (int)sprite.rect.height;
+                int pixelScaling = (int)sprite.pixelsPerUnit * (int)sprite.pixelsPerUnit;
+                tileSize = spriteSize / pixelScaling;
+
+                if (tileSize < 1) {
+                    tileSize = 1;
+                } else if (tileSize > 1) {
+                    tileSize = (int)Mathf.Sqrt(tileSize);
+                }
+                Debug.Log(spriteSize + " " + pixelScaling + " " + tileSize);
+            }
+        }
+    }
+
     private void DrawSelectionCopy() {
+        int gizmoSize = 2;
+
+        if (tileSize > 1) {
+            gizmoSize *= 2;
+        }
+
         if (copyObjects.Count == 0) {
             if (!Misc.IsSelectionValid(startPoint, point)) {
                 point = startPoint;
             }
-            DrawRectangle(startPoint, point, tileSize / 2, Color.yellow);
+            DrawRectangle(startPoint, point, tileSize / gizmoSize, Color.yellow);
         } else {
             foreach (KeyValuePair<Position, GameObject> pair in copyObjects) {
                 Position pos = pair.Key;
-                Vector3 objectPoint =  new Vector3(0.5f, 0.5f, 0) + new Vector3(pos.x, pos.y, 0)  - new Vector3(startPoint.x, startPoint.y, 0) + new Vector3(point.x, point.y, 0);
-                DrawRectangle(objectPoint, objectPoint, tileSize / 2, Color.cyan);
+                Vector3 objectPoint =  new Vector3(tileSize, tileSize, 0) + new Vector3(pos.x, pos.y, 0)  - new Vector3(startPoint.x, startPoint.y, 0) + new Vector3(point.x, point.y, 0);
+                DrawRectangle(objectPoint, objectPoint, tileSize / gizmoSize, Color.cyan);
             }
         }
     }
 
     private void DrawPathCreation() {
-        DrawRectangle(point, point, tileSize / 5, Color.red);
+        int gizmoSize = 5;
+
+        if (tileSize > 1) {
+            gizmoSize *= 2;
+        }
+
+        DrawRectangle(point, point, tileSize / gizmoSize, Color.red);
 
         if (pathObjects.Count >= 0) {
             Vector3 pathObjectPosition = pathObjects[pathObjects.Count - 1].transform.position;
@@ -557,11 +593,21 @@ public class LevelEditor : MonoBehaviour {
     }
 
     private void DrawObjectPlacement() {
-        DrawRectangle(point, point, tileSize / 2, Color.red);
+        int gizmoSize = 2;
+
+        if (tileSize > 1) {
+            gizmoSize *= 2;
+        }
+        DrawRectangle(point, point, tileSize / gizmoSize, Color.red);
     }
 
     private void DrawPointPlacement() {
-        DrawRectangle(point, point, tileSize / 5, Color.red);
+        int gizmoSize = 5;
+
+        if (tileSize > 1) {
+            gizmoSize *= 2;
+        }
+        DrawRectangle(point, point, tileSize / gizmoSize, Color.red);
     }
 
     private void DrawColliderCreation() {

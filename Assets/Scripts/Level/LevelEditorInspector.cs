@@ -16,6 +16,8 @@ public class LevelEditorInspector : Editor {
     private GUIStyle info;
     private GUIStyle selectionGrid;
 
+    private int tempActive_Go_index = -1;
+
     public void OnEnable() {
         editor = (LevelEditor)target;
 
@@ -148,7 +150,11 @@ public class LevelEditorInspector : Editor {
             GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
         GUILayout.Space(10);
-        
+
+        if (tempActive_Go_index != editor.activeGO_index) {
+            tempActive_Go_index = editor.activeGO_index;
+            editor.UpdateGridValues();
+        }
         editor.activeGO_index = GUILayout.SelectionGrid(editor.activeGO_index, objects, 6, GUILayout.MaxHeight(800), GUILayout.MaxWidth(400));
     }
 
