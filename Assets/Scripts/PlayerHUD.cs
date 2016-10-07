@@ -122,12 +122,12 @@ public class PlayerHUD : MonoBehaviour {
             GUI.Label(new Rect(padding.x + Screen.width / 1.8f, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Power:");
 
             if (mControl.currentPower != null && mControl.currentPower.gameObject.tag == "DamageTypeFire") {
-                Rect rect = new Rect(padding.x + Screen.width / 1.8f + 100, padding.y - 4, fireTexture.width, fireTexture.height);
+                Rect rect = new Rect(padding.x + Screen.width / 1.8f + 100, padding.y - 4, 16, 26);
                 GUI.DrawTexture(rect, fireTexture);
             }
 
             if (mControl.currentPower != null && mControl.currentPower.gameObject.tag == "DamageTypeIce") {
-                Rect rect = new Rect(padding.x + Screen.width / 1.8f + 100, padding.y - 4, iceTexture.width, iceTexture.height);
+                Rect rect = new Rect(padding.x + Screen.width / 1.8f + 100, padding.y - 4, 16, 26);
                 GUI.DrawTexture(rect, iceTexture);
             }
         }
