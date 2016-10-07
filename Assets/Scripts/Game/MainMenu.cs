@@ -5,6 +5,9 @@ public class MainMenu : MonoBehaviour {
 
     GameManager GM;
 
+    private enum Difficulty { Easy, Normal, Hard }
+    private Difficulty difficulty = Difficulty.Normal;
+
     public Transition startGameTransition = Transition.BoxIn;
     public Transition quitGameTransition = Transition.HorizontalIn;
 
@@ -29,7 +32,7 @@ public class MainMenu : MonoBehaviour {
             GUI.DrawTexture(new Rect(Screen.width / 2 - logo.width / 2, Screen.height / 2 - 250, logo.width, logo.height), logo);
         }
 
-        GUI.DrawTexture(new Rect(Screen.width / 2 - 125, Screen.height / 2 - 90, 250, 225), background);
+        GUI.DrawTexture(new Rect(Screen.width / 2 - 125, Screen.height / 2 - 90, 250, 245), background);
 
         GUI.BeginGroup (new Rect (Screen.width / 2 - 100, Screen.height / 2 - 75, 200, 800));
             if (mainmenu != null) {
@@ -38,7 +41,23 @@ public class MainMenu : MonoBehaviour {
             if (GUI.Button (new Rect (10, 40, 180, 40), "New game")) {
                 PlayStartGameTransition();
             }
-            if (GUI.Button (new Rect (10, 120, 180, 40), "Quit")) {
+            if (difficulty == Difficulty.Easy) {
+                if (GUI.Button (new Rect (10, 100, 180, 40), "Easy")) {
+                    difficulty = Difficulty.Normal;
+                    GM.playerLives = 3;
+                }
+            } else if (difficulty == Difficulty.Normal) {
+                if (GUI.Button (new Rect (10, 100, 180, 40), "Normal")) {
+                    difficulty = Difficulty.Hard;
+                    GM.playerLives = 1;
+                }
+            } else if (difficulty == Difficulty.Hard) {
+                if (GUI.Button (new Rect (10, 100, 180, 40), "Hard")) {
+                    difficulty = Difficulty.Easy;
+                    GM.playerLives = 5;
+                }
+            }
+            if (GUI.Button (new Rect (10, 160, 180, 40), "Quit")) {
                 PlayQuitGameTransition();
             }
         GUI.EndGroup();

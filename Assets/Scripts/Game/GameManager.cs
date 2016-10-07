@@ -3,10 +3,11 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
-public enum GameState { Intro, MainMenu, GameOver, Paused, LoadLevel, NextLevel, Playing, PlayerDied, GameFinished, QuitGame }
+public enum GameState { Intro, MainMenu, GameOver, Paused, LoadLevel, NextLevel, Playing, PlayerDied, LevelFinished, GameFinished, QuitGame }
 
 public class GameManager : MonoBehaviour {
     public GameState gameState { get; private set; }
+    public GameObject player;
 
     public Dictionary<string, Score> scores;
     public string[] levels = new string[] { "Level-0", "Level-1", "Level-2" };
@@ -35,7 +36,6 @@ public class GameManager : MonoBehaviour {
                 break;
 
             case GameState.MainMenu:
-                playerLives = 3;
                 scores.Clear();
 
                 if (scene.name != "MainMenu") {
@@ -44,10 +44,14 @@ public class GameManager : MonoBehaviour {
                 break;
 
             case GameState.GameOver:
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                player = GameObject.FindGameObjectWithTag("Player");
 
                 if (player != null) {
-                    player.AddComponent<GameOver>();
+                    GameOver gameOver = player.GetComponent<GameOver>();
+
+                    if (gameOver == null) {
+                        player.AddComponent<GameOver>();
+                    }
                 }
                 level_index = 0;
                 break;
@@ -85,6 +89,18 @@ public class GameManager : MonoBehaviour {
                     SetGameState(GameState.LoadLevel);
                 } else {
                     SetGameState(GameState.GameOver);
+                }
+                break;
+
+            case GameState.LevelFinished:
+                player = GameObject.FindGameObjectWithTag("Player");
+
+                if (player != null) {
+                    LevelFinish levelFinish = player.GetComponent<LevelFinish>();
+
+                    if (levelFinish == null) {
+                        player.AddComponent<LevelFinish>();
+                    }
                 }
                 break;
 
