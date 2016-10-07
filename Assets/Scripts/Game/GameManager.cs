@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
-public enum GameState { Intro, MainMenu, GameOver, Paused, LoadLevel, NextLevel, Playing, GameFinished, QuitGame }
+public enum GameState { Intro, MainMenu, GameOver, Paused, LoadLevel, NextLevel, Playing, PlayerDied, GameFinished, QuitGame }
 
 public class GameManager : MonoBehaviour {
     public GameState gameState { get; private set; }
@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour {
     public int level_index = 0;
 
     public Scene scene;
+
+    public int playerLives = 3;
 
 	private static GameManager manager = null;
 	public static GameManager Manager {
@@ -33,6 +35,7 @@ public class GameManager : MonoBehaviour {
                 break;
 
             case GameState.MainMenu:
+                playerLives = 3;
                 scores.Clear();
 
                 if (scene.name != "MainMenu") {
@@ -41,6 +44,11 @@ public class GameManager : MonoBehaviour {
                 break;
 
             case GameState.GameOver:
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+
+                if (player != null) {
+                    player.AddComponent<GameOver>();
+                }
                 level_index = 0;
                 break;
 
@@ -60,16 +68,24 @@ public class GameManager : MonoBehaviour {
 
             case GameState.LoadLevel:
                 if (levels != null && levels.Length > 0) {
-                    string level = levels[level_index];
-
-                    if (scene.name != level) {
+                    if (level_index < levels.Length) {
                         SceneManager.LoadScene(levels[level_index]);
+                        SetGameState(GameState.Playing);
                     }
-                }
-                SetGameState(GameState.Playing);
+                }  
                 break;
 
             case GameState.Playing:
+                break;
+
+           case GameState.PlayerDied:
+                playerLives--;
+
+                if (playerLives > 0) { 
+                    SetGameState(GameState.LoadLevel);
+                } else {
+                    SetGameState(GameState.GameOver);
+                }
                 break;
 
             case GameState.GameFinished:

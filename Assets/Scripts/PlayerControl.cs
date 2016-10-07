@@ -4,6 +4,8 @@ using System.Collections;
 [RequireComponent(typeof(MovementControl))]
 public class PlayerControl : MonoBehaviour {
 
+    GameManager GM;
+
     private MovementControl mControl;
     
     public KeyCode moveLeft = KeyCode.A;
@@ -12,6 +14,8 @@ public class PlayerControl : MonoBehaviour {
     public KeyCode shoot = KeyCode.Space;
 
     void Start () {
+        GM = FindObjectOfType<GameManager>();
+
         mControl = GetComponent<MovementControl>();
 
         InvokeRepeating("CheckPlayerState", 1f, 1f);
@@ -40,12 +44,10 @@ public class PlayerControl : MonoBehaviour {
     void CheckPlayerState() {
         if (mControl != null) {
             if (mControl.character == null) {
-                GameOver gameOver = gameObject.GetComponent<GameOver>();
-
-                if (gameOver != null) {
-                    gameOver.enabled = true;
-                } else {
-                    gameOver = gameObject.AddComponent<GameOver>();
+                if (GM != null) {
+                    if (GM.gameState == GameState.Playing) {
+                        GM.SetGameState(GameState.PlayerDied);
+                    }
                 }
             }
         }

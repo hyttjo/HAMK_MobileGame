@@ -44,7 +44,7 @@ public class BreakableObject : MonoBehaviour {
         if (sRenderer != null) {
             sRenderer.enabled = false;
         }
-        Invoke("DisableCollider", 0.1f);
+        Invoke("DisableCollider", 0.01f);
 
         Destroy(gameObject, debrisLifetime);
     }

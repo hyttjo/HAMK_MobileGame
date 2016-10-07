@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 3d2dbe543f520c7498ac4f932cef37a0
-timeCreated: 1475610996
+timeCreated: 1475856154
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -24,6 +24,7 @@ TextureImporter:
     21300034: Pickup_Iceball_3
     21300036: Iceblock
     21300038: Ice_Debris
+    21300040: Pickup_1
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -318,6 +319,19 @@ TextureImporter:
         x: 72
         y: 104
         width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Pickup_1
+      rect:
+        serializedVersion: 2
+        x: 19
+        y: 1
+        width: 15
         height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

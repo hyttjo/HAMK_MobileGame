@@ -29,15 +29,12 @@ public class LevelEditor : MonoBehaviour {
 
     private Vector3 point;
 
-    
-
     public int activeGO_index = 0;
     public int layer_index = 0;
 
     public int width = 128;
     public int height = 32;
     public float tileSize = 1;
-    private int gizmoSize = 1;
 
     public bool overwrite = false;
 

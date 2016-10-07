@@ -35,7 +35,7 @@ public class MainMenu : MonoBehaviour {
             if (mainmenu != null) {
                 GUI.Box(new Rect (10, 0, 180, 40), mainmenu);
             }
-            if (GUI.Button (new Rect (10, 40, 180, 40), "Start")) {
+            if (GUI.Button (new Rect (10, 40, 180, 40), "New game")) {
                 PlayStartGameTransition();
             }
             if (GUI.Button (new Rect (10, 120, 180, 40), "Quit")) {

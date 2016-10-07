@@ -39,7 +39,18 @@ public class Score : MonoBehaviour {
     void Start() {
         GM = FindObjectOfType<GameManager>();
         if (GM != null) {
-            GM.scores.Add(GM.levels[GM.level_index], this);
+            string level = GM.levels[GM.level_index];
+            if (!GM.scores.ContainsKey(level)) {
+                GM.scores.Add(level, this);
+            } else {
+                Score previousScore = GM.scores[level];
+                coinsCollected = previousScore.GetCoinsCollected();
+                heartsCollected = previousScore.GetHeartsCollected();
+                powerUpsCollected = previousScore.GetPowerUpsCollected();
+                enemiesKilled = previousScore.GetEnemiesKilled();
+                bricksDestroyed = previousScore.GetBricksDestroyed();
+                GM.scores[level] = this;
+            }
         }
 
         heartTexture = Misc.GetTextureFromSprite(heartSprite);

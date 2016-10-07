@@ -45,22 +45,22 @@ public class LevelFinish : MonoBehaviour {
 
                 GUI.Label(new Rect(20, 20, 180, 20), "Score: " + score.GetScore(), scoreStyle);
                 
-                scoreStyle.fontSize = 8;
+                scoreStyle.fontSize = 10;
 
-                GUI.DrawTexture(new Rect(0, 60, 20, 25), score.GetEnemyTexture());
-                GUI.Label(new Rect(30, 65, 180, 20), "Enemies killed: " + score.GetEnemiesKilled(), scoreStyle);
+                GUI.DrawTexture(new Rect(20, 60, 20, 25), score.GetEnemyTexture());
+                GUI.Label(new Rect(55, 65, 180, 20), "killed: " + score.GetTotalEnemies(), scoreStyle);
 
-                GUI.DrawTexture(new Rect(0, 90, 20, 20), score.GetCoinTexture());
-                GUI.Label(new Rect(30, 93, 180, 20), "Coins collected: " + score.GetCoinsCollected(), scoreStyle);
+                GUI.DrawTexture(new Rect(20, 90, 20, 20), score.GetCoinTexture());
+                GUI.Label(new Rect(55, 93, 180, 20), "collected: " + score.GetTotalCoins(), scoreStyle);
 
-                GUI.DrawTexture(new Rect(0, 115, 20, 20), score.GetHeartTexture());
-                GUI.Label(new Rect(30, 119, 180, 20), "Hearts collected: " + score.GetHeartsCollected(), scoreStyle);
+                GUI.DrawTexture(new Rect(20, 115, 20, 20), score.GetHeartTexture());
+                GUI.Label(new Rect(55, 119, 180, 20), "collected: " + score.GetTotalHearts(), scoreStyle);
 
-                GUI.DrawTexture(new Rect(0, 138, 20, 25), score.GetPowerUpTexture());
-                GUI.Label(new Rect(30, 145, 180, 20), "PowerUps collected: " + score.GetPowerUpsCollected(), scoreStyle);
+                GUI.DrawTexture(new Rect(20, 138, 20, 25), score.GetPowerUpTexture());
+                GUI.Label(new Rect(55, 146, 180, 20), "collected: " + score.GetTotalPowerUps(), scoreStyle);
 
-                GUI.DrawTexture(new Rect(0, 170, 20, 20), score.GetBrickTexture());
-                GUI.Label(new Rect(30, 172, 180, 20), "Bricks destroyed: " + score.GetBricksDestroyed(), scoreStyle);
+                GUI.DrawTexture(new Rect(20, 170, 20, 20), score.GetBrickTexture());
+                GUI.Label(new Rect(55, 173, 180, 20), "destroyed: " + score.GetTotalBricks(), scoreStyle);
             }
 
             if (GUI.Button(new Rect(10, 210, 180, 40), "Next Level")) {
