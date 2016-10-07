@@ -61,7 +61,7 @@ public class Health : MonoBehaviour {
 
     void HandleDamage(GameObject col) {
         string colliderTag = col.tag;
-
+        
         if (colliderTag == "DamageTypePit") {
             DeathByPit();
         } else if (colliderTag == "DamageTypeFire") {

@@ -44,13 +44,13 @@ public class BreakableObject : MonoBehaviour {
         if (sRenderer != null) {
             sRenderer.enabled = false;
         }
-        Invoke("DisableCollider", 0.01f);
+        Invoke("DisableCollider", 0.1f);
 
         Destroy(gameObject, debrisLifetime);
     }
 
     void DisableCollider() {
-        BoxCollider2D collider = GetComponent<BoxCollider2D>();
+        PolygonCollider2D collider = GetComponent<PolygonCollider2D>();
 
         if (collider != null) {
             collider.enabled = false;

@@ -89,7 +89,7 @@ public class PlayerHUD : MonoBehaviour {
                 Rect rect = new Rect(padding.x + 10, padding.y + 2, 20, 20);
                 GUI.DrawTexture(rect, livesTexture);
             }
-            GUI.Label(new Rect(padding.x + 32, padding.y, Screen.width - padding.width, hudHeight - padding.height), playerLives.ToString());
+            GUI.Label(new Rect(padding.x + 32, padding.y, Screen.width - padding.width, hudHeight - padding.height), "*" + playerLives);
         }
     }
 
@@ -105,11 +105,11 @@ public class PlayerHUD : MonoBehaviour {
                 healthInt = 0;
             }
 
-            GUI.Label(new Rect(padding.x + 80, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Health:");
+            GUI.Label(new Rect(padding.x + 100, padding.y, Screen.width - padding.width, hudHeight - padding.height), "HP:");
 
             if (healthTexture != null) {
                 for (int i = 0; i < health.health / Mathf.CeilToInt(100 / numberOfHearts); i++) {
-                    Rect rect = new Rect(padding.x + 182 + 20 * i + 4 * i, padding.y + 2, 20, 20);
+                    Rect rect = new Rect(padding.x + 139 + 20 * i + 4 * i, padding.y + 2, 20, 20);
                     GUI.DrawTexture(rect, healthTexture);
                 }
             }
