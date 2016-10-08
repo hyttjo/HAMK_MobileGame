@@ -134,6 +134,7 @@ public class LevelEditor : MonoBehaviour {
             point = new Vector3(Mathf.Floor(position.x / tileSize) * tileSize + tileSize / 2.0f,
                                 Mathf.Floor(position.y / tileSize) * tileSize + tileSize / 2.0f, 0);
         } else {
+            tileSize = 1f;
             point = new Vector3(Mathf.Round(position.x / tileSize) * tileSize,
                                 Mathf.Round(position.y / tileSize) * tileSize, 0);
         }

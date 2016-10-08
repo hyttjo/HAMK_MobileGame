@@ -19,6 +19,7 @@ public class MainMenu : MonoBehaviour {
 
     void Awake() {
         GM = FindObjectOfType<GameManager>();
+        GM.playerLives = 3;
 
         camControl = Camera.main.GetComponent<CameraControl>();
 
