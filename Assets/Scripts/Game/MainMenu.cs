@@ -13,6 +13,8 @@ public class MainMenu : MonoBehaviour {
 
     private CameraControl camControl;
 
+    public Font font;
+
     private Texture2D logo;
     private Texture2D background;
 
@@ -27,6 +29,10 @@ public class MainMenu : MonoBehaviour {
     }
 
     public void OnGUI() {
+        if (font != null) {
+            GUI.skin.font = font;
+        }
+
         if (logo != null) {
             GUI.DrawTexture(new Rect(Screen.width / 2 - logo.width / 2, Screen.height / 2 - 250, logo.width, logo.height), logo);
         }

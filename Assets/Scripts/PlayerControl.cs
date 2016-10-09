@@ -23,19 +23,19 @@ public class PlayerControl : MonoBehaviour {
 
     void FixedUpdate () {
         if (mControl != null) {
-            if (CrossPlatformInputManager.GetAxisRaw("Horizontal") < 0 || Input.GetKey(moveLeft)) {
+            if (CrossPlatformInputManager.GetButton("Left") || Input.GetKey(moveLeft)) {
                 mControl.MoveLeft();
-            } else if (CrossPlatformInputManager.GetAxisRaw("Horizontal") > 0 || Input.GetKey(moveRight)) {
+            } else if (CrossPlatformInputManager.GetButton("Right") || Input.GetKey(moveRight)) {
                 mControl.MoveRight();
             } else {
                 mControl.Idle();
             }
 
-            if (CrossPlatformInputManager.GetButtonDown("Jump") || Input.GetKey(jump)) {
+            if (CrossPlatformInputManager.GetButton("Jump") || Input.GetKey(jump)) {
                 mControl.Jump();
             }
 
-            if (CrossPlatformInputManager.GetButtonDown("Shoot") || Input.GetKey(shoot)) {
+            if (CrossPlatformInputManager.GetButton("Shoot") || Input.GetKey(shoot)) {
                 mControl.Shoot();
             }
         }

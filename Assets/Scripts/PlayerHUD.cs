@@ -62,6 +62,10 @@ public class PlayerHUD : MonoBehaviour {
     }
 
     void OnGUI() {
+        if (font != null) {
+            GUI.skin.font = font;
+        }
+
         if (player != null) {
             DisplayBackground();
             DisplayLives();
@@ -78,10 +82,6 @@ public class PlayerHUD : MonoBehaviour {
     }
 
     void DisplayLives() {
-        if (font != null) {
-            GUI.skin.font = font;
-        }
-
         if (GM != null) {
             int playerLives = GM.playerLives;
 
@@ -94,10 +94,6 @@ public class PlayerHUD : MonoBehaviour {
     }
 
     void DisplayHealth() {
-        if (font != null) {
-            GUI.skin.font = font;
-        }
-
         if (health != null) {
             int healthInt = (int)health.health;
 
@@ -117,10 +113,6 @@ public class PlayerHUD : MonoBehaviour {
     }
 
     void DisplayCoins() {
-        if (font != null) {
-            GUI.skin.font = font;
-        }
-
         if (score != null) {
             int coinInt = score.GetCoinsCollected();
 
@@ -136,10 +128,6 @@ public class PlayerHUD : MonoBehaviour {
     }
 
     void DisplayPowerUp() {
-        if (font != null) {
-            GUI.skin.font = font;
-        }
-
         if (mControl != null) {
             GUI.Label(new Rect(padding.x + Screen.width / 1.8f, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Power:");
 
@@ -156,10 +144,6 @@ public class PlayerHUD : MonoBehaviour {
     }
 
     void DisplayScore() {
-        if (font != null) {
-            GUI.skin.font = font;
-        }
-
         if (score != null) {
             string scoreText;
 
