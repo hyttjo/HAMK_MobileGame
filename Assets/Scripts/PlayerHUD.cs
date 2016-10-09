@@ -114,7 +114,7 @@ public class PlayerHUD : MonoBehaviour {
 
     void DisplayCoins() {
         if (score != null) {
-            int coinInt = score.GetCoinsCollected();
+            int coinInt = score.GetTotalCoins();
 
             GUI.Label(new Rect(padding.x + Screen.width / 3.3f, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Coins:");
 

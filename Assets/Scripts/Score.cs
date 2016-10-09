@@ -30,6 +30,8 @@ public class Score : MonoBehaviour {
     private int enemiesKilled = 0;
     private int bricksDestroyed = 0;
 
+    public int extraLifeValue = 50;
+
     public int coinValue = 50;
     public int heartValue = 200;
     public int powerUpValue = 150;
@@ -96,6 +98,10 @@ public class Score : MonoBehaviour {
 
     private void CoinCollected(GameObject e) {
         coinsCollected++;
+
+        if (GetTotalCoins() % extraLifeValue == 0) {
+            GM.playerLives++;
+        }
     }
 
     public int GetCoinsCollected() {
