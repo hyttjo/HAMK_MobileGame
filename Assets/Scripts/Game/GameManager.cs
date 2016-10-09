@@ -109,7 +109,11 @@ public class GameManager : MonoBehaviour {
                 break;
 
             case GameState.GameFinished:
-                Debug.Log("Congratulations, you have finished the Game!");
+                GameFinish gameFinish = player.GetComponent<GameFinish>();
+
+                if (gameFinish == null) {
+                    player.AddComponent<GameFinish>();
+                }
                 break;
 
             case GameState.QuitGame:
