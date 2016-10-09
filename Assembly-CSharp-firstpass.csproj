@@ -6,10 +6,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{F9364334-8E44-AF7F-6B3D-04E505392082}</ProjectGuid>
+    <ProjectGuid>{DF99E69E-621D-8730-3314-9D9D04620608}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>Assets</BaseDirectory>
@@ -45,29 +45,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\AIControl.cs" />
-     <Compile Include="Assets\Scripts\BoostObject.cs" />
-     <Compile Include="Assets\Scripts\BreakableObject.cs" />
-     <Compile Include="Assets\Scripts\CameraControl.cs" />
-     <Compile Include="Assets\Scripts\ContainerControl.cs" />
-     <Compile Include="Assets\Scripts\Game\GameManager.cs" />
-     <Compile Include="Assets\Scripts\Game\GameOver.cs" />
-     <Compile Include="Assets\Scripts\Game\Intro.cs" />
-     <Compile Include="Assets\Scripts\Game\LevelFinish.cs" />
-     <Compile Include="Assets\Scripts\Game\MainMenu.cs" />
-     <Compile Include="Assets\Scripts\Health.cs" />
-     <Compile Include="Assets\Scripts\Level\Level.cs" />
-     <Compile Include="Assets\Scripts\Level\LevelEditor.cs" />
-     <Compile Include="Assets\Scripts\Level\LevelEditorInspector.cs" />
-     <Compile Include="Assets\Scripts\Level\LevelLoader.cs" />
-     <Compile Include="Assets\Scripts\Misc.cs" />
-     <Compile Include="Assets\Scripts\MovementControl.cs" />
-     <Compile Include="Assets\Scripts\PickupControl.cs" />
-     <Compile Include="Assets\Scripts\PlayerControl.cs" />
-     <Compile Include="Assets\Scripts\PlayerControl_Mobile.cs" />
-     <Compile Include="Assets\Scripts\PlayerHUD.cs" />
-     <Compile Include="Assets\Scripts\Projectile.cs" />
-     <Compile Include="Assets\Scripts\Score.cs" />
+     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\AxisTouchButton.cs" />
+     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\ButtonHandler.cs" />
+     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\CrossPlatformInputManager.cs" />
+     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\InputAxisScrollbar.cs" />
+     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\Joystick.cs" />
+     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\MobileControlRig.cs" />
+     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\PlatformSpecific\MobileInput.cs" />
+     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\PlatformSpecific\StandaloneInput.cs" />
+     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\TiltInput.cs" />
+     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\TouchPad.cs" />
+     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\VirtualInput.cs" />
      <None Include="Assets\Standard Assets\Fonts\OpenSans\License!.txt" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
  <Reference Include="UnityEngine.UI">
@@ -76,10 +64,6 @@
  <Reference Include="UnityEngine.Networking">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
  </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{DF99E69E-621D-8730-3314-9D9D04620608}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

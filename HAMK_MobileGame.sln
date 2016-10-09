@@ -1,7 +1,11 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HAMK_MobileGame.CSharp", "HAMK_MobileGame.CSharp.csproj", "{6680554D-C539-6BAA-BC35-CD57DE3D9E93}"
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{ED97A1DF-CF11-4BA6-F85A-70E8FA2AE08F}") = "HAMK_MobileGame", "Assembly-CSharp-firstpass.csproj", "{DF99E69E-621D-8730-3314-9D9D04620608}"
+EndProject
+Project("{ED97A1DF-CF11-4BA6-F85A-70E8FA2AE08F}") = "HAMK_MobileGame", "Assembly-CSharp.csproj", "{F9364334-8E44-AF7F-6B3D-04E505392082}"
+EndProject
+Project("{ED97A1DF-CF11-4BA6-F85A-70E8FA2AE08F}") = "HAMK_MobileGame", "Assembly-CSharp-Editor.csproj", "{0431ED41-229C-D472-86ED-F5ACB128AA50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,12 +13,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6680554D-C539-6BAA-BC35-CD57DE3D9E93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6680554D-C539-6BAA-BC35-CD57DE3D9E93}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6680554D-C539-6BAA-BC35-CD57DE3D9E93}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6680554D-C539-6BAA-BC35-CD57DE3D9E93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF99E69E-621D-8730-3314-9D9D04620608}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF99E69E-621D-8730-3314-9D9D04620608}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF99E69E-621D-8730-3314-9D9D04620608}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF99E69E-621D-8730-3314-9D9D04620608}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9364334-8E44-AF7F-6B3D-04E505392082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9364334-8E44-AF7F-6B3D-04E505392082}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9364334-8E44-AF7F-6B3D-04E505392082}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9364334-8E44-AF7F-6B3D-04E505392082}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0431ED41-229C-D472-86ED-F5ACB128AA50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0431ED41-229C-D472-86ED-F5ACB128AA50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0431ED41-229C-D472-86ED-F5ACB128AA50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0431ED41-229C-D472-86ED-F5ACB128AA50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
 	EndGlobalSection
 EndGlobal
