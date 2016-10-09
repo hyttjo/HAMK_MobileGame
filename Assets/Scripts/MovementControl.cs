@@ -15,6 +15,7 @@ public class MovementControl : MonoBehaviour {
     public float airSpeed = 10;
 
     private Vector2 move;
+    private Vector2 contactNormal;
     private bool jumping = false;
 
     public float shotsPerSecond = 1.5f;
@@ -38,6 +39,8 @@ public class MovementControl : MonoBehaviour {
         if (gameObject.tag == "Player") {
             PickupControl.OnPowerUpCollected += GainPowerUp;
         }
+
+       
     }
 
     void Update() {
@@ -49,18 +52,26 @@ public class MovementControl : MonoBehaviour {
     }
 
     void OnCollisionEnter2D(Collision2D col) {
-        Vector2 hitDirection = Misc.GetHitDirection(col.contacts[0].normal);
+        contactNormal = col.contacts[0].normal;
 
-        if (hitDirection == Vector2.up) {
+        if (contactNormal.y > 0.5) {
             if (jumping) {
                 jumping = false;
                 speed = speed * airSpeed;  
             }
         }
     }
+
+    void OnCollisionExit2D(Collision2D col) {
+        contactNormal = Vector2.zero;
+    }
     
     public void Move() {
         float moveSpeed = speed;
+
+        if (contactNormal.y > 0.5 && !jumping) {
+            move.y = contactNormal.y / 5;
+        }
 
         if (character != null && rBody != null) {
             if (rBody.velocity.sqrMagnitude > maxSpeed) {
@@ -131,6 +142,7 @@ public class MovementControl : MonoBehaviour {
     
     public void Idle() {
         move = Vector2.zero;
+        contactNormal = Vector2.zero;
     }
 
     public void GainPowerUp(GameObject e){

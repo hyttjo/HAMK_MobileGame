@@ -10,12 +10,12 @@ public class GameManager : MonoBehaviour {
     public GameObject player;
 
     public Dictionary<string, Score> scores;
-    public string[] levels = new string[] { "Level-0", "Level-1", "Level-3" };
+    public string[] levels = new string[] { "Level-0", "Level-1", "Level-2" };
     public int level_index = 0;
 
     public Scene scene;
 
-    public int playerLives = 3;
+    public int playerLives = 5;
 
 	private static GameManager manager = null;
 	public static GameManager Manager {

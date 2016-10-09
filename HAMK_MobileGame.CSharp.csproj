@@ -83,7 +83,6 @@
     <Compile Include="Assets\Scripts\Level\Level.cs" />
     <Compile Include="Assets\Scripts\Level\LevelEditor.cs" />
     <Compile Include="Assets\Scripts\Level\LevelEditorInspector.cs" />
-    <Compile Include="Assets\Scripts\Level\LevelLoader.cs" />
     <Compile Include="Assets\Scripts\Misc.cs" />
     <Compile Include="Assets\Scripts\MovementControl.cs" />
     <Compile Include="Assets\Scripts\PickupControl.cs" />
