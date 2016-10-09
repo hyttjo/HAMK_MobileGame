@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿#if (UNITY_EDITOR)
+using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
-
+ 
 [CustomEditor(typeof(LevelEditor))]
 public class LevelEditorInspector : Editor {
 
@@ -273,3 +274,4 @@ public class LevelEditorInspector : Editor {
         GUI.Label(rect, "RMB: " + rmb, info);
     }
 }
+#endif

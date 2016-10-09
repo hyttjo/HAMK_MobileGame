@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityStandardAssets.CrossPlatformInput;
 
 [RequireComponent(typeof(MovementControl))]
 public class PlayerControl : MonoBehaviour {
@@ -23,19 +23,19 @@ public class PlayerControl : MonoBehaviour {
 
     void FixedUpdate () {
         if (mControl != null) {
-    	    if (Input.GetKey(moveLeft)) {
-    		    mControl.MoveLeft();
-    	    } else if (Input.GetKey(moveRight)) {
-    		    mControl.MoveRight();
-    	    } else {
-    		    mControl.Idle();
-    	    }
-    	
-    	    if (Input.GetKey(jump)) {
-    		    mControl.Jump();
-    	    }
+            if (CrossPlatformInputManager.GetAxisRaw("Horizontal") < 0 || Input.GetKey(moveLeft)) {
+                mControl.MoveLeft();
+            } else if (CrossPlatformInputManager.GetAxisRaw("Horizontal") > 0 || Input.GetKey(moveRight)) {
+                mControl.MoveRight();
+            } else {
+                mControl.Idle();
+            }
 
-            if (Input.GetKey(shoot)) {
+            if (CrossPlatformInputManager.GetButtonDown("Jump") || Input.GetKey(jump)) {
+                mControl.Jump();
+            }
+
+            if (CrossPlatformInputManager.GetButtonDown("Shoot") || Input.GetKey(shoot)) {
                 mControl.Shoot();
             }
         }
