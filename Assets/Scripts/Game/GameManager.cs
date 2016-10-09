@@ -96,10 +96,14 @@ public class GameManager : MonoBehaviour {
                 player = GameObject.FindGameObjectWithTag("Player");
 
                 if (player != null) {
-                    LevelFinish levelFinish = player.GetComponent<LevelFinish>();
+                    if (level_index == levels.Length - 1) {
+                        SetGameState(GameState.GameFinished);
+                    } else {
+                        LevelFinish levelFinish = player.GetComponent<LevelFinish>();
 
-                    if (levelFinish == null) {
-                        player.AddComponent<LevelFinish>();
+                        if (levelFinish == null) {
+                            player.AddComponent<LevelFinish>();
+                        }
                     }
                 }
                 break;
