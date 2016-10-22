@@ -11,6 +11,7 @@ public class AudioControl : MonoBehaviour {
     public AudioClip pickPowerUpSound;
     public AudioClip shootFireballSound;
     public AudioClip enemyDeathSound;
+    public AudioClip playerDeathSound;
 
     void Start() {
         audioPlayer = gameObject.AddComponent<AudioSource>();
@@ -21,6 +22,17 @@ public class AudioControl : MonoBehaviour {
         AudioControl.onPlayerCollectPowerUp += PlayPlayerCollectPowerUpSound;
         AudioControl.onPlayerShootFireball += PlayPlayerShootFireballSound;
         AudioControl.onEnemyDeath += PlayEnemyDeathSound;
+        AudioControl.onPlayerDeath += PlayPlayerDeathSound;
+    }
+
+    void OnDestroy() {
+        AudioControl.onPlayerJump -= PlayPlayerJumpSound;
+        AudioControl.onPlayerCollectCoin -= PlayPlayerCollectCoinSound;
+        AudioControl.onPlayerCollectHeart -= PlayPlayerCollectHeartSound;
+        AudioControl.onPlayerCollectPowerUp -= PlayPlayerCollectPowerUpSound;
+        AudioControl.onPlayerShootFireball -= PlayPlayerShootFireballSound;
+        AudioControl.onEnemyDeath -= PlayEnemyDeathSound;
+        AudioControl.onPlayerDeath -= PlayPlayerDeathSound;
     }
 
     //Delegate:
@@ -33,6 +45,7 @@ public class AudioControl : MonoBehaviour {
     public static event OnAudioEvent onPlayerCollectPowerUp;
     public static event OnAudioEvent onPlayerShootFireball;
     public static event OnAudioEvent onEnemyDeath;
+    public static event OnAudioEvent onPlayerDeath;
 
     public static void PlayerJump(GameObject unit) {
         if (onPlayerJump != null) {
@@ -70,6 +83,12 @@ public class AudioControl : MonoBehaviour {
         }
     }
 
+    public static void PlayerDeath(GameObject unit) {
+        if (onPlayerDeath != null) {
+            onPlayerDeath(unit);
+        }
+    }
+
     //Metodit jotka toistavat äänet
     public void PlayPlayerJumpSound(GameObject unit) {
         if (audioPlayer != null) {
@@ -104,6 +123,12 @@ public class AudioControl : MonoBehaviour {
     public void PlayEnemyDeathSound(GameObject unit) {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(enemyDeathSound, 0.65f);
+        }
+    }
+
+    public void PlayPlayerDeathSound(GameObject unit) {
+        if (audioPlayer != null) {
+            audioPlayer.PlayOneShot(playerDeathSound, 0.65f);
         }
     }
 }

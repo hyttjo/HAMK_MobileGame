@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour {
                 break;
 
             case GameState.GameOver:
+
                 player = GameObject.FindGameObjectWithTag("Player");
 
                 if (player != null) {
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour {
                         player.AddComponent<GameOver>();
                     }
                 }
+                
                 level_index = 0;
                 break;
 
@@ -84,7 +86,7 @@ public class GameManager : MonoBehaviour {
 
            case GameState.PlayerDied:
                 playerLives--;
-
+                
                 if (playerLives > 0) { 
                     SetGameState(GameState.LoadLevel);
                 } else {

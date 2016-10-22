@@ -152,6 +152,11 @@ public class Health : MonoBehaviour {
             AudioControl.EnemyDeath(null); //Toistaa äänen
         }
 
+        if (gameObject.tag == "Player") { 
+            AudioControl.PlayerDeath(null); //Toistaa äänen
+            StartCoroutine(DestroyPlayerWithSound());
+        }
+
         if (rBody != null) {
             rBody.isKinematic = true;
         }
@@ -173,5 +178,22 @@ public class Health : MonoBehaviour {
             }
         }
         Destroy(_gameObject);
+    }
+
+    IEnumerator DestroyPlayerWithSound() {
+
+        yield return new WaitForSeconds(2);
+
+        if (rBody != null)
+        {
+            rBody.isKinematic = true;
+        }
+        if (deathEffect != null)
+        {
+            Vector2 spawnPosition = (Vector2)transform.position + Vector2.up * 0.5f * transform.localScale.y;
+            deathEffect = (GameObject)Instantiate(deathEffect, spawnPosition, Quaternion.identity);
+            Destroy(deathEffect, 0.5f);
+            this.enabled = false;
+        }
     }
 }
