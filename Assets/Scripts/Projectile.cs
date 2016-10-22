@@ -24,6 +24,8 @@ public class Projectile : MonoBehaviour {
         if (rBody != null && mControl != null) {
             rBody.AddForce(new Vector2(speedX * mControl.GetFacingDir(), speedY), ForceMode2D.Impulse);
         }
+
+        AudioControl.PlayerShootFireball(null); //Toistaa äänen
     }
 
     void OnCollisionEnter2D(Collision2D col) {

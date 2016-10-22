@@ -149,6 +149,7 @@ public class Health : MonoBehaviour {
     void Destroy() {
         if (gameObject.tag == "Enemy") {
             OnEnemyKilled();
+            AudioControl.EnemyDeath(null); //Toistaa äänen
         }
 
         if (rBody != null) {

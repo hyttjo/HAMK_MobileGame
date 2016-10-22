@@ -9,6 +9,8 @@ public class AudioControl : MonoBehaviour {
     public AudioClip coinSound;
     public AudioClip heartSound;
     public AudioClip pickPowerUpSound;
+    public AudioClip shootFireballSound;
+    public AudioClip enemyDeathSound;
 
     void Start() {
         audioPlayer = gameObject.AddComponent<AudioSource>();
@@ -17,6 +19,8 @@ public class AudioControl : MonoBehaviour {
         AudioControl.onPlayerCollectCoin += PlayPlayerCollectCoinSound;
         AudioControl.onPlayerCollectHeart += PlayPlayerCollectHeartSound;
         AudioControl.onPlayerCollectPowerUp += PlayPlayerCollectPowerUpSound;
+        AudioControl.onPlayerShootFireball += PlayPlayerShootFireballSound;
+        AudioControl.onEnemyDeath += PlayEnemyDeathSound;
     }
 
     //Delegate:
@@ -27,6 +31,8 @@ public class AudioControl : MonoBehaviour {
     public static event OnAudioEvent onPlayerCollectCoin;
     public static event OnAudioEvent onPlayerCollectHeart;
     public static event OnAudioEvent onPlayerCollectPowerUp;
+    public static event OnAudioEvent onPlayerShootFireball;
+    public static event OnAudioEvent onEnemyDeath;
 
     public static void PlayerJump(GameObject unit) {
         if (onPlayerJump != null) {
@@ -52,6 +58,18 @@ public class AudioControl : MonoBehaviour {
         }
     }
 
+    public static void PlayerShootFireball(GameObject unit) {
+        if (onPlayerShootFireball != null) {
+            onPlayerShootFireball(unit);
+        }
+    }
+
+    public static void EnemyDeath(GameObject unit) {
+        if (onEnemyDeath != null) {
+            onEnemyDeath(unit);
+        }
+    }
+
     //Metodit jotka toistavat äänet
     public void PlayPlayerJumpSound(GameObject unit) {
         if (audioPlayer != null) {
@@ -74,6 +92,18 @@ public class AudioControl : MonoBehaviour {
     public void PlayPlayerCollectPowerUpSound(GameObject unit) {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(pickPowerUpSound, 0.65f);
+        }
+    }
+
+    public void PlayPlayerShootFireballSound(GameObject unit) {
+        if (audioPlayer != null) {
+            audioPlayer.PlayOneShot(shootFireballSound, 0.65f);
+        }
+    }
+
+    public void PlayEnemyDeathSound(GameObject unit) {
+        if (audioPlayer != null) {
+            audioPlayer.PlayOneShot(enemyDeathSound, 0.65f);
         }
     }
 }
