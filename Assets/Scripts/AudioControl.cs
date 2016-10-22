@@ -3,8 +3,16 @@ using System.Collections;
 
 public class AudioControl : MonoBehaviour {
 
+    private static AudioSource audioPlayer;
+
+    public AudioClip jumpSound;
+    public AudioClip coinSound;
+
     void Start() {
-        //Debug.Log("Loaded");
+        audioPlayer = gameObject.AddComponent<AudioSource>();
+
+        AudioControl.onPlayerJump += PlayPlayerJumpSound;
+        AudioControl.onPlayerCollectCoin += PlayPlayerCollectCoinSound;
     }
 
     //Delegate:
@@ -27,11 +35,15 @@ public class AudioControl : MonoBehaviour {
     }
 
     //Metodit jotka toistavat äänet
-    public static void PlayPlayerJumpSound(GameObject unit) {
-        Debug.Log("JUMP!");
+    public void PlayPlayerJumpSound(GameObject unit) {
+        if (audioPlayer != null) {
+            audioPlayer.PlayOneShot(jumpSound, 0.5f);
+        }
     }
 
     public void PlayPlayerCollectCoinSound(GameObject unit) {
-        Debug.Log("COIN!");
+        if (audioPlayer != null) {
+            audioPlayer.PlayOneShot(coinSound, 0.65f);
+        }
     }
 }

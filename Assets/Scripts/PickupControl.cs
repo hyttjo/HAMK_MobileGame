@@ -49,6 +49,7 @@ public class PickupControl : MonoBehaviour {
 
                 if (behaviour == Pickups.Coin) {
                     OnCoinCollected(null);
+                    AudioControl.PlayerCollectCoin(null);
                     Destroy(); // Poistetaan tämä pickup pelimaailmasta.
                 }
 

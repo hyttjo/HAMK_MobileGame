@@ -115,8 +115,7 @@ public class MovementControl : MonoBehaviour {
                     rBody.AddForce(new Vector2(0, 1 * jumpForce), ForceMode2D.Impulse);
                     jumping = true;
                     speed = speed / airSpeed;
-                    AudioControl.onPlayerJump += AudioControl.PlayPlayerJumpSound;
-                    AudioControl.PlayerJump(gameObject); //Toistaa äänen kun pelaaja hyppää
+                    AudioControl.PlayerJump(null); //Toistaa äänen kun pelaaja hyppää
                 }
             }
         }
