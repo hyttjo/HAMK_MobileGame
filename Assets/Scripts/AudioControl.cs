@@ -1,25 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-//Delegate:
-public delegate void OnAudioEvent(Transform eventTransform);
-
 public class AudioControl : MonoBehaviour {
 
-    //Eventit:
+    void Start() {
+        //Debug.Log("Loaded");
+    }
+
+    //Delegate:
+    public delegate void OnAudioEvent(GameObject unit);
+
+    //Eventtien linkitys:
     public static event OnAudioEvent onPlayerJump;
     public static event OnAudioEvent onPlayerCollectCoin;
 
-    //Metodit:
-    public static void PlayerJump(Transform eventTransform) {
+    public static void PlayerJump(GameObject unit) {
         if (onPlayerJump != null) {
-            onPlayerJump(eventTransform);
+            onPlayerJump(unit);
         }
     }
 
-    public static void PlayerCollectCoin(Transform eventTransform) {
+    public static void PlayerCollectCoin(GameObject unit) {
         if (onPlayerCollectCoin != null) {
-            onPlayerCollectCoin(eventTransform);
+            onPlayerCollectCoin(unit);
         }
+    }
+
+    //Metodit jotka toistavat äänet
+    public static void PlayPlayerJumpSound(GameObject unit) {
+        Debug.Log("JUMP!");
+    }
+
+    public void PlayPlayerCollectCoinSound(GameObject unit) {
+        Debug.Log("COIN!");
     }
 }
