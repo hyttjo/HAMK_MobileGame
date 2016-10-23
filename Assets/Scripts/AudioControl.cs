@@ -13,6 +13,9 @@ public class AudioControl : MonoBehaviour {
     public AudioClip enemyDeathSound;
     public AudioClip playerDeathSound;
     public AudioClip springsound;
+    public AudioClip smokeSound;
+    public AudioClip brickSound;
+    public AudioClip finishSound;
 
     void Start() {
         audioPlayer = gameObject.AddComponent<AudioSource>();
@@ -25,6 +28,9 @@ public class AudioControl : MonoBehaviour {
         AudioControl.onEnemyDeath += PlayEnemyDeathSound;
         AudioControl.onPlayerDeath += PlayPlayerDeathSound;
         AudioControl.onSpringJump += PlaySpringSound;
+        AudioControl.onSmokePuff += PlaySmokeSound;
+        AudioControl.onBrickBreak += PlayBrickSound;
+        AudioControl.onLevelFinish += PlayFinishSound;
     }
 
     void OnDestroy() {
@@ -36,6 +42,9 @@ public class AudioControl : MonoBehaviour {
         AudioControl.onEnemyDeath -= PlayEnemyDeathSound;
         AudioControl.onPlayerDeath -= PlayPlayerDeathSound;
         AudioControl.onSpringJump -= PlaySpringSound;
+        AudioControl.onSmokePuff -= PlaySmokeSound;
+        AudioControl.onBrickBreak -= PlayBrickSound;
+        AudioControl.onLevelFinish -= PlayFinishSound;
     }
 
     //Delegate:
@@ -50,6 +59,9 @@ public class AudioControl : MonoBehaviour {
     public static event OnAudioEvent onEnemyDeath;
     public static event OnAudioEvent onPlayerDeath;
     public static event OnAudioEvent onSpringJump;
+    public static event OnAudioEvent onSmokePuff;
+    public static event OnAudioEvent onBrickBreak;
+    public static event OnAudioEvent onLevelFinish;
 
     public static void PlayerJump(GameObject unit) {
         if (onPlayerJump != null) {
@@ -99,6 +111,24 @@ public class AudioControl : MonoBehaviour {
         }
     }
 
+    public static void SmokePuff(GameObject unit) {
+        if (onSmokePuff != null) {
+            onSmokePuff(unit);
+        }
+    }
+
+    public static void BrickBreak(GameObject unit) {
+        if (onBrickBreak != null) {
+            onBrickBreak(unit);
+        }
+    }
+
+    public static void LevelFinish(GameObject unit) {
+        if (onLevelFinish != null) {
+            onLevelFinish(unit);
+        }
+    }
+
     //Metodit jotka toistavat äänet
     public void PlayPlayerJumpSound(GameObject unit) {
         if (audioPlayer != null) {
@@ -145,6 +175,24 @@ public class AudioControl : MonoBehaviour {
     public void PlaySpringSound(GameObject unit) {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(springsound, 0.65f);
+        }
+    }
+
+    public void PlaySmokeSound(GameObject unit) {
+        if (audioPlayer != null) {
+            audioPlayer.PlayOneShot(smokeSound, 0.25f);
+        }
+    }
+
+    public void PlayBrickSound(GameObject unit) {
+        if (audioPlayer != null) {
+            audioPlayer.PlayOneShot(brickSound, 0.65f);
+        }
+    }
+
+    public void PlayFinishSound(GameObject unit) {
+        if (audioPlayer != null) {
+            audioPlayer.PlayOneShot(finishSound, 0.65f);
         }
     }
 }

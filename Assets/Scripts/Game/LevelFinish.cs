@@ -33,6 +33,7 @@ public class LevelFinish : MonoBehaviour {
     public void OnGUI() {
         if (levelFinish != null) {
             GUI.DrawTexture(new Rect(Screen.width / 2 - levelFinish.width / 2, Screen.height / 2 - 225, levelFinish.width, levelFinish.height), levelFinish);
+            //AudioControl.LevelFinish(null); //Toistaa äänen, mutta otin pois koska buginen. Miksi? Kuka tietää...
         }
 
         if (background != null) {

@@ -192,6 +192,7 @@ public class Health : MonoBehaviour {
         {
             Vector2 spawnPosition = (Vector2)transform.position + Vector2.up * 0.5f * transform.localScale.y;
             deathEffect = (GameObject)Instantiate(deathEffect, spawnPosition, Quaternion.identity);
+            AudioControl.SmokePuff(null); //Toistaa äänen
             Destroy(deathEffect, 0.5f);
             this.enabled = false;
         }
