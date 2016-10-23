@@ -19,6 +19,8 @@ public class Health : MonoBehaviour {
     public int damageBite = 34;
     public bool immuneToCrush = false;
     public int damageCrush = 100;
+    public bool immuneToSpike = false;
+    public int damageSpike = 34;
     public float damageShowDuration = 0.25f;
     public Color32 damageColor = new Color32(255, 128, 128, 255);
     public Color32 freezeColor = new Color32(45, 170, 245, 255);
@@ -61,24 +63,44 @@ public class Health : MonoBehaviour {
 
     void HandleDamage(GameObject col) {
         string colliderTag = col.tag;
-        
-        if (colliderTag == "DamageTypePit") {
+
+        if (colliderTag == "DamageTypePit")
+        {
             DeathByPit();
-        } else if (colliderTag == "DamageTypeFire") {
-            if (!immuneToFire) {
+        }
+        else if (colliderTag == "DamageTypeFire")
+        {
+            if (!immuneToFire)
+            {
                 DamageByFire(col);
             }
-        } else if (colliderTag == "DamageTypeIce") {
-            if (!immuneToIce) {
+        }
+        else if (colliderTag == "DamageTypeIce")
+        {
+            if (!immuneToIce)
+            {
                 DamageByIce();
             }
-        } else if (colliderTag == "DamageTypeBite") {
-            if (!immuneToBite) {
+        }
+        else if (colliderTag == "DamageTypeBite")
+        {
+            if (!immuneToBite)
+            {
                 DamageByBite(col);
             }
-        } else if (colliderTag == "DamageTypeCrush") {
-            if (!immuneToCrush) {
+        }
+        else if (colliderTag == "DamageTypeCrush")
+        {
+            if (!immuneToCrush)
+            {
                 DamageByCrush(col);
+            }
+        }
+        else if (colliderTag == "DamageTypeSpike")
+        {
+            if (!immuneToSpike)
+            {
+                DamageBySpike(col);
             }
         }
     }
@@ -108,6 +130,13 @@ public class Health : MonoBehaviour {
     void DamageByCrush(GameObject col) {
         PushBack(gameObject, col);
         health -= damageCrush;
+    }
+
+    void DamageBySpike(GameObject col)
+    {
+        PushBack(col, gameObject);
+        StartCoroutine(ShowFlashDamage(damageColor, damageShowDuration));
+        health -= damageSpike;
     }
 
     IEnumerator ChangeSpeed(float speedMultiplier, float duration) {

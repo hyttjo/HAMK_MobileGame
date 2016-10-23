@@ -68,6 +68,7 @@
      <Compile Include="Assets\Scripts\PlayerHUD.cs" />
      <Compile Include="Assets\Scripts\Projectile.cs" />
      <Compile Include="Assets\Scripts\Score.cs" />
+     <Compile Include="Assets\Scripts\Spike.cs" />
      <None Include="Assets\Standard Assets\Fonts\OpenSans\License!.txt" />
      <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
  <Reference Include="UnityEngine.UI">
