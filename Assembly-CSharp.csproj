@@ -51,6 +51,7 @@
      <Compile Include="Assets\Scripts\BreakableObject.cs" />
      <Compile Include="Assets\Scripts\CameraControl.cs" />
      <Compile Include="Assets\Scripts\ContainerControl.cs" />
+     <Compile Include="Assets\Scripts\DonutControl.cs" />
      <Compile Include="Assets\Scripts\Game\GameFinish.cs" />
      <Compile Include="Assets\Scripts\Game\GameManager.cs" />
      <Compile Include="Assets\Scripts\Game\GameOver.cs" />
