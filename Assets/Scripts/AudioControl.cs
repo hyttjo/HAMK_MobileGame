@@ -12,6 +12,7 @@ public class AudioControl : MonoBehaviour {
     public AudioClip shootFireballSound;
     public AudioClip enemyDeathSound;
     public AudioClip playerDeathSound;
+    public AudioClip springsound;
 
     void Start() {
         audioPlayer = gameObject.AddComponent<AudioSource>();
@@ -23,6 +24,7 @@ public class AudioControl : MonoBehaviour {
         AudioControl.onPlayerShootFireball += PlayPlayerShootFireballSound;
         AudioControl.onEnemyDeath += PlayEnemyDeathSound;
         AudioControl.onPlayerDeath += PlayPlayerDeathSound;
+        AudioControl.onSpringJump += PlaySpringSound;
     }
 
     void OnDestroy() {
@@ -33,6 +35,7 @@ public class AudioControl : MonoBehaviour {
         AudioControl.onPlayerShootFireball -= PlayPlayerShootFireballSound;
         AudioControl.onEnemyDeath -= PlayEnemyDeathSound;
         AudioControl.onPlayerDeath -= PlayPlayerDeathSound;
+        AudioControl.onSpringJump -= PlaySpringSound;
     }
 
     //Delegate:
@@ -46,6 +49,7 @@ public class AudioControl : MonoBehaviour {
     public static event OnAudioEvent onPlayerShootFireball;
     public static event OnAudioEvent onEnemyDeath;
     public static event OnAudioEvent onPlayerDeath;
+    public static event OnAudioEvent onSpringJump;
 
     public static void PlayerJump(GameObject unit) {
         if (onPlayerJump != null) {
@@ -89,6 +93,12 @@ public class AudioControl : MonoBehaviour {
         }
     }
 
+    public static void SpringJump(GameObject unit) {
+        if (onSpringJump != null) {
+            onSpringJump(unit);
+        }
+    }
+
     //Metodit jotka toistavat äänet
     public void PlayPlayerJumpSound(GameObject unit) {
         if (audioPlayer != null) {
@@ -129,6 +139,12 @@ public class AudioControl : MonoBehaviour {
     public void PlayPlayerDeathSound(GameObject unit) {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(playerDeathSound, 0.65f);
+        }
+    }
+
+    public void PlaySpringSound(GameObject unit) {
+        if (audioPlayer != null) {
+            audioPlayer.PlayOneShot(springsound, 0.65f);
         }
     }
 }

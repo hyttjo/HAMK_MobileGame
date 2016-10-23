@@ -21,7 +21,8 @@ public class BoostObject : MonoBehaviour {
             if (hitDirection == boostDirection * -1) {
                 Rigidbody2D rBody = col.gameObject.GetComponent<Rigidbody2D>();
                if (rBody != null) {
-                    StartCoroutine(Boost(rBody, animationDuration));  
+                    StartCoroutine(Boost(rBody, animationDuration));
+                    AudioControl.SpringJump(null); //Toistaa äänen
                 }
             }
         }
