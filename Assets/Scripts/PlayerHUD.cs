@@ -21,11 +21,13 @@ public class PlayerHUD : MonoBehaviour {
     private Texture2D fireTexture;
     private Texture2D iceTexture;
     public int numberOfHearts = 3;
-    public int hudHeight = 50;
-    public Rect padding = new Rect(10, 10, 10, 10);
+    public float hudHeightPercent = 0.08f;
+    private int hudScale;
+    private Rect padding;
     public Color hudBackgroundColor = new Color(0, 0, 0, 0.75f);
     public Color color = new Color(1, 1, 1, 1);
 
+    private GUIStyle hudStyle;
     private Texture2D texture;
     private Texture2D background;
 
@@ -59,13 +61,18 @@ public class PlayerHUD : MonoBehaviour {
         background = new Texture2D(1, 1);
         background.SetPixel(0, 0, hudBackgroundColor);
         background.Apply();
+        hudStyle = new GUIStyle();
+        hudScale = (int)(Screen.height * hudHeightPercent);
+        padding = new Rect(hudScale / 5, hudScale / 5, hudScale / 5, hudScale / 5);
+
+        if (font != null) {
+            hudStyle.font = font;
+        }
+        hudStyle.fontSize = (int)(hudScale / 3.125f);
+        hudStyle.normal.textColor = Color.white;
     }
 
     void OnGUI() {
-        if (font != null) {
-            GUI.skin.font = font;
-        }
-
         if (player != null) {
             DisplayBackground();
             DisplayLives();
@@ -78,7 +85,7 @@ public class PlayerHUD : MonoBehaviour {
 
     void DisplayBackground() {
         GUI.skin.box.normal.background = background;
-        GUI.Box(new Rect(0, 0, Screen.width, hudHeight), GUIContent.none);
+        GUI.Box(new Rect(0, 0, Screen.width, hudScale), GUIContent.none);
     }
 
     void DisplayLives() {
@@ -86,10 +93,10 @@ public class PlayerHUD : MonoBehaviour {
             int playerLives = GM.playerLives;
 
             if (livesTexture != null) {
-                Rect rect = new Rect(padding.x + 10, padding.y + 2, 20, 20);
+                Rect rect = new Rect(padding.x + hudScale / 5, padding.y + hudScale / 25, hudScale / 2.5f, hudScale / 2.5f);
                 GUI.DrawTexture(rect, livesTexture);
             }
-            GUI.Label(new Rect(padding.x + 32, padding.y, Screen.width - padding.width, hudHeight - padding.height), "*" + playerLives);
+            GUI.Label(new Rect(padding.x + hudScale / 1.56f, padding.y + hudScale / 25, Screen.width - padding.width, hudScale - padding.height), "*" + playerLives, hudStyle);
         }
     }
 
@@ -101,11 +108,11 @@ public class PlayerHUD : MonoBehaviour {
                 healthInt = 0;
             }
 
-            GUI.Label(new Rect(padding.x + 100, padding.y, Screen.width - padding.width, hudHeight - padding.height), "HP:");
+            GUI.Label(new Rect(padding.x + hudScale / 0.55f, padding.y + hudScale / 25, Screen.width - padding.width, hudScale - padding.height), "HP:", hudStyle);
 
             if (healthTexture != null) {
                 for (int i = 0; i < health.health / Mathf.CeilToInt(100 / numberOfHearts); i++) {
-                    Rect rect = new Rect(padding.x + 139 + 20 * i + 4 * i, padding.y + 2, 20, 20);
+                    Rect rect = new Rect(padding.x + hudScale / 0.38f + hudScale / 2.5f * i + hudScale / 12.5f * i, padding.y + hudScale / 25, hudScale / 2.5f, hudScale / 2.5f);
                     GUI.DrawTexture(rect, healthTexture);
                 }
             }
@@ -116,28 +123,28 @@ public class PlayerHUD : MonoBehaviour {
         if (score != null) {
             int coinInt = score.GetTotalCoins();
 
-            GUI.Label(new Rect(padding.x + Screen.width / 3.3f, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Coins:");
+            GUI.Label(new Rect(padding.x + Screen.width / 3.3f, padding.y + hudScale / 25, Screen.width - padding.width, hudScale - padding.height), "Coins:", hudStyle);
 
             if (coinTexture != null) {  
-                Rect rect = new Rect(padding.x + Screen.width / 3.3f + 78, padding.y + 2, 20, 20);
+                Rect rect = new Rect(padding.x + Screen.width / 3.3f + hudScale / 0.65f, padding.y + hudScale / 25, hudScale / 2.5f, hudScale / 2.5f);
                 GUI.DrawTexture(rect, coinTexture);
             }
             string coinText = "*" + coinInt;
-            GUI.Label(new Rect(padding.x + Screen.width / 3.3f + 100, padding.y, Screen.width - padding.width, hudHeight - padding.height), coinText);
+            GUI.Label(new Rect(padding.x + Screen.width / 3.3f + hudScale / 0.5f, padding.y + hudScale / 25, Screen.width - padding.width, hudScale - padding.height), coinText, hudStyle);
         }
     }
 
     void DisplayPowerUp() {
         if (mControl != null) {
-            GUI.Label(new Rect(padding.x + Screen.width / 1.8f, padding.y, Screen.width - padding.width, hudHeight - padding.height), "Power:");
+            GUI.Label(new Rect(padding.x + Screen.width / 1.8f, padding.y + hudScale / 25, Screen.width - padding.width, hudScale - padding.height), "Power:", hudStyle);
 
             if (mControl.currentPower != null && mControl.currentPower.gameObject.tag == "DamageTypeFire") {
-                Rect rect = new Rect(padding.x + Screen.width / 1.8f + 100, padding.y - 4, 16, 26);
+                Rect rect = new Rect(padding.x + Screen.width / 1.8f + hudScale / 0.5f, padding.y - hudScale / 12.5f, hudScale / 3.125f, hudScale / 1.923f);
                 GUI.DrawTexture(rect, fireTexture);
             }
 
             if (mControl.currentPower != null && mControl.currentPower.gameObject.tag == "DamageTypeIce") {
-                Rect rect = new Rect(padding.x + Screen.width / 1.8f + 100, padding.y - 4, 16, 26);
+                Rect rect = new Rect(padding.x + Screen.width / 1.8f + hudScale / 0.5f, padding.y - hudScale / 12.5f, hudScale / 3.125f, hudScale / 1.923f);
                 GUI.DrawTexture(rect, iceTexture);
             }
         }
@@ -152,7 +159,7 @@ public class PlayerHUD : MonoBehaviour {
             } else {
                 scoreText = "Score: " + score.GetScore();
             }
-            GUI.Label(new Rect(padding.x + Screen.width / 1.3f, padding.y, Screen.width - padding.width, hudHeight - padding.height), scoreText);
+            GUI.Label(new Rect(padding.x + Screen.width / 1.3f, padding.y + hudScale / 25, Screen.width - padding.width, hudScale - padding.height), scoreText, hudStyle);
         }
     }
 }

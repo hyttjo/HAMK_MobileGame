@@ -64,42 +64,26 @@ public class Health : MonoBehaviour {
     void HandleDamage(GameObject col) {
         string colliderTag = col.tag;
 
-        if (colliderTag == "DamageTypePit")
-        {
+        if (colliderTag == "DamageTypePit") {
             DeathByPit();
-        }
-        else if (colliderTag == "DamageTypeFire")
-        {
-            if (!immuneToFire)
-            {
+        } else if (colliderTag == "DamageTypeFire") {
+            if (!immuneToFire) {
                 DamageByFire(col);
             }
-        }
-        else if (colliderTag == "DamageTypeIce")
-        {
-            if (!immuneToIce)
-            {
+        } else if (colliderTag == "DamageTypeIce") {
+            if (!immuneToIce) {
                 DamageByIce();
             }
-        }
-        else if (colliderTag == "DamageTypeBite")
-        {
-            if (!immuneToBite)
-            {
+        } else if (colliderTag == "DamageTypeBite") {
+            if (!immuneToBite) {
                 DamageByBite(col);
             }
-        }
-        else if (colliderTag == "DamageTypeCrush")
-        {
-            if (!immuneToCrush)
-            {
+        } else if (colliderTag == "DamageTypeCrush") {
+            if (!immuneToCrush) {
                 DamageByCrush(col);
             }
-        }
-        else if (colliderTag == "DamageTypeSpike")
-        {
-            if (!immuneToSpike)
-            {
+        } else if (colliderTag == "DamageTypeSpike") {
+            if (!immuneToSpike) {
                 DamageBySpike(col);
             }
         }
@@ -132,8 +116,7 @@ public class Health : MonoBehaviour {
         health -= damageCrush;
     }
 
-    void DamageBySpike(GameObject col)
-    {
+    void DamageBySpike(GameObject col) {
         PushBack(col, gameObject);
         StartCoroutine(ShowFlashDamage(damageColor, damageShowDuration));
         health -= damageSpike;
@@ -141,6 +124,7 @@ public class Health : MonoBehaviour {
 
     IEnumerator ChangeSpeed(float speedMultiplier, float duration) {
         MovementControl mControl = gameObject.GetComponentInChildren<MovementControl>();
+
         if (mControl != null) {
             mControl.speed *= speedMultiplier;
             yield return new WaitForSeconds(duration);
@@ -178,23 +162,24 @@ public class Health : MonoBehaviour {
     void Destroy() {
         if (gameObject.tag == "Enemy") {
             OnEnemyKilled();
-            AudioControl.EnemyDeath(null); //Toistaa äänen
         }
 
         if (gameObject.tag == "Player") { 
-            AudioControl.PlayerDeath(null); //Toistaa äänen
+            AudioControl.PlayerDeath(); //Toistaa äänen
             StartCoroutine(DestroyPlayerWithSound());
         }
 
         if (rBody != null) {
             rBody.isKinematic = true;
         }
+
         if (deathEffect != null) {
             Vector2 spawnPosition = (Vector2)transform.position + Vector2.up * 0.5f * transform.localScale.y;
             deathEffect = (GameObject)Instantiate(deathEffect, spawnPosition, Quaternion.identity);
             Destroy(deathEffect, 0.5f);
             this.enabled = false;
         }
+
         AIControl aiControl = gameObject.GetComponent<AIControl>();
 
         if (aiControl != null) {
@@ -210,18 +195,16 @@ public class Health : MonoBehaviour {
     }
 
     IEnumerator DestroyPlayerWithSound() {
-
         yield return new WaitForSeconds(2);
 
-        if (rBody != null)
-        {
+        if (rBody != null) {
             rBody.isKinematic = true;
         }
-        if (deathEffect != null)
-        {
+
+        if (deathEffect != null) {
             Vector2 spawnPosition = (Vector2)transform.position + Vector2.up * 0.5f * transform.localScale.y;
             deathEffect = (GameObject)Instantiate(deathEffect, spawnPosition, Quaternion.identity);
-            AudioControl.SmokePuff(null); //Toistaa äänen
+            AudioControl.SmokePuff(); //Toistaa äänen
             Destroy(deathEffect, 0.5f);
             this.enabled = false;
         }

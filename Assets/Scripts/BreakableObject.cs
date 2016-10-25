@@ -38,7 +38,7 @@ public class BreakableObject : MonoBehaviour {
 
     void DestroyObject() {
         OnBrickDestroyed();
-        AudioControl.BrickBreak(null); //Toistaa äänen
+        AudioControl.BrickBreak(); //Toistaa äänen
         SpriteRenderer sRenderer = GetComponent<SpriteRenderer>();
         
         if (sRenderer != null) {

@@ -98,9 +98,10 @@ public class Score : MonoBehaviour {
 
     private void CoinCollected(GameObject e) {
         coinsCollected++;
-
-        if (GetTotalCoins() % extraLifeValue == 0) {
-            GM.playerLives++;
+        if (GM != null) {
+            if (GetTotalCoins() % extraLifeValue == 0) {
+                GM.playerLives++;
+            }
         }
     }
 
@@ -142,48 +143,60 @@ public class Score : MonoBehaviour {
 
     public int GetTotalHearts() {
         int totalHearts = 0;
-        foreach(var score in GM.scores.Values) {
-            totalHearts += score.GetHeartsCollected();
+        if (GM != null) {
+            foreach(var score in GM.scores.Values) {
+                totalHearts += score.GetHeartsCollected();
+            }
         }
         return totalHearts;
     }
 
     public int GetTotalCoins() {
         int totalCoins = 0;
-        foreach(var score in GM.scores.Values) {
-            totalCoins += score.GetCoinsCollected();
+        if (GM != null) {
+            foreach(var score in GM.scores.Values) {
+                totalCoins += score.GetCoinsCollected();
+            }
         }
         return totalCoins;
     }
 
     public int GetTotalPowerUps() {
         int totalPowerUps = 0;
-        foreach(var score in GM.scores.Values) {
-            totalPowerUps += score.GetPowerUpsCollected();
+        if (GM != null) {
+            foreach(var score in GM.scores.Values) {
+                totalPowerUps += score.GetPowerUpsCollected();
+            }
         }
         return totalPowerUps;
     }
 
     public int GetTotalBricks() {
         int totalBricks = 0;
-        foreach(var score in GM.scores.Values) {
-            totalBricks += score.GetBricksDestroyed();
+        if (GM != null) {
+            foreach(var score in GM.scores.Values) {
+                totalBricks += score.GetBricksDestroyed();
+            }
         }
         return totalBricks;
     }
 
     public int GetTotalEnemies() {
         int totalEnemies = 0;
-        foreach(var score in GM.scores.Values) {
-            totalEnemies += score.GetEnemiesKilled();
+        if (GM != null) {
+            foreach(var score in GM.scores.Values) {
+                totalEnemies += score.GetEnemiesKilled();
+            }
         }
         return totalEnemies;
     }
 
     public int GetTotalScore() {
         int totalScore = 0;
-        foreach(var score in GM.scores.Values) {
-            totalScore += score.GetScore();
+        if (GM != null) {
+            foreach(var score in GM.scores.Values) {
+                totalScore += score.GetScore();
+            }
         }
         return totalScore;
     }

@@ -21,11 +21,11 @@ public class AudioControl : MonoBehaviour {
         audioPlayer = gameObject.AddComponent<AudioSource>();
 
         AudioControl.onPlayerJump += PlayPlayerJumpSound;
-        AudioControl.onPlayerCollectCoin += PlayPlayerCollectCoinSound;
-        AudioControl.onPlayerCollectHeart += PlayPlayerCollectHeartSound;
-        AudioControl.onPlayerCollectPowerUp += PlayPlayerCollectPowerUpSound;
+        PickupControl.OnCoinCollected += PlayPlayerCollectCoinSound;
+        PickupControl.OnHeartCollected += PlayPlayerCollectHeartSound;
+        PickupControl.OnPowerUpCollected += PlayPlayerCollectPowerUpSound;
         AudioControl.onPlayerShootFireball += PlayPlayerShootFireballSound;
-        AudioControl.onEnemyDeath += PlayEnemyDeathSound;
+        Health.OnEnemyKilled += PlayEnemyDeathSound;
         AudioControl.onPlayerDeath += PlayPlayerDeathSound;
         AudioControl.onSpringJump += PlaySpringSound;
         AudioControl.onSmokePuff += PlaySmokeSound;
@@ -35,11 +35,11 @@ public class AudioControl : MonoBehaviour {
 
     void OnDestroy() {
         AudioControl.onPlayerJump -= PlayPlayerJumpSound;
-        AudioControl.onPlayerCollectCoin -= PlayPlayerCollectCoinSound;
-        AudioControl.onPlayerCollectHeart -= PlayPlayerCollectHeartSound;
-        AudioControl.onPlayerCollectPowerUp -= PlayPlayerCollectPowerUpSound;
+        PickupControl.OnCoinCollected -= PlayPlayerCollectCoinSound;
+        PickupControl.OnHeartCollected -= PlayPlayerCollectHeartSound;
+        PickupControl.OnPowerUpCollected -= PlayPlayerCollectPowerUpSound;
         AudioControl.onPlayerShootFireball -= PlayPlayerShootFireballSound;
-        AudioControl.onEnemyDeath -= PlayEnemyDeathSound;
+        Health.OnEnemyKilled -= PlayEnemyDeathSound;
         AudioControl.onPlayerDeath -= PlayPlayerDeathSound;
         AudioControl.onSpringJump -= PlaySpringSound;
         AudioControl.onSmokePuff -= PlaySmokeSound;
@@ -48,149 +48,107 @@ public class AudioControl : MonoBehaviour {
     }
 
     //Delegate:
-    public delegate void OnAudioEvent(GameObject unit);
+    public delegate void OnAudioEvent();
 
     //Eventtien linkitys:
     public static event OnAudioEvent onPlayerJump;
-    public static event OnAudioEvent onPlayerCollectCoin;
-    public static event OnAudioEvent onPlayerCollectHeart;
-    public static event OnAudioEvent onPlayerCollectPowerUp;
     public static event OnAudioEvent onPlayerShootFireball;
-    public static event OnAudioEvent onEnemyDeath;
     public static event OnAudioEvent onPlayerDeath;
     public static event OnAudioEvent onSpringJump;
     public static event OnAudioEvent onSmokePuff;
     public static event OnAudioEvent onBrickBreak;
     public static event OnAudioEvent onLevelFinish;
 
-    public static void PlayerJump(GameObject unit) {
-        if (onPlayerJump != null) {
-            onPlayerJump(unit);
-        }
+    public static void PlayerJump() {
+        onPlayerJump();
     }
 
-    public static void PlayerCollectCoin(GameObject unit) {
-        if (onPlayerCollectCoin != null) {
-            onPlayerCollectCoin(unit);
-        }
+    public static void PlayerShootFireball() {
+        onPlayerShootFireball();
     }
 
-    public static void PlayerCollectHeart(GameObject unit) {
-        if (onPlayerCollectHeart != null) {
-            onPlayerCollectHeart(unit);
-        }
+    public static void PlayerDeath() {
+        onPlayerDeath();
     }
 
-    public static void PlayerCollectPowerUp(GameObject unit) {
-        if (onPlayerCollectPowerUp != null) {
-            onPlayerCollectPowerUp(unit);
-        }
+    public static void SpringJump() {
+        onSpringJump();
     }
 
-    public static void PlayerShootFireball(GameObject unit) {
-        if (onPlayerShootFireball != null) {
-            onPlayerShootFireball(unit);
-        }
+    public static void SmokePuff() {
+        onSmokePuff();
     }
 
-    public static void EnemyDeath(GameObject unit) {
-        if (onEnemyDeath != null) {
-            onEnemyDeath(unit);
-        }
+    public static void BrickBreak() {
+        onBrickBreak();
     }
 
-    public static void PlayerDeath(GameObject unit) {
-        if (onPlayerDeath != null) {
-            onPlayerDeath(unit);
-        }
-    }
-
-    public static void SpringJump(GameObject unit) {
-        if (onSpringJump != null) {
-            onSpringJump(unit);
-        }
-    }
-
-    public static void SmokePuff(GameObject unit) {
-        if (onSmokePuff != null) {
-            onSmokePuff(unit);
-        }
-    }
-
-    public static void BrickBreak(GameObject unit) {
-        if (onBrickBreak != null) {
-            onBrickBreak(unit);
-        }
-    }
-
-    public static void LevelFinish(GameObject unit) {
-        if (onLevelFinish != null) {
-            onLevelFinish(unit);
-        }
+    public static void LevelFinish() {
+        onLevelFinish();
     }
 
     //Metodit jotka toistavat äänet
-    public void PlayPlayerJumpSound(GameObject unit) {
+    public void PlayPlayerJumpSound() {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(jumpSound, 0.5f);
         }
     }
 
-    public void PlayPlayerCollectCoinSound(GameObject unit) {
+    public void PlayPlayerCollectCoinSound(GameObject e) {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(coinSound, 0.65f);
         }
     }
 
-    public void PlayPlayerCollectHeartSound(GameObject unit) {
+    public void PlayPlayerCollectHeartSound(GameObject e) {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(heartSound, 0.65f);
         }
     }
 
-    public void PlayPlayerCollectPowerUpSound(GameObject unit) {
+    public void PlayPlayerCollectPowerUpSound(GameObject e) {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(pickPowerUpSound, 0.65f);
         }
     }
 
-    public void PlayPlayerShootFireballSound(GameObject unit) {
+    public void PlayPlayerShootFireballSound() {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(shootFireballSound, 0.65f);
         }
     }
 
-    public void PlayEnemyDeathSound(GameObject unit) {
+    public void PlayEnemyDeathSound() {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(enemyDeathSound, 0.65f);
         }
     }
 
-    public void PlayPlayerDeathSound(GameObject unit) {
+    public void PlayPlayerDeathSound() {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(playerDeathSound, 0.65f);
         }
     }
 
-    public void PlaySpringSound(GameObject unit) {
+    public void PlaySpringSound() {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(springsound, 0.65f);
         }
     }
 
-    public void PlaySmokeSound(GameObject unit) {
+    public void PlaySmokeSound() {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(smokeSound, 0.25f);
         }
     }
 
-    public void PlayBrickSound(GameObject unit) {
+    public void PlayBrickSound() {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(brickSound, 0.65f);
         }
     }
 
-    public void PlayFinishSound(GameObject unit) {
+    public void PlayFinishSound() {
         if (audioPlayer != null) {
             audioPlayer.PlayOneShot(finishSound, 0.65f);
         }
