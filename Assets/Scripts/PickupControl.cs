@@ -44,16 +44,19 @@ public class PickupControl : MonoBehaviour {
             if (colliderTag == "Player") { // Jos pelaaja osuu pickupiin
                 if (behaviour == Pickups.Heart) {
                     OnHeartCollected(null);
+                    AudioControl.PlayerCollectHeart(null); //Toistetaan ääni
                     Destroy(); // Poistetaan tämä pickup pelimaailmasta.
                 }
 
                 if (behaviour == Pickups.Coin) {
                     OnCoinCollected(null);
+                    AudioControl.PlayerCollectCoin(null); //Toistetaan ääni
                     Destroy(); // Poistetaan tämä pickup pelimaailmasta.
                 }
 
                 if (behaviour == Pickups.PowerUp) {
                     OnPowerUpCollected(powerUp);
+                    AudioControl.PlayerCollectPowerUp(null); //Toistetaan ääni
                     Destroy(); // Poistetaan tämä pickup pelimaailmasta.
                 }
             }

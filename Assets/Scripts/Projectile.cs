@@ -24,6 +24,8 @@ public class Projectile : MonoBehaviour {
         if (rBody != null && mControl != null) {
             rBody.AddForce(new Vector2(speedX * mControl.GetFacingDir(), speedY), ForceMode2D.Impulse);
         }
+
+        AudioControl.PlayerShootFireball(null); //Toistaa äänen
     }
 
     void OnCollisionEnter2D(Collision2D col) {
@@ -69,6 +71,7 @@ public class Projectile : MonoBehaviour {
     void Destroy(Vector3 effectPosition) {
         if (decayEffect != null) {
             decayEffect = (GameObject)Instantiate(decayEffect, effectPosition, Quaternion.identity);
+            AudioControl.SmokePuff(null); //Toistaa äänen
             decayEffect.transform.localScale *= 0.75f;
             Destroy(decayEffect, 0.5f);
         }

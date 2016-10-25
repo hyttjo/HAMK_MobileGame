@@ -39,8 +39,6 @@ public class MovementControl : MonoBehaviour {
         if (gameObject.tag == "Player") {
             PickupControl.OnPowerUpCollected += GainPowerUp;
         }
-
-       
     }
 
     void Update() {
@@ -117,6 +115,7 @@ public class MovementControl : MonoBehaviour {
                     rBody.AddForce(new Vector2(0, 1 * jumpForce), ForceMode2D.Impulse);
                     jumping = true;
                     speed = speed / airSpeed;
+                    AudioControl.PlayerJump(null); //Toistaa äänen kun pelaaja hyppää
                 }
             }
         }
